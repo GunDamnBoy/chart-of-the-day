@@ -2,12 +2,15 @@
 """
 fetch_twse.py — 台股籌碼取數（三大法人買賣超、融資融券餘額）。
 
-狀態（2026-08-05 實測）：
-   ✅ `bfi82u`（三大法人）**已實測可用**，欄位與聚合口徑都對過帳。
-   ⚠ `margin`（融資融券）**尚未取得成功回應**——首次實測時因日期參數無效而回空，
-      需以有效交易日重測。參數 `selectType=MS` 也還沒驗證過。
+狀態（2026-08-05 實測，**兩支都已驗證可用**）：
+   ✅ `bfi82u`（三大法人）：欄位與聚合口徑都對過帳，回應為頂層 `data`（flat）。
+   ✅ `margin`（融資融券）：回應為 `tables` 形狀，2026-08-04 取得
+      融資餘額 5,211.35 億元、日增 63.79 億元、融券 196,970 張。
 
-兩個實測踩到的坑（都寫進 MAINTENANCE 第 2 節）：
+三個實測踩到的坑（都寫進 MAINTENANCE 第 2 節）：
+   0. **同一支 API 家族的回應形狀不一致**：`bfi82u` 把資料放頂層 `data`，
+      `margin` 放在 `tables[]`。只吃前者的話，後者會表現成「stat=OK 但 data 為空」，
+      看起來像沒資料，其實是形狀不對。`fetch()` 兩種都吃，都不是時會把頂層鍵印出來。
    1. **證交所會安靜地吞掉無效的日期參數**：`dayDate=#` 不報錯、不回 stat 失敗，
       直接回傳「最近一個交易日」。本模組已在送出前擋掉非 YYYYMMDD 的輸入，
       並要求呼叫端核對回傳 `title` 裡的民國日期。
@@ -157,6 +160,51 @@ def parse_bfi82u(doc: dict) -> dict:
             "three_majors": agg, "raw": raw}
 
 
+def parse_margin(doc: dict) -> dict:
+    """融資融券 → 餘額與日增減。單位：融資金額為億元、張數為交易單位（張）。
+
+    ✅ 2026-08-04 實測回應（`shape="tables"`，三列）：
+       fields ＝ ['項目','買進','賣出','現金(券)償還','前日餘額','今日餘額']
+       融資(交易單位) / 融券(交易單位) / 融資金額(仟元)
+
+    **單位陷阱**：金額那列是「仟元」不是元，換算億元要除以 1e5（不是 1e8）。
+    弄錯會差 1,000 倍，而 5,211 億與 52 萬億在圖上都「看起來像數字」，不會自己露餡。
+
+    **張數與金額會反向**：2026-08-04 融資張數減少（912.07 萬→903.20 萬）但融資金額
+    增加（5,147.55 億→5,211.35 億），因為金額同時受股價影響。**引用時要說清楚是哪一個**，
+    媒體講「融資餘額」通常指金額。
+    """
+    if not doc.get("ok"):
+        return {"ok": False, "stat": doc.get("stat")}
+    rows = {}
+    for row in doc.get("data", []):
+        rows[str(row[0]).strip()] = row
+
+    def cell(name, idx):
+        r = rows.get(name)
+        if r is None or idx >= len(r):
+            return None
+        try:
+            return float(str(r[idx]).replace(",", ""))
+        except ValueError:
+            return None
+
+    PREV, TODAY = 4, 5                       # 前日餘額 / 今日餘額
+    fin_prev, fin_now = cell("融資金額(仟元)", PREV), cell("融資金額(仟元)", TODAY)
+    lot_prev, lot_now = cell("融資(交易單位)", PREV), cell("融資(交易單位)", TODAY)
+    shr_prev, shr_now = cell("融券(交易單位)", PREV), cell("融券(交易單位)", TODAY)
+    missing = [n for n, v in (("融資金額(仟元)", fin_now), ("融資(交易單位)", lot_now),
+                              ("融券(交易單位)", shr_now)) if v is None]
+    if missing:
+        return {"ok": False, "stat": f"缺少預期的列或欄位：{missing}，"
+                                     f"實際列名 {sorted(rows)}，請核對回應結構"}
+    e = lambda x: round(x / 1e5, 2)          # 仟元 → 億元
+    return {"ok": True, "title": doc.get("title", ""),
+            "融資餘額_億元": e(fin_now), "融資日增減_億元": e(fin_now - fin_prev),
+            "融資張數": int(lot_now), "融資張數日增減": int(lot_now - lot_prev),
+            "融券張數": int(shr_now), "融券張數日增減": int(shr_now - shr_prev)}
+
+
 def selftest(day: str | None = None) -> int:
     import datetime
     # 預設抓「昨天」而不是今天：09:00 那輪執行時當日盤還沒收，
@@ -192,13 +240,14 @@ def selftest(day: str | None = None) -> int:
         print(f"  fields: {doc['fields']}")
         for row in doc["data"]:
             print(f"    {row}")
-        if kind == "bfi82u":
-            r = parse_bfi82u(doc)
-            print(f"  解析後：{json.dumps(r, ensure_ascii=False)}")
-            if not r.get("ok"):
-                rc = 1
-    print("\n核對重點：title 的日期是否正確、fields 順序是否為"
-          "['單位名稱','買進金額','賣出金額','買賣差額']、三大法人加總是否與證交所的合計列相符。")
+        r = {"bfi82u": parse_bfi82u, "margin": parse_margin}[kind](doc)
+        print(f"  解析後：{json.dumps(r, ensure_ascii=False)}")
+        if not r.get("ok"):
+            rc = 1
+    print("\n核對重點：")
+    print("  · title 的民國日期是不是你要的那天（送錯日期不會報錯，會回最近一個交易日）")
+    print("  · bfi82u：三大法人加總是否與證交所自己的合計列相符")
+    print("  · margin：融資餘額的量級是不是「幾千億」（仟元→億元要除 1e5，弄錯會差 1,000 倍）")
     return rc
 
 
