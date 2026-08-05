@@ -1,0 +1,19 @@
+# ~/.dashpush/repos.txt — dashpush 要自動推送的 repo，一行一個。
+#
+# 加一個新知識庫時，**唯一要做的事就是在這裡加一行**。
+# 不必改 auto-push.sh、不必動 plist、不必重載 launchctl——
+# launchd 每 180 秒重新叫起腳本，存檔後下一輪就生效。
+#
+# 允許 ~ 開頭、# 註解、空行。
+#
+# 驗證方式：
+#   tail -20 ~/.dashpush/push.log      → 開頭那行會寫「本輪涵蓋 N 個 repo」
+#
+# 歷史：這個檔案的存在，是因為同一個「新 repo 沒被推送而且毫無聲響」的 bug
+# 在 2026-08-02（podcast）與 08-05（chart-of-the-day）發作了兩次。
+# 清單寫死在程式裡的時候，沒有人會想到要去改它。
+
+~/advisory-knowledge-hub
+~/podcast-knowledge-digest
+~/convergence-weekly
+~/chart-of-the-day
