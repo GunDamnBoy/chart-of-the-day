@@ -271,11 +271,22 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
     return {"png": png, "svg": svg}
 
 # ---------------------------------------------------------------- ECharts
-def qa_series(ch: Chart, z: float = 6.0) -> list:
+def qa_series(ch: Chart, z: float = 5.0) -> list:
     """資料品質檢查：抓單日跳動異常大的點。
 
     期貨連續序列的轉倉、來源端的錯價、單位變更，都會表現成一根突兀的單日跳動。
     這些點如果沒被抓出來，會直接變成圖上的假訊號。回傳待人工覆核的清單。
+
+    門檻為何是 5σ 而不是 6σ（2026-08-05 實測後調整）：
+        6σ 漏掉了 2026-01-30 黃金單日 −11.37%（z=−5.59）。一根 11% 的單日棒子沒被
+        任何機制看一眼，正是這個檢查該擋下來的東西，所以門檻本身失職。
+        改 5σ 後同一份資料由 2 筆增為 7 筆，多出來的 4 筆全是已知的真實事件
+        （2024-08-02、2025-04-03/04、2025-05-12），依 AGENT_BRIEF 第 3.4 節屬
+        「保留並可在判讀中引用」。**多出來的不是雜訊，是本來就該被讀到的東西。**
+
+    連續日合併：同一序列相鄰交易日的旗標會併成一筆並記 date_end。
+        2025-04-03 與 04-04 是同一次關稅衝擊，算成兩筆只會讓 about.run 的處置
+        說明變成流水帳，讀的人反而抓不到重點。
     """
     flags = []
     for s in ch.series:
@@ -289,11 +300,22 @@ def qa_series(ch: Chart, z: float = 6.0) -> list:
         sd = (sum((r - mu) ** 2 for r in rets) / len(rets)) ** 0.5
         if sd == 0:
             continue
-        for i, r in enumerate(rets, start=1):
-            if abs(r - mu) > z * sd:
-                flags.append({"chart": ch.slug, "series": s.name,
-                              "date": s.dates[i] if i < len(s.dates) else "?",
-                              "pct": round(r * 100, 2), "z": round((r - mu) / sd, 1)})
+        hits = [i for i, r in enumerate(rets, start=1) if abs(r - mu) > z * sd]
+        run = []                      # 收集連續索引，遇到斷點就結算成一筆
+        for idx in hits + [None]:
+            if run and (idx is None or idx != run[-1] + 1):
+                peak = max(run, key=lambda i: abs(rets[i - 1] - mu))
+                r = rets[peak - 1]
+                f = {"chart": ch.slug, "series": s.name,
+                     "date": s.dates[run[0]] if run[0] < len(s.dates) else "?",
+                     "pct": round(r * 100, 2), "z": round((r - mu) / sd, 1)}
+                if len(run) > 1:      # 只有跨日事件才寫 date_end 與 days
+                    f["date_end"] = s.dates[run[-1]] if run[-1] < len(s.dates) else "?"
+                    f["days"] = len(run)
+                flags.append(f)
+                run = []
+            if idx is not None:
+                run.append(idx)
     return flags
 
 

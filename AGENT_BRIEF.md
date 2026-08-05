@@ -265,6 +265,35 @@ for c in d['charts']:
     if not os.path.exists(png): bad(f'PNG 檔不存在：{c.get("files",{}).get("png")}')
     elif os.path.getsize(png) < 20000: bad(f'PNG 過小可能沒畫出來：{png}')
 
+# 序列新鮮度：拿兩天前的收盤當「今天」講，是最容易發生也最難察覺的錯
+import datetime, re
+doc_day = datetime.date.fromisoformat(d['date'])
+ends = {}
+for c in d['charts']:
+    for s in c.get('series', []):
+        ends.setdefault(s['dates'][-1], []).append(f"{c['slug']}／{s['name']}")
+print('   序列新鮮度：')
+for last in sorted(ends, reverse=True):
+    gap = (doc_day - datetime.date.fromisoformat(last)).days
+    if gap >= 5:
+        bad(f'序列已過期 {gap} 天（末日 {last}）：{"、".join(ends[last])}')
+    elif gap >= 2:
+        print(f'   ⚠ 落後 {gap} 天（末日 {last}）：{"、".join(ends[last])}'
+              '｜凡以此序列計算的「今天」數字，subtitle 或 note 必須寫出實際基準日')
+    else:
+        print(f'     {gap} 天（末日 {last}）：{len(ends[last])} 條序列')
+
+# window.note 必須與實際末日相符——寫錯比不寫更糟，它會讓讀者以為資料是新的
+# 一律比對 MM-DD：note 常把年份省略成「2026-08-04／08-05」。
+# 前面的 (?<!\d) 與可選年份是為了不讓 '2026-08-03' 被誤切成 '26-08'。
+DATE_RE = r'(?<!\d)(?:\d{4}-)?(\d{2}-\d{2})(?!\d)'
+note_md = set(re.findall(DATE_RE, d.get('window', {}).get('note', '')))
+ends_md = {x[-5:] for x in ends}
+for nd in sorted(note_md - ends_md):
+    print(f'   ⚠ window.note 提到 {nd}，但沒有任何序列以該日結束——寫錯比不寫更糟')
+for ed in sorted(ends_md - note_md):
+    print(f'   ⚠ 有序列末日為 {ed}，window.note 未提及')
+
 # QA 旗標必須在 about.run 留下處置紀錄（警示級，不擋發布，但看到就要補）
 q   = d.get('about',{}).get('qa_flags',[])
 run = d.get('about',{}).get('run','') or ''
