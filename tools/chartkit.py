@@ -1,0 +1,364 @@
+# -*- coding: utf-8 -*-
+"""
+chartkit — 每日五圖的繪圖引擎。
+
+單一事實來源原則：每張圖只寫一次「資料 + 語意」，
+本模組同時吐出 (a) 靜態 PNG/SVG（matplotlib）與 (b) ECharts option（互動網頁）。
+兩軌若不同源就會漂移，所以永遠只從同一個 Series 物件出發。
+"""
+from __future__ import annotations
+import json, os, datetime as dt
+from dataclasses import dataclass, field, replace as ck_replace
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import matplotlib.dates as mdates
+
+# ---------------------------------------------------------------- 樣式
+INK      = "#14161A"
+MUTED    = "#6B7076"
+FAINT    = "#9BA0A6"
+GRID     = "#E7E5E2"
+RULE     = "#C9C5C0"
+BG       = "#FFFFFF"
+ACCENT   = "#C8102E"        # 台新紅，只留給「主角線／今日點」
+PALETTE  = [ACCENT, "#1F4E79", "#D9942B", "#3F7D5C", "#7A6BA8", "#8A8F95"]
+POS, NEG = "#1F7A4D", "#C8102E"
+
+CJK = ["PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Heiti TC",
+       "Microsoft JhengHei", "Noto Sans CJK JP", "DejaVu Sans"]
+
+_FONT_READY = False
+_CACHE = os.path.expanduser("~/.cache/chart-of-the-day/fonts")
+
+
+def _ensure_cjk_font():
+    """確保 matplotlib 找得到繁中字型。
+
+    macOS 有 PingFang TC，直接可用。Linux 通常只有 Noto Sans CJK 的 .ttc 集合檔，
+    而 matplotlib 只會登記 .ttc 的第一個 face（日文），造成繁中字形被日文字形取代。
+    因此在找不到繁中字型時，用 fontTools 把 TC face 抽出到使用者快取目錄再登記。
+    **抽出的檔案放快取、不放 repo**——單檔 17MB，不應進版控。
+    """
+    global _FONT_READY
+    if _FONT_READY:
+        return
+    import matplotlib.font_manager as fm
+    have = {f.name for f in fm.fontManager.ttflist}
+    if have & {"PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Heiti TC"}:
+        _FONT_READY = True
+        return
+    os.makedirs(_CACHE, exist_ok=True)
+    for cached, src, idx in [
+        (f"{_CACHE}/NotoSansCJKtc-Regular.otf",
+         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", 3),
+        (f"{_CACHE}/NotoSansCJKtc-Bold.otf",
+         "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 3),
+    ]:
+        try:
+            if not os.path.exists(cached):
+                if not os.path.exists(src):
+                    continue
+                from fontTools.ttLib import TTCollection
+                TTCollection(src).fonts[idx].save(cached)
+            fm.fontManager.addfont(cached)
+        except Exception as e:                       # 抽不出來就退回泛 CJK face
+            print(f"  [font] 繁中字型準備失敗，改用備援：{e}")
+    _FONT_READY = True
+
+
+def apply_style():
+    _ensure_cjk_font()
+    plt.rcParams.update({
+        "figure.facecolor": BG, "axes.facecolor": BG, "savefig.facecolor": BG,
+        "font.family": "sans-serif", "font.sans-serif": CJK,
+        "axes.edgecolor": RULE, "axes.linewidth": 0.9,
+        "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.8,
+        "axes.spines.top": False, "axes.spines.right": False, "axes.spines.left": False,
+        "xtick.color": MUTED, "ytick.color": MUTED,
+        "xtick.labelsize": 9, "ytick.labelsize": 9,
+        "axes.labelcolor": MUTED, "text.color": INK,
+        "axes.unicode_minus": False, "figure.dpi": 200,
+        # 讓 SVG 的內部 id 由固定 salt 產生：同一份 JSON 重畫要能位元級重現，
+        # 否則「歷史可重建」無法被機械驗證，只能靠肉眼看。
+        "svg.hashsalt": "chart-of-the-day",
+    })
+
+# ---------------------------------------------------------------- 資料容器
+@dataclass
+class Series:
+    name: str
+    dates: list          # 'YYYY-MM-DD'
+    values: list
+    color: str = None
+    axis: str = "left"   # left | right
+    style: str = "line"  # line | area | bar
+    width: float = 1.9
+    dash: bool = False
+
+@dataclass
+class Marker:
+    date: str
+    label: str
+    color: str = FAINT
+
+@dataclass
+class Chart:
+    slug: str
+    title: str
+    subtitle: str
+    series: list = field(default_factory=list)
+    markers: list = field(default_factory=list)
+    kind: str = "timeseries"        # timeseries | scatter | dist
+    y_label: str = ""
+    y2_label: str = ""
+    y_fmt: str = "{:,.0f}"
+    y2_fmt: str = "{:,.2f}"
+    source: str = ""
+    note: str = ""
+    zero_line: bool = False
+    y_log: bool = False          # 利差、倍數這類「比例才有意義」的量請開啟
+    # scatter 專用
+    pts: list = field(default_factory=list)      # [(x, y), ...]
+    hi_pts: list = field(default_factory=list)   # [(x, y, label), ...]
+    x_label: str = ""
+
+_label_slots: dict = {}
+
+
+def _vis_len(s: str) -> float:
+    """視覺寬度：CJK 與全形標點算兩格，拉丁字元算一格。用來判斷頁尾會不會壓到品牌字。"""
+    return sum(2 if ord(c) > 0x2E80 else 1 for c in s)
+
+
+def _d(s):
+    return dt.date.fromisoformat(s)
+
+def _fmt(f):
+    return FuncFormatter(lambda v, p: f.format(v))
+
+# ---------------------------------------------------------------- PNG / SVG
+def render_static(ch: Chart, outdir: str, basename: str) -> dict:
+    apply_style()
+    _label_slots.clear()
+    fig, ax = plt.subplots(figsize=(8.6, 4.9))
+    fig.subplots_adjust(left=0.075, right=0.925, top=0.80, bottom=0.17)
+    ax2 = None
+
+    if ch.kind == "scatter":
+        xs = [p[0] for p in ch.pts]; ys = [p[1] for p in ch.pts]
+        ax.scatter(xs, ys, s=13, c=FAINT, alpha=0.55, linewidths=0)
+        ax.axhline(0, color=RULE, lw=0.9); ax.axvline(0, color=RULE, lw=0.9)
+        offs = [(11, 9), (11, -15), (-14, 12), (-14, -18)]   # 交錯避免標籤互壓
+        for k, (x, y, lab) in enumerate(ch.hi_pts):
+            ax.scatter([x], [y], s=66, c=ACCENT, zorder=5, linewidths=0)
+            dx, dy = offs[k % len(offs)]
+            ax.annotate(lab, (x, y), textcoords="offset points", xytext=(dx, dy),
+                        fontsize=9, color=ACCENT, fontweight="bold",
+                        ha="left" if dx > 0 else "right",
+                        arrowprops=dict(arrowstyle="-", color=ACCENT, lw=0.7,
+                                        shrinkA=0, shrinkB=4))
+        ax.set_xlabel(ch.x_label, fontsize=9)
+        ax.set_ylabel(ch.y_label, fontsize=9)
+        ax.grid(True, axis="both")
+    else:
+        # 雙軸圖不用面積填色：填到 y=0 會把兩條線壓在上緣，也會誤導比例
+        dual = any(s.axis == "right" for s in ch.series)
+        for i, s in enumerate(ch.series):
+            col = s.color or PALETTE[i % len(PALETTE)]
+            if dual and s.style == "area":
+                s = ck_replace(s, style="line")
+            x = [_d(d) for d in s.dates]
+            tgt = ax
+            if s.axis == "right":
+                if ax2 is None:
+                    ax2 = ax.twinx(); ax2.grid(False)
+                    ax2.spines["right"].set_visible(True)
+                    ax2.spines["right"].set_color(RULE)
+                tgt = ax2
+            if s.style == "area":
+                tgt.fill_between(x, s.values, color=col, alpha=0.13, linewidth=0)
+                tgt.plot(x, s.values, color=col, lw=s.width,
+                         ls="--" if s.dash else "-", label=s.name)
+            elif s.style == "bar":
+                tgt.bar(x, s.values, color=col, width=1.0, linewidth=0, label=s.name)
+            else:
+                tgt.plot(x, s.values, color=col, lw=s.width,
+                         ls="--" if s.dash else "-", label=s.name)
+            # 末值標籤（同軸多條線時上下錯開，避免互壓）
+            if s.style != "bar" and s.values:
+                last = next((v for v in reversed(s.values) if v is not None), None)
+                if last is not None:
+                    # 以「軸內相對位置」判斷碰撞——雙軸時兩條線的絕對值不可比
+                    lo_, hi_ = min(v for v in s.values if v is not None), \
+                               max(v for v in s.values if v is not None)
+                    frac = (last - lo_) / (hi_ - lo_) if hi_ > lo_ else 0.5
+                    used = _label_slots.setdefault("all", [])
+                    dy = -3
+                    for prev in used:
+                        if abs(prev - frac) < 0.06:
+                            dy += 12
+                    used.append(frac)
+                    tgt.annotate(f"{last:,.2f}".rstrip("0").rstrip("."),
+                                 (x[-1], last), textcoords="offset points",
+                                 xytext=(5, dy), fontsize=8.5, color=col,
+                                 fontweight="bold")
+        if ch.zero_line:
+            ax.axhline(0, color=RULE, lw=1.0)
+        for m in ch.markers:
+            ax.axvline(_d(m.date), color=m.color, lw=0.9, ls=":", zorder=0)
+            ax.annotate(m.label, (_d(m.date), 1.005), xycoords=("data", "axes fraction"),
+                        fontsize=8, color=m.color, rotation=0, ha="center")
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%y/%m"))
+        ax.yaxis.set_major_formatter(_fmt(ch.y_fmt))
+        if ax2 is not None:
+            ax2.yaxis.set_major_formatter(_fmt(ch.y2_fmt))
+            ax2.tick_params(colors=MUTED, labelsize=9)
+
+        # y 軸依資料範圍留白，不強制從 0 起（除非資料本身跨零）
+        def _pad(axis, sers):
+            vals = [v for s in sers for v in s.values if v is not None]
+            if not vals:
+                return
+            lo, hi = min(vals), max(vals)
+            if lo == hi:
+                return
+            if ch.y_log and lo > 0:
+                axis.set_yscale("log")
+                axis.set_ylim(lo * 0.88, hi * 1.18)
+                axis.yaxis.set_major_formatter(_fmt(ch.y_fmt))
+                axis.yaxis.set_minor_formatter(_fmt(ch.y_fmt))
+                axis.tick_params(axis="y", which="minor", labelsize=7.5, colors=FAINT)
+                return
+            m = (hi - lo) * 0.10
+            axis.set_ylim(min(lo - m, 0) if lo < 0 else lo - m, hi + m * 1.6)
+        _pad(ax, [s for s in ch.series if s.axis != "right"])
+        if ax2 is not None:
+            _pad(ax2, [s for s in ch.series if s.axis == "right"])
+
+    ax.grid(axis="x", visible=(ch.kind == "scatter"))
+    ax.tick_params(length=0)
+
+    # 標題區
+    fig.text(0.075, 0.945, ch.title, fontsize=14.5, fontweight="bold", color=INK, va="top")
+    fig.text(0.075, 0.868, ch.subtitle, fontsize=10, color=MUTED, va="top")
+    # 圖例
+    handles, labels = ax.get_legend_handles_labels()
+    if ax2 is not None:
+        h2, l2 = ax2.get_legend_handles_labels(); handles += h2; labels += l2
+    if len(labels) > 1:
+        ax.legend(handles, labels, loc="upper left", frameon=False,
+                  fontsize=9, ncol=min(len(labels), 4),
+                  bbox_to_anchor=(0, 1.02), handlelength=1.6)
+    # 頁尾：來源與註記優先；太長時第二行續排並讓出品牌位置，絕不互壓
+    foot = ch.source if not ch.note else f"{ch.source}    |    {ch.note}"
+    if _vis_len(foot) > 78:
+        fig.text(0.075, 0.052, ch.source, fontsize=8, color=FAINT, va="bottom")
+        fig.text(0.075, 0.012, ch.note, fontsize=8, color=FAINT, va="bottom")
+    else:
+        fig.text(0.075, 0.035, foot, fontsize=8, color=FAINT, va="bottom")
+        fig.text(0.925, 0.035, "每日五圖 · Chart of the Day", fontsize=8,
+                 color=FAINT, va="bottom", ha="right")
+
+    os.makedirs(outdir, exist_ok=True)
+    png = os.path.join(outdir, basename + ".png")
+    svg = os.path.join(outdir, basename + ".svg")
+    fig.savefig(png, dpi=200)
+    fig.savefig(svg, metadata={"Date": None})      # 不寫入產生時間，同上理由
+    plt.close(fig)
+    return {"png": png, "svg": svg}
+
+# ---------------------------------------------------------------- ECharts
+def qa_series(ch: Chart, z: float = 6.0) -> list:
+    """資料品質檢查：抓單日跳動異常大的點。
+
+    期貨連續序列的轉倉、來源端的錯價、單位變更，都會表現成一根突兀的單日跳動。
+    這些點如果沒被抓出來，會直接變成圖上的假訊號。回傳待人工覆核的清單。
+    """
+    flags = []
+    for s in ch.series:
+        v = [x for x in s.values if x is not None]
+        if len(v) < 30:
+            continue
+        rets = [(v[i] / v[i - 1] - 1) for i in range(1, len(v)) if v[i - 1]]
+        if not rets:
+            continue
+        mu = sum(rets) / len(rets)
+        sd = (sum((r - mu) ** 2 for r in rets) / len(rets)) ** 0.5
+        if sd == 0:
+            continue
+        for i, r in enumerate(rets, start=1):
+            if abs(r - mu) > z * sd:
+                flags.append({"chart": ch.slug, "series": s.name,
+                              "date": s.dates[i] if i < len(s.dates) else "?",
+                              "pct": round(r * 100, 2), "z": round((r - mu) / sd, 1)})
+    return flags
+
+
+def echarts_option(ch: Chart) -> dict:
+    """與 render_static 同源；前端直接 setOption。"""
+    base = {
+        "animation": False,
+        "grid": {"left": 58, "right": 58, "top": 34, "bottom": 46},
+        "tooltip": {"trigger": "axis" if ch.kind != "scatter" else "item",
+                    "axisPointer": {"type": "line"}},
+        "color": PALETTE,
+        "textStyle": {"fontFamily": "'Noto Sans TC','PingFang TC',sans-serif"},
+    }
+    if ch.kind == "scatter":
+        base.update({
+            "xAxis": {"type": "value", "name": ch.x_label, "nameLocation": "middle",
+                      "nameGap": 26, "splitLine": {"lineStyle": {"color": GRID}}},
+            "yAxis": {"type": "value", "name": ch.y_label,
+                      "splitLine": {"lineStyle": {"color": GRID}}},
+            "series": [
+                {"type": "scatter", "symbolSize": 6, "data": [list(p) for p in ch.pts],
+                 "itemStyle": {"color": FAINT, "opacity": 0.55}, "name": "歷史交易日"},
+                {"type": "scatter", "symbolSize": 13,
+                 "data": [{"value": [p[0], p[1]], "name": p[2]} for p in ch.hi_pts],
+                 "itemStyle": {"color": ACCENT}, "name": "同步上漲日",
+                 "label": {"show": True, "formatter": "{b}", "position": "top",
+                           "color": ACCENT, "fontWeight": "bold"}},
+            ],
+        })
+        return base
+
+    dates = ch.series[0].dates if ch.series else []
+    ys = [{"type": "log" if ch.y_log else "value", "scale": True, "name": ch.y_label,
+           "splitLine": {"lineStyle": {"color": GRID}},
+           "axisLabel": {"color": MUTED}}]
+    if any(s.axis == "right" for s in ch.series):
+        ys.append({"type": "value", "scale": True, "name": ch.y2_label,
+                   "splitLine": {"show": False}, "axisLabel": {"color": MUTED}})
+    base.update({
+        "legend": {"top": 2, "textStyle": {"color": MUTED}},
+        "xAxis": {"type": "category", "data": dates, "boundaryGap": False,
+                  "axisLabel": {"color": MUTED,
+                                "formatter": "{value}"},
+                  "axisLine": {"lineStyle": {"color": RULE}}},
+        "yAxis": ys,
+        "series": [],
+    })
+    for i, s in enumerate(ch.series):
+        col = s.color or PALETTE[i % len(PALETTE)]
+        item = {
+            "name": s.name, "type": "bar" if s.style == "bar" else "line",
+            "showSymbol": False, "smooth": False,
+            "yAxisIndex": 1 if s.axis == "right" else 0,
+            "lineStyle": {"width": s.width, "type": "dashed" if s.dash else "solid"},
+            "itemStyle": {"color": col},
+            "data": [None if v is None else v for v in s.values],
+        }
+        if s.style == "area":
+            item["areaStyle"] = {"opacity": 0.13}
+        base["series"].append(item)
+    if ch.markers and base["series"]:
+        base["series"][0]["markLine"] = {
+            "silent": True, "symbol": "none",
+            "lineStyle": {"color": FAINT, "type": "dotted"},
+            "data": [{"xAxis": m.date, "label": {"formatter": m.label,
+                      "color": FAINT, "fontSize": 10}} for m in ch.markers],
+        }
+    return base

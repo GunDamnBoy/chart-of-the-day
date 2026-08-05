@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>每日五圖 · Chart of the Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --ink:#14161A; --muted:#6B7076; --faint:#9BA0A6; --grid:#E7E5E2;
+  --rule:#DCD9D5; --bg:#FAF9F7; --card:#FFFFFF; --accent:#C8102E; --navy:#1F4E79;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.75}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+
+header{border-bottom:2px solid var(--ink);background:var(--card)}
+.masthead{display:flex;align-items:baseline;gap:14px;padding:22px 0 14px;flex-wrap:wrap}
+.logo{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.logo span{color:var(--accent)}
+.kicker{font-size:12px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
+.navbar{display:flex;align-items:center;gap:10px;padding:10px 0 16px;flex-wrap:wrap}
+.navbar select,.navbar button{font-family:inherit;font-size:13px;padding:6px 12px;
+  border:1px solid var(--rule);background:var(--card);border-radius:3px;cursor:pointer;color:var(--ink)}
+.navbar button:hover:not(:disabled){border-color:var(--ink)}
+.navbar button:disabled{opacity:.35;cursor:default}
+.filters{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:4px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);cursor:pointer;color:var(--muted)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.lede{padding:26px 0 6px}
+.lede h1{margin:0 0 10px;font-size:30px;line-height:1.35;letter-spacing:-.01em}
+.lede p{margin:0;color:var(--muted);font-size:15.5px;max-width:66ch}
+.datestamp{font-size:13px;color:var(--faint);margin-bottom:8px}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  margin:26px 0;overflow:hidden}
+.card-head{padding:20px 24px 0}
+.badges{display:flex;gap:7px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 9px;border-radius:2px;letter-spacing:.04em}
+.b-slot{background:var(--accent);color:#fff;font-weight:500}
+.b-theme{background:#EFEDEA;color:var(--muted)}
+.card h2{margin:0 0 4px;font-size:21px;line-height:1.4;letter-spacing:-.01em}
+.card .sub{margin:0;color:var(--muted);font-size:13.5px}
+.chart{height:400px;margin:8px 0 0;padding:0 10px}
+@media(max-width:720px){.chart{height:320px}}
+.takeaway{margin:4px 24px 0;padding:13px 16px;background:#FBF3F4;
+  border-left:3px solid var(--accent);font-size:15px;font-weight:500}
+.body{padding:6px 24px 0}
+.body p{margin:14px 0;font-size:15px}
+.sowhat{margin:16px 24px 0;padding:14px 16px;background:#F4F6F8;border-left:3px solid var(--navy);font-size:14.5px}
+.sowhat b{color:var(--navy)}
+.watch{padding:4px 24px 0}
+.watch b{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.watch ul{margin:6px 0 0;padding-left:20px}
+.watch li{font-size:14px;margin:4px 0}
+.card-foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  padding:16px 24px 20px;margin-top:14px;border-top:1px solid var(--grid)}
+.tag{font-size:11.5px;color:var(--muted);background:#F2F0ED;padding:3px 9px;border-radius:2px}
+.dl{margin-left:auto;display:flex;gap:8px}
+.dl a{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--rule);
+  padding:4px 10px;border-radius:3px}
+.dl a:hover{border-color:var(--ink);color:var(--ink)}
+
+.runlog{margin:34px 0;padding:16px 20px;background:#FFF9E8;border:1px solid #EADFBE;
+  border-radius:4px;font-size:13px;color:#6B5A2A}
+.runlog b{display:block;margin-bottom:5px}
+.qa{margin-top:8px;font-family:ui-monospace,monospace;font-size:12px}
+footer{border-top:1px solid var(--rule);margin-top:40px;padding:22px 0 50px;
+  font-size:12.5px;color:var(--faint)}
+.empty{padding:60px 0;text-align:center;color:var(--faint)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="masthead">
+      <div class="logo">每日<span>五圖</span></div>
+      <div class="kicker">Chart of the Day</div>
+    </div>
+    <div class="navbar">
+      <button id="prev">← 前一期</button>
+      <select id="daypick"></select>
+      <button id="next">後一期 →</button>
+      <div class="filters" id="filters"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="lede">
+    <div class="datestamp" id="datestamp"></div>
+    <h1 id="headline"></h1>
+    <p id="standfirst"></p>
+  </div>
+  <div id="charts"></div>
+  <div id="runlog"></div>
+</main>
+
+<footer><div class="wrap">
+  每日五圖 · 圖表由公開資料自行重製，非轉載。資料來源標註於各圖頁尾。<br>
+  上游：投顧知識庫每日儀表板；下游：主題匯流訊號報、House View。
+</div></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+let DAYS = [], DOC = null, FILTER = null, INSTANCES = [];
+
+async function boot(){
+  const idx = await fetch('data/index.json?t=' + Date.now()).then(r => r.json());
+  DAYS = idx.days.slice().sort().reverse();
+  const sel = $('#daypick');
+  sel.innerHTML = DAYS.map(d => `<option value="${d.date}">${d.date}（${d.weekday||''}）</option>`).join('');
+  sel.onchange = () => load(sel.value);
+  $('#prev').onclick = () => step(1);
+  $('#next').onclick = () => step(-1);
+  await load(DAYS[0].date);
+}
+
+function step(n){
+  const i = DAYS.findIndex(d => d.date === DOC.date) + n;
+  if(i >= 0 && i < DAYS.length){ $('#daypick').value = DAYS[i].date; load(DAYS[i].date); }
+}
+
+async function load(day){
+  DOC = await fetch(`data/${day}.json?t=${Date.now()}`).then(r => r.json());
+  $('#daypick').value = day;
+  const i = DAYS.findIndex(d => d.date === day);
+  $('#prev').disabled = (i >= DAYS.length - 1);
+  $('#next').disabled = (i <= 0);
+  $('#datestamp').textContent = `${DOC.date}　${DOC.weekday || ''}　·　資料截至 ${(DOC.window||{}).data_asof || '—'}`;
+  $('#headline').textContent = DOC.headline || '';
+  $('#standfirst').textContent = DOC.standfirst || '';
+  buildFilters();
+  render();
+  renderRunlog();
+}
+
+function buildFilters(){
+  const themes = [...new Set(DOC.charts.map(c => c.theme))];
+  $('#filters').innerHTML =
+    [`<span class="chip ${FILTER?'':'on'}" data-t="">全部</span>`]
+    .concat(themes.map(t => `<span class="chip ${FILTER===t?'on':''}" data-t="${t}">${t}</span>`)).join('');
+  $('#filters').querySelectorAll('.chip').forEach(el => el.onclick = () => {
+    FILTER = el.dataset.t || null; buildFilters(); render();
+  });
+}
+
+function esc(s){ return String(s??'').replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+function render(){
+  INSTANCES.forEach(i => i.dispose()); INSTANCES = [];
+  const list = DOC.charts.filter(c => !FILTER || c.theme === FILTER);
+  if(!list.length){ $('#charts').innerHTML = '<div class="empty">這個主題今天沒有圖。</div>'; return; }
+  $('#charts').innerHTML = list.map((c, i) => `
+    <article class="card">
+      <div class="card-head">
+        <div class="badges">
+          <span class="badge b-slot">${esc(c.slot)}</span>
+          <span class="badge b-theme">${esc(c.theme)}</span>
+        </div>
+        <h2>${esc(c.title)}</h2>
+        <p class="sub">${esc(c.subtitle)}</p>
+      </div>
+      <div class="chart" id="ec-${i}"></div>
+      <div class="takeaway">${esc(c.takeaway)}</div>
+      <div class="body">${(c.reading||'').split('\n\n').map(p => `<p>${esc(p)}</p>`).join('')}</div>
+      ${c.so_what ? `<div class="sowhat"><b>對投組的意涵：</b>${esc(c.so_what)}</div>` : ''}
+      ${(c.watch||[]).length ? `<div class="watch"><b>接下來看什麼</b><ul>${c.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
+      <div class="card-foot">
+        ${(c.tags||[]).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+        <span class="dl">
+          <a href="${c.files?.png||'#'}" download>下載 PNG</a>
+          <a href="${c.files?.svg||'#'}" download>SVG</a>
+        </span>
+      </div>
+    </article>`).join('');
+
+  list.forEach((c, i) => {
+    if(!c.option) return;
+    const el = document.getElementById('ec-' + i);
+    const inst = echarts.init(el, null, {renderer:'canvas'});
+    inst.setOption(c.option);
+    INSTANCES.push(inst);
+  });
+}
+
+function renderRunlog(){
+  const a = DOC.about || {};
+  const qa = a.qa_flags || [];
+  if(!a.run && !qa.length){ $('#runlog').innerHTML = ''; return; }
+  $('#runlog').innerHTML = `<div class="runlog">
+    <b>本期產出紀錄</b>
+    ${a.run ? esc(a.run) : ''}
+    ${qa.length ? `<div class="qa">資料品質旗標（單日跳動異常，待人工覆核）：<br>` +
+      qa.map(f => `· ${esc(f.series)}　${esc(f.date)}　${f.pct>0?'+':''}${f.pct}%　z=${f.z}`).join('<br>') + `</div>` : ''}
+  </div>`;
+}
+
+addEventListener('resize', () => INSTANCES.forEach(i => i.resize()));
+boot().catch(e => { $('#charts').innerHTML = `<div class="empty">載入失敗：${e.message}</div>`; });
+</script>
+</body>
+</html>

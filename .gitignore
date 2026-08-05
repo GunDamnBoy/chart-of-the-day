@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+assets/fonts/
+.fred_key
+.env
