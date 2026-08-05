@@ -2,10 +2,17 @@
 """
 fetch_twse.py — 台股籌碼取數（三大法人買賣超、融資融券餘額）。
 
-⚠ 狀態：**尚未在有網路的環境實測過。** 端點與參數取自 `advisory-dashboard-daily`
-   的實測紀錄（那條產線每天實際在打這幾支），但本模組的解析邏輯還沒跑過真實回應。
-   **第一次使用前務必先跑 `python3 tools/fetch_twse.py --selftest` 並看輸出對不對。**
-   確認可用後，把本說明改成「已實測」並在 AGENT_BRIEF 第 3.1 節登錄。
+狀態（2026-08-05 實測）：
+   ✅ `bfi82u`（三大法人）**已實測可用**，欄位與聚合口徑都對過帳。
+   ⚠ `margin`（融資融券）**尚未取得成功回應**——首次實測時因日期參數無效而回空，
+      需以有效交易日重測。參數 `selectType=MS` 也還沒驗證過。
+
+兩個實測踩到的坑（都寫進 MAINTENANCE 第 2 節）：
+   1. **證交所會安靜地吞掉無效的日期參數**：`dayDate=#` 不報錯、不回 stat 失敗，
+      直接回傳「最近一個交易日」。本模組已在送出前擋掉非 YYYYMMDD 的輸入，
+      並要求呼叫端核對回傳 `title` 裡的民國日期。
+   2. **三大法人是六列不是三列**，自營商拆自行買賣與避險、外資拆外資及陸資與外資自營商。
+      只取單一列會少算——避險部位的量級與自行買賣相當。
 
 為什麼獨立成一個模組而不是塞進 fetch.py：
    fetch.py 是每天 09:00 那輪的關鍵路徑，明早第一次無人值守執行就要用。
@@ -34,7 +41,7 @@ fetch_twse.py — 台股籌碼取數（三大法人買賣超、融資融券餘�
   advisory 那邊就因此撞上跨版去重被擋掉，改帶 dayDate 才過。
 """
 from __future__ import annotations
-import json, os, sys, urllib.request
+import json, os, re, sys, urllib.request
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(REPO, "data", "series")
@@ -61,44 +68,86 @@ def _get(url: str, tries: int = 3) -> bytes:
     raise RuntimeError(f"取數失敗 {url}：{last}")
 
 
+_DAY_RE = re.compile(r"^\d{8}$")
+
+
 def fetch(kind: str, day: str) -> dict:
-    """kind ∈ {'bfi82u','margin'}，day 格式 YYYYMMDD。回傳原始 JSON。"""
+    """kind ∈ {'bfi82u','margin'}，day 格式 YYYYMMDD。回傳原始 JSON。
+
+    ⚠ **證交所會安靜地吞掉無效的日期參數。** 2026-08-05 實測：`dayDate=#` 不會
+      報錯、不會回 stat 失敗，而是直接回傳「最近一個交易日」的資料（當時是 08-04）。
+      呼叫端若沒發現，就會拿到一份日期不是自己要的資料，而且完全沒有跡象。
+      因此這裡在送出前先擋掉不是 YYYYMMDD 的東西，並在回傳中附上 `title`，
+      **呼叫端務必核對 title 裡的民國日期是不是你要的那天。**
+    """
     if kind not in ENDPOINTS:
         raise ValueError(f"未知的端點 {kind}，可用：{list(ENDPOINTS)}")
+    if not _DAY_RE.match(str(day)):
+        raise ValueError(f"day 必須是 YYYYMMDD，收到 {day!r}。"
+                         "證交所收到爛日期不會報錯，會安靜回最近一個交易日。")
     raw = _get(ENDPOINTS[kind].format(day=day))
     doc = json.loads(raw.decode("utf-8"))
     # 證交所在非交易日會回 stat != 'OK'（例如 '很抱歉，沒有符合條件的資料!'）。
     # **這不是錯誤，是週末或假日。** 呼叫端要能分辨「沒開市」與「抓失敗」。
     if doc.get("stat") != "OK":
         return {"ok": False, "stat": doc.get("stat"), "day": day, "kind": kind}
+    # stat 是 OK 但 data 空的也算沒資料——實測 margin 端點出現過這種回應。
+    # **「成功但空」是最容易被當成成功的失敗。**
+    if not doc.get("data"):
+        return {"ok": False, "stat": "stat=OK 但 data 為空", "day": day, "kind": kind,
+                "title": doc.get("title", "")}
     return {"ok": True, "day": day, "kind": kind,
             "fields": doc.get("fields", []), "data": doc.get("data", []),
             "title": doc.get("title", "")}
 
 
+# 證交所把三大法人拆成六列，不是三列（2026-08-05 實測的實際 data）：
+#   自營商(自行買賣) / 自營商(避險) / 投信 / 外資及陸資(不含外資自營商) / 外資自營商 / 合計
+# 媒體講的「三大法人」是聚合後的口徑，直接拿某一列會少算。
+_ROLLUP = {
+    "自營商": ("自營商(自行買賣)", "自營商(避險)"),
+    "投信":   ("投信",),
+    "外資":   ("外資及陸資(不含外資自營商)", "外資自營商"),
+}
+
+
 def parse_bfi82u(doc: dict) -> dict:
     """三大法人買賣超 → {外資, 投信, 自營商, 合計} 單位：億元。
 
-    ⚠ 欄位順序未實測。證交所這支的 data 每列形如
-      [單位名稱, 買進金額, 賣出金額, 買賣差額]，金額為字串含逗號。
-      跑 --selftest 時務必核對印出來的 fields 與實際欄位是否一致。
+    ✅ 欄位已於 2026-08-05 實測：fields ＝
+       ['單位名稱', '買進金額', '賣出金額', '買賣差額']，金額為元、字串含逗號。
+
+    **聚合口徑**：自營商要把自行買賣與避險相加，外資要把外資及陸資與外資自營商相加。
+    只取單一列會少算——避險部位的金額量級與自行買賣相當，漏掉會差很多。
+    回傳同時保留 `raw` 原始六列，數字被質疑時可以直接攤開對帳。
     """
     if not doc.get("ok"):
         return {"ok": False, "stat": doc.get("stat")}
-    out = {}
+    raw = {}
     for row in doc["data"]:
         name = str(row[0]).strip()
         try:
-            net = float(str(row[-1]).replace(",", "")) / 1e8     # 元 → 億元
+            raw[name] = round(float(str(row[-1]).replace(",", "")) / 1e8, 2)   # 元 → 億元
         except (ValueError, IndexError):
             continue
-        out[name] = round(net, 2)
-    return {"ok": True, "unit": "億元", "by_investor": out}
+    agg = {k: round(sum(raw.get(n, 0.0) for n in names), 2)
+           for k, names in _ROLLUP.items()}
+    agg["合計"] = round(sum(agg.values()), 2)
+    # 與證交所自己那列「合計」對帳；對不上代表列名變了，寧可吵也不要安靜地錯
+    stated = raw.get("合計")
+    if stated is not None and abs(stated - agg["合計"]) > 0.5:
+        return {"ok": False, "stat": f"合計對不上：證交所 {stated} vs 加總 {agg['合計']}，"
+                                     "可能是列名改了，請核對 raw", "raw": raw}
+    return {"ok": True, "unit": "億元", "title": doc.get("title", ""),
+            "three_majors": agg, "raw": raw}
 
 
 def selftest(day: str | None = None) -> int:
     import datetime
-    day = day or datetime.date.today().strftime("%Y%m%d")
+    # 預設抓「昨天」而不是今天：09:00 那輪執行時當日盤還沒收，
+    # 抓今天必然無資料，看起來像壞掉其實只是還沒開盤。
+    day = day or (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
+    print(f"測試日期：{day}（YYYYMMDD）")
     rc = 0
     for kind in ENDPOINTS:
         print(f"\n=== {kind} @ {day} ===")
@@ -109,16 +158,22 @@ def selftest(day: str | None = None) -> int:
             rc = 1
             continue
         if not doc["ok"]:
-            print(f"  · 非交易日或無資料：stat={doc['stat']}")
+            print(f"  · 無資料（非交易日或端點回空）：{doc['stat']}")
+            if doc.get("title"):
+                print(f"    title={doc['title']!r}")
+            rc = 1
             continue
-        print(f"  title : {doc['title']}")
+        print(f"  title : {doc['title']}   ← **核對這裡的民國日期是不是你要的那天**")
         print(f"  fields: {doc['fields']}")
-        for row in doc["data"][:5]:
+        for row in doc["data"]:
             print(f"    {row}")
         if kind == "bfi82u":
-            print(f"  解析後：{parse_bfi82u(doc)}")
-    print("\n核對重點：fields 的欄位順序與 parse_bfi82u 的假設是否一致；"
-          "金額單位是不是元。對了才把本模組標為已實測。")
+            r = parse_bfi82u(doc)
+            print(f"  解析後：{json.dumps(r, ensure_ascii=False)}")
+            if not r.get("ok"):
+                rc = 1
+    print("\n核對重點：title 的日期是否正確、fields 順序是否為"
+          "['單位名稱','買進金額','賣出金額','買賣差額']、三大法人加總是否與證交所的合計列相符。")
     return rc
 
 
