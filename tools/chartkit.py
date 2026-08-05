@@ -23,9 +23,30 @@ FAINT    = "#9BA0A6"
 GRID     = "#E7E5E2"
 RULE     = "#C9C5C0"
 BG       = "#FFFFFF"
-ACCENT   = "#C8102E"        # 台新紅，只留給「主角線／今日點」
-PALETTE  = [ACCENT, "#1F4E79", "#D9942B", "#3F7D5C", "#7A6BA8", "#8A8F95"]
-POS, NEG = "#1F7A4D", "#C8102E"
+# ── 序列色：角色制，不是編號制 ────────────────────────────────
+# 顏色回答的是「你在這張圖的論證裡是什麼角色」，不是「你是第幾條序列」。
+# 每張圖都有 takeaway 與 so_what，也就是每張圖都在講一句話——
+# 顏色的工作是讓人一眼看出那句話講的是哪一條線。
+#
+# ACCENT 的舊值 #C8102E 註解寫著「台新紅」，但那不是台新紅。
+# 品牌紅取自 tsholdings.com.tw 的 logo SVG fill（全站計算樣式 86 處）＝ #D70C18。
+# #C8102E 接近 Pantone 186，是當初挑錯的；#C00000 則是 PowerPoint 標準色盤的
+# Dark Red，House View 模板用的是那個。三者兩兩相距 ΔE 6～8——
+# 都在「太近讀不出是刻意的、太遠又不像同一個顏色」的最糟區間。
+# 這裡與 House View 月報統一到品牌紅，下游貼 PNG 時才不會出現兩種紅。
+ACCENT   = "#D70C18"        # 主角：品牌紅。只留給主角線／今日點，一張圖只有一個
+REF      = "#1F4E79"        # 對照：深藍。前期、對手、共識
+ALT      = "#8A8F95"        # 溢出：中灰。第三條。用到就代表該考慮拆圖了
+DIM      = "#B8BBBE"        # 背景：淺灰。其餘所有東西，低對比是刻意的
+PALETTE  = [ACCENT, REF, ALT, DIM]
+# 原本的土黃 #D9942B／綠 #3F7D5C／紫 #7A6BA8 已移出工作集：
+#   土黃對白底只有 2.6:1，2pt 細線會偏淡；綠與 ACCENT 在紅綠色盲下只差 17。
+#   更重要的是，一張圖需要第 5、6 個顏色時，該修的是圖不是色。
+#
+# 正負值不分色。原本的 POS/NEG 是死碼——全 repo 從未被引用，
+# 而且 NEG 的值與 ACCENT 完全相同，真用起來會讓紅同時代表「重點」與「下跌」。
+# 正負一律靠 zero_line（見 Chart.zero_line）與資料標籤表達，
+# 紅只保留給主角。這也順帶避開台灣紅漲綠跌與西方慣例相反的問題。
 
 CJK = ["PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Heiti TC",
        "Microsoft JhengHei", "Noto Sans CJK JP", "DejaVu Sans"]

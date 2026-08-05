@@ -601,7 +601,7 @@ L 535.483636 187.361633
 L 537.709091 184.068672 
 L 548.836364 216.333649 
 L 548.836364 216.333649 
-" clip-path="url(#p590cffd353)" style="fill: none; stroke: #c8102e; stroke-width: 1.9; stroke-linecap: square"/>
+" clip-path="url(#p590cffd353)" style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
    </g>
    <g id="patch_3">
     <path d="M 46.44 292.824 
@@ -610,7 +610,7 @@ L 572.76 292.824
    </g>
    <g id="text_16">
     <!-- 79.44 -->
-    <g style="fill: #c8102e" transform="translate(553.836364 219.333649) scale(0.085 -0.085)">
+    <g style="fill: #d70c18" transform="translate(553.836364 219.333649) scale(0.085 -0.085)">
      <defs>
       <path id="NotoSansCJKtc-Bold-37" d="M 1190 0 
 L 2138 0 
@@ -991,7 +991,7 @@ z
      <path d="M 54.54 78.228157 
 L 61.74 78.228157 
 L 68.94 78.228157 
-" style="fill: none; stroke: #c8102e; stroke-width: 1.9; stroke-linecap: square"/>
+" style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
     <g id="text_19">
      <!-- 布蘭特原油 -->
@@ -1294,7 +1294,7 @@ z
      <path d="M 139.14 78.228157 
 L 146.34 78.228157 
 L 153.54 78.228157 
-" style="fill: none; stroke: #d9942b; stroke-width: 1.9; stroke-linecap: square"/>
+" style="fill: none; stroke: #1f4e79; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
     <g id="text_20">
      <!-- 黃金 -->
@@ -1684,7 +1684,7 @@ L 537.709091 266.779588
 L 544.385455 268.817824 
 L 548.836364 252.895765 
 L 548.836364 252.895765 
-" clip-path="url(#p590cffd353)" style="fill: none; stroke: #d9942b; stroke-width: 1.9; stroke-linecap: square"/>
+" clip-path="url(#p590cffd353)" style="fill: none; stroke: #1f4e79; stroke-width: 1.9; stroke-linecap: square"/>
    </g>
    <g id="patch_4">
     <path d="M 572.76 292.824 
@@ -1698,7 +1698,7 @@ L 572.76 292.824
    </g>
    <g id="text_29">
     <!-- 4,154 -->
-    <g style="fill: #d9942b" transform="translate(553.836364 255.895765) scale(0.085 -0.085)">
+    <g style="fill: #1f4e79" transform="translate(553.836364 255.895765) scale(0.085 -0.085)">
      <defs>
       <path id="NotoSansCJKtc-Bold-2c" d="M 538 -1370 
 C 1312 -1107 1747 -538 1747 211 

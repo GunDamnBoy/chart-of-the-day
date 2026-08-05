@@ -1012,7 +1012,7 @@ z
      <path d="M 131.002031 78.228157 
 L 138.202031 78.228157 
 L 145.402031 78.228157 
-" style="fill: none; stroke: #c8102e; stroke-width: 1.9; stroke-linecap: square"/>
+" style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
     <g id="text_19">
      <!-- 美 10 年期殖利率 -->
@@ -1611,7 +1611,7 @@ L 535.79896 133.746162
 L 540.362051 111.497514 
 L 544.925142 116.265081 
 L 548.836364 113.086703 
-" clip-path="url(#p590cffd353)" style="fill: none; stroke: #c8102e; stroke-width: 1.9; stroke-linecap: square"/>
+" clip-path="url(#p590cffd353)" style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
    </g>
    <g id="patch_4">
     <path d="M 572.76 292.824 
@@ -1625,7 +1625,7 @@ L 572.76 292.824
    </g>
    <g id="text_27">
     <!-- 4.7 -->
-    <g style="fill: #c8102e" transform="translate(553.836364 116.086703) scale(0.085 -0.085)">
+    <g style="fill: #d70c18" transform="translate(553.836364 116.086703) scale(0.085 -0.085)">
      <defs>
       <path id="NotoSansCJKtc-Bold-34" d="M 2157 0 
 L 3034 0 
