@@ -3,6 +3,8 @@
 每天挑五個題目，用公開資料**自己重製**五張圖，每張圖配一段自己的判讀。
 當天封存成一個獨立 JSON，圖與底層資料永久保留。
 
+網站：**https://gundamnboy.github.io/chart-of-the-day/**
+
 - 規格與每日執行步驟：**[AGENT_BRIEF.md](AGENT_BRIEF.md)**
 - 已知坑與待辦：**[MAINTENANCE.md](MAINTENANCE.md)**
 - 維護入口（在 Claude 輸入）：`/chart-maintain`
