@@ -405,4 +405,16 @@ def echarts_option(ch: Chart) -> dict:
             "data": [{"xAxis": m.date, "label": {"formatter": m.label,
                       "color": FAINT, "fontSize": 10}} for m in ch.markers],
         }
+    # 零線：靜態軌在 render_static() 用 axhline 畫，互動軌原本完全沒有這件事。
+    # 正負值不分色之後，零線是唯一區分正負的視覺元素——兩軌都要有，否則
+    # 網頁上的讀者看不出正負的分界，而 PNG 上看得出來。
+    if ch.zero_line and base["series"]:
+        s0 = base["series"][0]
+        ml = s0.get("markLine") or {"silent": True, "symbol": "none", "data": []}
+        ml.setdefault("data", [])
+        ml["data"] = list(ml["data"]) + [{
+            "yAxis": 0, "lineStyle": {"color": RULE, "width": 1.0, "type": "solid"},
+            "label": {"show": False},
+        }]
+        s0["markLine"] = ml
     return base
