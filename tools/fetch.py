@@ -34,7 +34,7 @@ FRED 有兩條路，程式會自動選：
 改由瀏覽器同源 fetch，細節見 AGENT_BRIEF 第 3.3 節。
 """
 from __future__ import annotations
-import csv, io, json, os, re, sys, time, urllib.parse, urllib.request
+import csv, io, json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(REPO, "data", "series")
@@ -71,15 +71,34 @@ def fred_key():
 
 
 def _get(url: str, tries: int = 3) -> bytes:
+    """取數並重試。
+
+    **429 要用完全不同的節奏退避。** 2026-08-05 實測：連續抓多個 Yahoo 標的後被限流，
+    原本 1.5／3／4.5 秒的退避完全不夠，連打只會讓限流延長。429 屬於「照規矩等」的
+    狀況，不是「換條路繞過去」的狀況——所以這裡是等更久，不是換端點。
+    """
     last = None
     for k in range(tries):
         try:
             return urllib.request.urlopen(
                 urllib.request.Request(url, headers=UA), timeout=30).read()
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code == 429:
+                wait = 20 * (k + 1)          # 20s / 40s，最後一輪不再等
+                if k < tries - 1:
+                    print(f"  [限流] 對方回 429，等 {wait}s 再試（第 {k + 1}/{tries} 次）")
+                    time.sleep(wait)
+                continue
+            time.sleep(1.5 * (k + 1))
         except Exception as e:
             last = e
             time.sleep(1.5 * (k + 1))
-    raise RuntimeError(f"取數失敗 {_redact(url)}\n  {_redact(last)}")
+    hint = ""
+    if isinstance(last, urllib.error.HTTPError) and last.code == 429:
+        hint = ("\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 "
+                "data/series/ 快取不再打站台。**不要改用其他來源來規避限流。**")
+    raise RuntimeError(f"取數失敗 {_redact(url)}\n  {_redact(last)}{hint}")
 
 
 # ────────────────────────────────────────────────── FRED
@@ -234,7 +253,11 @@ if __name__ == "__main__":
         since = sys.argv[sys.argv.index("--since") + 1]
         args = [a for a in args if a != since]
     print(f"FRED 取數路徑：{'官方 API（已讀到 key）' if fred_key() else '繪圖端點（未設定 key）'}")
-    for ident in args:
+    # 連續打同一個站台是招來 429 的主因（2026-08-05 實測）。標的之間隔一下，
+    # 五個標的也才多花 4 秒，遠比被限流之後整輪重跑划算。快取命中則不必等。
+    for n, ident in enumerate(args):
+        if n:
+            time.sleep(1.0)
         try:
             s = get(ident, since=since)
             print(f"OK   {ident:<16} {len(s['d']):>5} 筆  {s['d'][0]} → {s['d'][-1]}  最新 {s['v'][-1]}")

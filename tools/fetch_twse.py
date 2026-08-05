@@ -91,14 +91,29 @@ def fetch(kind: str, day: str) -> dict:
     # **這不是錯誤，是週末或假日。** 呼叫端要能分辨「沒開市」與「抓失敗」。
     if doc.get("stat") != "OK":
         return {"ok": False, "stat": doc.get("stat"), "day": day, "kind": kind}
-    # stat 是 OK 但 data 空的也算沒資料——實測 margin 端點出現過這種回應。
-    # **「成功但空」是最容易被當成成功的失敗。**
-    if not doc.get("data"):
-        return {"ok": False, "stat": "stat=OK 但 data 為空", "day": day, "kind": kind,
+    # 證交所 RWD 端點有兩種回應形狀，同一支 API 家族內並不一致：
+    #   (a) 頂層 fields / data              —— bfi82u 屬此（2026-08-05 實測）
+    #   (b) tables: [{fields, data, title}] —— 多表端點屬此
+    # 只吃 (a) 的話，(b) 會表現成「stat=OK 但 data 為空」，看起來像沒資料其實是形狀不對。
+    if doc.get("data"):
+        return {"ok": True, "day": day, "kind": kind, "shape": "flat",
+                "fields": doc.get("fields", []), "data": doc["data"],
                 "title": doc.get("title", "")}
-    return {"ok": True, "day": day, "kind": kind,
-            "fields": doc.get("fields", []), "data": doc.get("data", []),
-            "title": doc.get("title", "")}
+
+    tables = [t for t in (doc.get("tables") or []) if t.get("data")]
+    if tables:
+        return {"ok": True, "day": day, "kind": kind, "shape": "tables",
+                "tables": [{"title": t.get("title", ""), "fields": t.get("fields", []),
+                            "data": t["data"]} for t in tables],
+                # 便利欄位：預設攤平第一張表，呼叫端要別張自己從 tables 取
+                "fields": tables[0].get("fields", []), "data": tables[0]["data"],
+                "title": doc.get("title", "") or tables[0].get("title", "")}
+
+    # 兩種形狀都不是——把頂層鍵帶回去，下次一眼就知道該怎麼解，不必再猜一輪。
+    # **「成功但空」是最容易被當成成功的失敗。**
+    return {"ok": False, "stat": "stat=OK 但找不到資料（頂層 data 與 tables 都空）",
+            "day": day, "kind": kind, "title": doc.get("title", ""),
+            "keys": sorted(doc.keys())}
 
 
 # 證交所把三大法人拆成六列，不是三列（2026-08-05 實測的實際 data）：
@@ -158,12 +173,22 @@ def selftest(day: str | None = None) -> int:
             rc = 1
             continue
         if not doc["ok"]:
-            print(f"  · 無資料（非交易日或端點回空）：{doc['stat']}")
+            print(f"  · 無資料：{doc['stat']}")
             if doc.get("title"):
                 print(f"    title={doc['title']!r}")
+            if doc.get("keys"):
+                print(f"    回應頂層鍵：{doc['keys']}")
+                print("    ↑ 把這行貼出來，就能判斷該端點的資料放在哪個鍵底下")
             rc = 1
             continue
         print(f"  title : {doc['title']}   ← **核對這裡的民國日期是不是你要的那天**")
+        print(f"  shape : {doc['shape']}")
+        if doc["shape"] == "tables":
+            for t in doc["tables"]:
+                print(f"  ── 表「{t['title']}」 fields={t['fields']}")
+                for row in t["data"][:6]:
+                    print(f"       {row}")
+            continue
         print(f"  fields: {doc['fields']}")
         for row in doc["data"]:
             print(f"    {row}")
