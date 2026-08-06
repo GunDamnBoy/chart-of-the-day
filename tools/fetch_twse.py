@@ -18,7 +18,7 @@ fetch_twse.py — 台股籌碼取數（三大法人買賣超、融資融券餘�
       只取單一列會少算——避險部位的量級與自行買賣相當。
 
 為什麼獨立成一個模組而不是塞進 fetch.py：
-   fetch.py 是每天 09:00 那輪的關鍵路徑，明早第一次無人值守執行就要用。
+   fetch.py 是每天 11:00 那輪的關鍵路徑。
    把未實測的程式碼加進去，萬一 import 期就出錯，會讓整輪產不出東西。
    實測穩定後再決定要不要併回去。
 
@@ -207,7 +207,7 @@ def parse_margin(doc: dict) -> dict:
 
 def selftest(day: str | None = None) -> int:
     import datetime
-    # 預設抓「昨天」而不是今天：09:00 那輪執行時當日盤還沒收，
+    # 預設抓「昨天」而不是今天：11:00 那輪執行時台股當日盤還沒收（13:30 收盤），
     # 抓今天必然無資料，看起來像壞掉其實只是還沒開盤。
     day = day or (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
     print(f"測試日期：{day}（YYYYMMDD）")
