@@ -29,7 +29,7 @@ def to_chart(c: dict) -> ck.Chart:
             name=s["name"], dates=s["dates"], values=s["values"],
             color=s.get("color"), axis=s.get("axis", "left"),
             style=s.get("style", "line"), width=s.get("width", 1.9),
-            dash=s.get("dash", False)))
+            dash=s.get("dash", False), derived=s.get("derived", False)))
     for m in c.get("markers", []):
         ch.markers.append(ck.Marker(date=m["date"], label=m["label"]))
     ch.pts = [tuple(p) for p in c.get("pts", [])]

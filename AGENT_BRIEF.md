@@ -28,7 +28,7 @@
 advisory-dashboard-daily（每天 07:30，114 則新聞、15 個子類別）
               │  提供當日題材
               ▼
-     chart-of-the-day（每天 09:00，本系統）
+     chart-of-the-day（每天 11:00，本系統）
               │  提供「已經畫好、可直接引用」的圖與判讀
               ├──────────────► convergence-weekly（每週日，主題匯流訊號報）
               └──────────────► House View 月報（pptx 直接取用 PNG）
@@ -137,6 +137,9 @@ advisory-dashboard-daily（每天 07:30，114 則新聞、15 個子類別）
 | 真實市場事件 | 有對應新聞（如 2025/04/03 關稅衝擊） | 保留，可在判讀中引用 |
 | 期貨轉倉 | 出現在 `GC=F`／`BZ=F` 這類近月合約，**且幅度通常在 1% 以內** | 改用現貨或連續調整序列，或在圖註說明 |
 | 來源錯價 | **隔日就跳回去**、無對應新聞 | 換來源重抓，**不要**照原樣出圖 |
+| **衍生序列的窗口效應** | 滾動波動率、移動平均這類量；跳動呈**階梯狀**且與該日新聞無關 | 在 `series` 標 `"derived": true`。旗標會標記並改為**整條序列說明一次**，不必逐筆 |
+
+**第四類是 2026-08-06 那期逼出來的**：18 筆旗標裡有 13 筆全在「黃金 ETF 60 日波動率」這一條上。它既不是市場事件、不是轉倉、也不是錯價——是某一天的極端值滾出 60 日窗口，指標就跳一階。**原本的三分法沒有這一格，執行者只能硬塞進「真實事件」或逐筆寫罐頭說明。** 標了 `derived` 之後，檢查腳本只要求該序列在 `about.run` 被提到一次。**注意這不是豁免**：完全不提仍會警示，因為讀者需要知道那些階梯是什麼。
 
 **判斷時先看幅度再看故事。** 黃金與原油的轉倉價差來自持有成本，**正常在 1% 以內、極少超過 2%**。所以「跌 11% 是轉倉」這種解釋在數量級上就不成立——2026-01-30 那筆的正確歸類是前兩類之一，而它之後停在 4,600–4,900 沒有跳回 5,300，**排除了「來源錯價」**（錯價的特徵是隔日還原）。**不要用轉倉當成不想查的藉口。**
 
@@ -364,10 +367,20 @@ else:          print(f'   單日 JSON {kb:.0f}KB')
 
 q   = d.get('about',{}).get('qa_flags',[])
 run = d.get('about',{}).get('run','') or ''
-print(f'   QA 旗標 {len(q)} 筆')
-for f in q:
+plain   = [f for f in q if not f.get('derived')]
+derived = [f for f in q if f.get('derived')]
+print(f'   QA 旗標 {len(q)} 筆'
+      + (f'（其中衍生序列 {len(derived)} 筆，整條說明一次即可）' if derived else ''))
+# 一般旗標：逐筆都要在 about.run 點名
+for f in plain:
     if (f.get('series') or '') not in run and (f.get('date') or '') not in run:
         print(f'   ⚠ 旗標未在 about.run 說明處置：{f.get("chart")}／{f.get("series")}／{f.get("date")}')
+# 衍生序列：窗口進出造成的階梯跳動，逐筆要求只會逼出罐頭文字。
+# 改成「每條序列至少要被提到一次」——說明一次，但不能完全不說。
+for name in sorted({f.get('series', '') for f in derived}):
+    if name and name not in run:
+        n = sum(1 for f in derived if f.get('series') == name)
+        print(f'   ⚠ 衍生序列「{name}」有 {n} 筆旗標，about.run 完全沒提到')
 
 print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 ```

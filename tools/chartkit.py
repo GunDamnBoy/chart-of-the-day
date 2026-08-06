@@ -118,6 +118,9 @@ class Series:
     style: str = "line"  # line | area | bar
     width: float = 1.9
     dash: bool = False
+    derived: bool = False   # 滾動波動率、移動平均這類「由別的序列算出來」的量。
+                            # 它們的單日跳動來自窗口進出，不是市場事件，
+                            # QA 檢查會照抓但標成 derived，處置方式不同（見 qa_series）。
 
 @dataclass
 class Marker:
@@ -309,6 +312,13 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
     連續日合併：同一序列相鄰交易日的旗標會併成一筆並記 date_end。
         2025-04-03 與 04-04 是同一次關稅衝擊，算成兩筆只會讓 about.run 的處置
         說明變成流水帳，讀的人反而抓不到重點。
+
+    衍生序列（`Series.derived=True`）的旗標會標上 `"derived": True`：
+        滾動波動率、移動平均這類量的單日跳動來自「窗口進出」——某一天的極端值
+        滾出 60 日窗口，指標就跳一階。**那不是市場事件、不是轉倉、也不是錯價，
+        是檢查方法與衍生序列不相容。** 2026-08-06 那期 18 筆旗標裡有 13 筆是
+        這一種（黃金 ETF 60 日波動率），全部要求逐筆說明只會逼出罐頭文字。
+        標記後由 AGENT_BRIEF 第 3.4 節第四類統一處置：整條序列說明一次即可。
     """
     flags = []
     for s in ch.series:
@@ -331,6 +341,8 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
                 f = {"chart": ch.slug, "series": s.name,
                      "date": s.dates[run[0]] if run[0] < len(s.dates) else "?",
                      "pct": round(r * 100, 2), "z": round((r - mu) / sd, 1)}
+                if s.derived:
+                    f["derived"] = True
                 if len(run) > 1:      # 只有跨日事件才寫 date_end 與 days
                     f["date_end"] = s.dates[run[-1]] if run[-1] < len(s.dates) else "?"
                     f["days"] = len(run)

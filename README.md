@@ -12,7 +12,7 @@
 ## 這套系統在哪個位置
 
 ```
-advisory-dashboard-daily  07:30  →  chart-of-the-day  09:00
+advisory-dashboard-daily  07:30  →  chart-of-the-day  11:00
                                           ├─→ convergence-weekly（週日）
                                           └─→ House View 月報（pptx 取用 PNG）
 ```
