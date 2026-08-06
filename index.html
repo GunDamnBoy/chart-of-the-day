@@ -115,7 +115,12 @@ let DAYS = [], DOC = null, FILTER = null, INSTANCES = [];
 
 async function boot(){
   const idx = await fetch('data/index.json?t=' + Date.now()).then(r => r.json());
-  DAYS = idx.days.slice().sort().reverse();
+  // 一定要帶比較函式。`.sort()` 不帶比較函式會把元素轉成字串再比——
+  // 一堆 `[object Object]` 全部相等，sort 變成 no-op，接著 `.reverse()` 就把
+  // index.json 原本的「新→舊」翻成「舊→新」，於是 DAYS[0] 是最舊的那天，
+  // 開站顯示的永遠是舊資料，要手動拉下拉選單才看得到今天。
+  // 也不要倚賴 index.json 的既有順序，這裡自己排定序。
+  DAYS = idx.days.slice().sort((a, b) => b.date.localeCompare(a.date));
   const sel = $('#daypick');
   sel.innerHTML = DAYS.map(d => `<option value="${d.date}">${d.date}（${d.weekday||''}）</option>`).join('');
   sel.onchange = () => load(sel.value);
