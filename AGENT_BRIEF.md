@@ -270,10 +270,22 @@ advisory-dashboard-daily（07:30 起跑，實測約 10:40 完成，26 家來源�
 ## 7. 發布前檢查腳本
 
 ```python
-import json, os, glob, collections
+import json, os, sys, glob, collections
 REPO = os.path.expanduser('~/chart-of-the-day')          # 一律絕對路徑
-DAY  = sorted(g for g in glob.glob(REPO+'/data/2*.json'))[-1]
+# 預設檢查最新一期；發布流程用這個。維護時要診斷舊期，傳日期進來即可：
+#     python3 -c "...exec(檢查腳本)..." 2026-08-05
+# 沒有這個開關的話，想看舊期就得手改路徑，改完常常忘了改回來。
+DAY  = (REPO + f'/data/{sys.argv[1]}.json') if len(sys.argv) > 1 else \
+       sorted(g for g in glob.glob(REPO+'/data/2*.json'))[-1]
 d    = json.load(open(DAY, encoding='utf-8'))
+
+# 已知的歷史例外：不是待修的 bug，是不回頭改寫已發表分析的結果。
+# **列在這裡是為了讓紅字有解釋**，否則下一個人會以為是新問題而去「修好」它。
+KNOWN = {
+  '2026-08-05': ['risk-premium-unwind so_what 59 字（規範 60–120）',
+                 'spx-vix-corise so_what 42 字（規範 60–120）',
+                 'sox-vs-twse reading 引用 8/4 費半 +6.55%，該日不在本圖序列內（已於 note 標明）'],
+}
 SLOTS  = ['當日主圖','市場異動圖','重製圖','主題深掘']    # 第 5 個是「軌道圖｜xxx」
 THEMES = {'美股與財報','AI 與半導體','央行、利率與匯率','台灣','中國','日本',
           '能源與原物料','金融、併購與企業','地緣政治（中東與戰事）','美國政治與政策',
@@ -383,6 +395,34 @@ for name in sorted({f.get('series', '') for f in derived}):
     if name and name not in run:
         n = sum(1 for f in derived if f.get('series') == name)
         print(f'   ⚠ 衍生序列「{name}」有 {n} 筆旗標，about.run 完全沒提到')
+
+# 判讀文字不可引用「本圖序列涵蓋不到的日期」。
+# 這條來自 2026-08-05 的實例：sox-vs-twse 的 reading 引用 8/4 費半 +6.55%，
+# 但該圖的 ^SOX 序列止於 08-03——那個數字只能是抄來的，違反
+# 「數字一律來自我們自己算出來的序列」。**抄來的數字沒有任何機制擋得住，
+# 但「引用了序列涵蓋不到的日期」抓得到，而且那正是它的特徵。**
+import datetime as _dt
+DATE_TOK = re.compile(r'(?<![\d.])(\d{1,2})[/月](\d{1,2})(?![\d%])')
+for i, c in enumerate(d['charts'], 1):
+    if not c.get('series'):
+        continue                                   # scatter 沒有 series，照不到
+    # 取各序列末日的 min，不是 max——一張圖裡只要有一條序列沒涵蓋到那天，
+    # 針對那條序列講的數字就不可能是自己算的。2026-08-05 的 sox-vs-twse 正是如此：
+    # 台股到 08-05、費半只到 08-03，而文字講的是「8/4 費半 +6.55%」。
+    last = min(s['dates'][-1] for s in c['series'])
+    ly, lm, ld = (int(x) for x in last.split('-'))
+    # **不掃 `watch`**：觸發條件本來就該指向未來日期，那是它的用途不是違規。
+    text = ' '.join(str(c.get(f, '')) for f in ('title','subtitle','takeaway','reading','so_what'))
+    for mm, dd in DATE_TOK.findall(text):
+        mm, dd = int(mm), int(dd)
+        if not (1 <= mm <= 12 and 1 <= dd <= 31):
+            continue
+        if (mm, dd) > (lm, ld) and abs(mm - lm) <= 2:   # 只比對同期附近，避免誤判去年的日期
+            print(f'   ⚠ [{i}] {c.get("slug")} 文字提到 {mm}/{dd}，'
+                  f'但本圖序列只到 {last}——該數字若非自算，違反「數字一律來自自己的序列」')
+
+for m in KNOWN.get(d.get('date',''), []):
+    print(f'   · 已知歷史例外（不必修）：{m}')
 
 print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 ```
