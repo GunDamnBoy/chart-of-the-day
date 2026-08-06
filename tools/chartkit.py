@@ -369,7 +369,22 @@ def echarts_option(ch: Chart) -> dict:
         })
         return base
 
-    dates = ch.series[0].dates if ch.series else []
+    # x 軸取所有序列日期的聯集，不是 series[0] 的日期。
+    #
+    # **ECharts 的 category 軸是按「位置」貼資料，不是按日期。** 原本用 series[0].dates
+    # 當軸、每條序列直接丟 s.values，只要某條序列長度不同，整條線就會靜默位移——
+    # 而且靜態軌（matplotlib 用真實日期畫）完全正確，所以兩軌會不一致，網頁錯、PNG 對。
+    #
+    # 2026-08-06 實測到的兩個實例：
+    #   · 08-06 圖 2 的「2016–2025 中位數」只有 42 點、軸有 2,452 點，
+    #     那條參考線被畫在最左邊 1.7% 的寬度裡，看起來像沒畫出來。
+    #   · 08-05 圖 5 的「台股加權」有 140 點、軸有 146 點，末端被畫在 2026-07-24
+    #     的位置（實際是 08-05），**整條位移八個交易日**——而那張圖的判讀正是在
+    #     比較台股與費半的相對走勢。
+    #
+    # 取聯集並依日期補 None，再開 connectNulls，稀疏序列（例如常數參考線）
+    # 就會連成一條完整的橫線，長度不同的序列也會各自落在正確的日期上。
+    dates = sorted({d for s in ch.series for d in s.dates})
     ys = [{"type": "log" if ch.y_log else "value", "scale": True, "name": ch.y_label,
            "splitLine": {"lineStyle": {"color": GRID}},
            "axisLabel": {"color": MUTED}}]
@@ -387,13 +402,16 @@ def echarts_option(ch: Chart) -> dict:
     })
     for i, s in enumerate(ch.series):
         col = s.color or PALETTE[i % len(PALETTE)]
+        # 依日期對位到聯集軸上，缺的補 None。**不要直接丟 s.values**——那是位置對應。
+        by_date = dict(zip(s.dates, s.values))
         item = {
             "name": s.name, "type": "bar" if s.style == "bar" else "line",
             "showSymbol": False, "smooth": False,
+            "connectNulls": True,       # 稀疏序列（常數參考線）要連成完整一條
             "yAxisIndex": 1 if s.axis == "right" else 0,
             "lineStyle": {"width": s.width, "type": "dashed" if s.dash else "solid"},
             "itemStyle": {"color": col},
-            "data": [None if v is None else v for v in s.values],
+            "data": [by_date.get(d) for d in dates],
         }
         if s.style == "area":
             item["areaStyle"] = {"opacity": 0.13}
