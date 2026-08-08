@@ -113,8 +113,9 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 **FRED 的兩條路徑**：`fetch.py` 會自動選——讀得到 API key 就走官方 API（`api.stlouisfed.org`，文件化、120 req/min），讀不到就退回繪圖端點（`fredgraph.csv`，免認證但非文件化 API）。key 從 `FRED_API_KEY` 環境變數或 `~/.config/fred/api_key` 讀取，**不寫進程式碼、不進版控**（`.fred_key` 與 `.env` 已列入 `.gitignore`）。所有對外輸出都經過 `_redact()`，key 不會出現在 log 或錯誤訊息裡。
 用 `python3 tools/fetch.py --check-key` 可自我檢查。
 
-### 3.2 兩個實測過的限制（不要重踩）
+### 3.2 三個實測過的限制（不要重踩）
 
+0. **`fredgraph.csv` 在發布機上連不通（2026-08-08 `--check-key` 實測：`[Errno 60] Operation timed out`），而 `api.stlouisfed.org` 正常。** 上面把繪圖端點寫成「沒有 key 時的退路」，但**在這台機器上退路才是壞的那條**——所以 **FRED API key 不是「有比較好」，是 FRED 這條線的唯一活路**。同一輪也確認官方 API 的 `DGS10` 給 16,134 筆（回到 1962 年），遠多於繪圖端點。**若某輪回報「無 API key，走 fredgraph 退回端點」，先確認那輪跑在沙箱還是發布機**——沙箱讀不到家目錄的 key，兩者環境不同，別誤判成 key 掉了。
 1. **FRED 一次只能抓一條序列。** `fredgraph.csv?id=A,B` 會回傳 **zip**，不是 CSV。`fetch.py` 已對 `PK` 開頭做偵測並拋錯。
 2. **ICE BofA 利差序列（`BAMLxxx`）只有近三年。** 這不是端點限制，是 FRED 的政策——序列頁面明載「Starting in April 2026, this series will only include 3 years of observations.」，資料本身受 ICE Data Indices 版權保護。**申請 FRED API key 不會解決這件事**，換 API 端點也不會。因此凡是用到 HY／IG OAS 的圖，分位數與中位數一律標明「近三年」，**不可以寫成「歷史低點」**。要更長的歷史只能改用其他來源（如 ICE 官方或 Bloomberg 授權資料）。
 
@@ -484,6 +485,18 @@ print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 ---
 
 ## 8. 變更紀錄
+
+### 2026-08-09 · 第 11.1 版（FRED 的主備關係其實是反的）
+
+`--check-key` 在發布機上實測：**`fredgraph.csv` 逾時（`[Errno 60]`），`api.stlouisfed.org` 正常。**
+
+第 3.1／3.2 節原本把繪圖端點寫成「沒有 key 時的退路」，那個框架是錯的——**在這台機器上，被當成備援的那條才是壞的**。所以 FRED API key 不是可選的優化，是 FRED 這條線唯一能走的路。已改寫第 3.2 節並在 `MAINTENANCE.md` 加一列。
+
+兩個附帶確認：官方 API 的 `DGS10` 給 **16,134 筆**（回到 1962 年），遠多於繪圖端點；ICE BofA 仍是 787 筆近三年，**第 3.2 節那條限制還成立**——`--check-key` 裡那段「若取得長於三年的歷史就更新文件」的自我檢查，這次證明它會動。
+
+**這也讓第 11 版的 `macro_release.py` 走上好路**：`last_updated` 會用文件化的 `fred/series` 端點，而不是解析 HTML 頁面。HTML 那條備援仍保留，但實務上不會被觸發。
+
+**教訓：主備關係要實測，不能照抄「免認證的比較通用」這種直覺。** 這裡的直覺正好相反。
 
 ### 2026-08-09 · 第 11 版（美國三大月度數據發布日固定出圖）
 
