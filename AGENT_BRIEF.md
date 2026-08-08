@@ -186,8 +186,8 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 | `watch` | 1–3 條 | **可被驗證的觸發條件**，要有數字或事件名 |
 | `tags` | 2–5 個 | 供跨期檢索 |
 
-> 這張表是第 7 節檢查腳本的散文版。**腳本是唯一可執行的權威副本**，這裡的數字必須與它逐字相符。
-> 改任何一個長度數字，**本節、第 7 節腳本、排程 prompt 第 5 步三處要同時改**——只改散文版不會有任何效果，只改腳本則會讓寫作者依錯的規範下筆。
+> 這張表是 `tools/check_day.py` 的散文版。**該檔是唯一可執行的權威副本**，這裡的數字必須與它逐字相符。
+> 改任何一個長度數字，**本節、`tools/check_day.py`、排程 prompt 三處要同時改**——只改散文版不會有任何效果，只改腳本則會讓寫作者依錯的規範下筆。
 
 ### 寫作要求
 
@@ -296,7 +296,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 
 ```python
 import os
-REPO = os.path.expanduser('~/chart-of-the-day')          # 一律絕對路徑
+REPO = os.environ.get('CHART_REPO') or os.path.expanduser('~/chart-of-the-day')  # 一律絕對路徑
 os.environ.setdefault('CHART_REPO', REPO)
 exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8').read(),
              'check_day', 'exec'), {'__name__': '__main__'})
