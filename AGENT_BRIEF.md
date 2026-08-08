@@ -124,7 +124,8 @@ advisory-dashboard-daily（07:30 起跑，實測約 10:40 完成，26 家來源�
 
 **注意兩件實測到的事：**
 - **不要把整包資料當成工具回傳值往外送**——回傳會被截斷（實測單一欄位約 1,000 字元）。要嘛在本機處理完，要嘛用 `a.download` 存成檔案再讀。
-- **`finance.yahoo.com` 的 CSP 會擋掉程式觸發的下載**；`fred.stlouisfed.org` 可以，但同一站台第二次自動下載會被 Chrome 擋。備援路徑只適合救急，正式流程請用本機直連。
+- **Chrome 的程式觸發下載配額是「每個分頁放行一次」，不是每個站台一次**（2026-08-08 修正實測）。同分頁第二次會被**靜默**擋掉，但**開新分頁重新導覽後配額重置**——所以要抓多條序列就一條開一個新分頁，不要在同一頁連抓。
+- **`finance.yahoo.com` 的 CSP 一次都不放行**；但 `query1.finance.yahoo.com`／`query2.finance.yahoo.com` 可以。`fred.stlouisfed.org` 也可以。備援路徑只適合救急，正式流程請用本機直連。
 
 ### 3.4 資料品質檢查（強制）
 
@@ -374,6 +375,17 @@ for ed in sorted(ends_md - note_md):
     print(f'   ⚠ 有序列末日為 {ed}，window.note 未提及')
 
 # QA 旗標必須在 about.run 留下處置紀錄（警示級，不擋發布，但看到就要補）
+# 頁尾寬度：PNG 的 source／note 會依視覺寬度斷行，但頁尾最多三行，再多就截斷。
+# 2026-08-08 前沒有換行機制，超出圖框直接被裁且不留痕跡——
+# 而 PNG 正是 House View 月報直接取用的檔案。既有 2026-08-05 有一筆視覺寬 224。
+_vis = lambda s: sum(2 if ord(ch) > 0x2E80 else 1 for ch in s or '')
+for i, c in enumerate(d['charts'], 1):
+    ls = -(-_vis(c.get('source')) // 120) + -(-_vis(c.get('note')) // 120)
+    if ls > 3:
+        bad(f'[{i}] {c.get("slug")} 頁尾需 {ls} 行（上限 3），PNG 會截斷；請縮短 source／note')
+    elif ls == 3:
+        print(f'   ⚠ [{i}] {c.get("slug")} 頁尾佔滿 3 行——能縮就縮，頁尾越長越沒人讀')
+
 # 體積守門：不會隨天數累積（每天獨立檔、前端一次只載一天），只隨序列長度成長
 kb = os.path.getsize(DAY) / 1024
 if kb > 600:   bad(f'單日 JSON {kb:.0f}KB 過大，前端載入會明顯卡頓')
