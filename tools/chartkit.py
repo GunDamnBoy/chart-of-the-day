@@ -230,7 +230,12 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
                 tgt.plot(x, s.values, color=col, lw=s.width,
                          ls="--" if s.dash else "-", label=s.name)
             elif s.style == "bar":
-                tgt.bar(x, s.values, color=col, width=1.0, linewidth=0, label=s.name)
+                # 長條寬度要跟著資料頻率走。原本寫死 1.0（＝一天），畫日頻沒問題，
+                # 但月頻資料的點距是 30 天，1 天寬的柱子會細成一根針——
+                # 2026-08-09 做非農月增圖時實測到。取相鄰日期中位距的 0.8 倍。
+                gaps = sorted((x[k + 1] - x[k]).days for k in range(len(x) - 1)) if len(x) > 1 else [1]
+                tgt.bar(x, s.values, color=col, width=max(1, gaps[len(gaps) // 2]) * 0.8,
+                        linewidth=0, label=s.name)
             else:
                 tgt.plot(x, s.values, color=col, lw=s.width,
                          ls="--" if s.dash else "-", label=s.name)
