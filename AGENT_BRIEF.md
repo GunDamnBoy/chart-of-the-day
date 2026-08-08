@@ -75,6 +75,18 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 - **序列與基期沿用該軌道當週那一次**，複查才看得出前後差異。
 - 「五張圖 `theme` 不得重複」對週末同樣適用。
 
+### 美國三大月度數據發布日：`slot` 1 由該數據佔用
+
+非農（NFP）、CPI、PCE **發布當日，`當日主圖` 必須是該數據的圖**。這三個數字是政策路徑的直接輸入，發布日它們本來就是當天最重要的事——2026-08-08 那輪執行者在沒有這條規則時也是自己這樣選的，這裡只是把它固定下來。
+
+- **偵測方式不靠行事曆**：`tools/macro_release.py --check` 讀 FRED 序列的 `last_updated`，那個時刻就是官方發布時刻（實測 `PAYEMS` ＝ 2026-08-07 8:31 AM CDT，正是 BLS 的 8:30 ET）。**行事曆會過期而且過期時是靜默的，資料自己的更新時間不會。**
+- **時序**：三者都在美東 08:30 公布 ＝ 台北 20:30，永遠落在次日 11:30 那輪之前約 13 小時，**不會漏接**。
+- **`theme` 一律是「央行、利率與匯率」**，其餘四張圖照常避開該主題。
+- **產圖**：`--build NFP|CPI|PCE` 會回傳備妥序列的 chart dict，**文字欄位刻意留空**——判讀要看當天的實際數字寫，工具不產罐頭句。它附的 `_hint` 有算好的關鍵數值供引用，**寫進 JSON 前要把 `_hint` 拿掉**。
+- **每天都要把 `--check` 的結果寫進 `about.macro_release`**，不論有沒有發布。檢查腳本靠它守門：有 `fresh` 卻沒有對應的 slot 1 就是硬失敗。**沒寫等於沒查過，會被警示。**
+
+三張圖的畫法：**NFP** 畫月增長條 ＋ 三個月移動平均（月增是水準值一階差分，**BLS 每期會修正前兩個月，圖註要寫明本圖為最新一版**）；**CPI 與 PCE** 都畫總體與核心年增率，並附 2% 目標線。
+
 ### 三條硬規則
 
 - **五張圖不得有兩張落在同一個 `theme`。** 主題撞車就換掉排序較後的那張。
@@ -90,6 +102,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 | 來源 | 用途 | 取法 |
 |------|------|------|
 | **FRED** | 總經、利率、利差、信用、匯率、通膨預期 | `tools/fetch.py` 的 `fred()` |
+| **FRED（三大月度數據）** | 非農 `PAYEMS`／CPI `CPIAUCSL`＋`CPILFESL`／PCE `PCEPI`＋`PCEPILFE` | `tools/macro_release.py`：`--check` 偵測今日是否剛發布（讀 `last_updated`，**不靠行事曆**）、`--build` 產出備妥序列的圖 |
 | **Yahoo Finance** | 指數、個股、期貨、匯率日收盤 | `tools/fetch.py` 的 `yahoo()` |
 | 世界銀行／IMF／EIA | 跨國、能源實體數據 | 官方 JSON／CSV 端點 |
 | 台灣證交所、櫃買、央行、主計總處 | 台股籌碼、台灣總經 | `tools/fetch_twse.py`，`bfi82u`（三大法人）與 `margin`（融資融券）**均已實測可用**。三大法人是**六列要聚合**；融資金額單位是**仟元**（→億元除 1e5）。**日期送錯不會報錯，會安靜回最近一個交易日**，務必核對回傳 `title` |
@@ -224,7 +237,8 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
   "about": {
     "upstream": ["advisory-knowledge-hub/data/2026-08-05.json", "..."],
     "run": "本輪執行紀錄：降級、替換、待覆核事項",
-    "qa_flags": []                       // 由 render_day.py 自動寫入，不要手改
+    "qa_flags": [],                      // 由 render_day.py 自動寫入，不要手改
+    "macro_release": []                  // `macro_release.py --check` 的原樣輸出，每天都要寫
   },
   "charts": [{
     "slug": "risk-premium-unwind",       // 檔名用，英文小寫連字號
@@ -377,6 +391,24 @@ for ed in sorted(ends_md - note_md):
     print(f'   ⚠ 有序列末日為 {ed}，window.note 未提及')
 
 # QA 旗標必須在 about.run 留下處置紀錄（警示級，不擋發布，但看到就要補）
+# 三大數據發布日：slot 1 必須是該數據。靠 about.macro_release 守門——
+# 規則沒有守門就是交給運氣，而這條規則一個月只觸發約三次，漏掉不會有人發現。
+mr = d.get('about', {}).get('macro_release')
+if mr is None:
+    print('   ⚠ about.macro_release 未寫入——沒跑過 macro_release.py --check？'
+          '（發布日漏圖將無法被偵測）')
+else:
+    fresh = [r for r in mr if r.get('fresh')]
+    slot1 = next((c for c in d['charts'] if c.get('slot') == '當日主圖'), {})
+    for r in fresh:
+        want = f"{r['kind'].lower()}-release"
+        if slot1.get('slug') != want:
+            bad(f"{r['label']}（{r['kind']}）今日發布，當日主圖必須是它："
+                f"預期 slug `{want}`，實際 `{slot1.get('slug')}`")
+    if fresh and slot1.get('theme') != '央行、利率與匯率':
+        bad(f"發布日的當日主圖 theme 應為「央行、利率與匯率」，實際「{slot1.get('theme')}」")
+    print(f'   三大數據發布：{"、".join(r["label"] for r in fresh) if fresh else "今日無"}')
+
 # 頁尾寬度：PNG 的 source／note 會依視覺寬度斷行，但頁尾最多三行，再多就截斷。
 # 2026-08-08 前沒有換行機制，超出圖框直接被裁且不留痕跡——
 # 而 PNG 正是 House View 月報直接取用的檔案。既有 2026-08-05 有一筆視覺寬 224。
@@ -452,6 +484,17 @@ print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 ---
 
 ## 8. 變更紀錄
+
+### 2026-08-09 · 第 11 版（美國三大月度數據發布日固定出圖）
+
+新增能力：**非農、CPI、PCE 發布當日，`當日主圖` 強制是該數據。** 這三個數字是政策路徑的直接輸入，發布日它們本來就是當天最重要的事。
+
+- **偵測不靠行事曆，靠資料自己的更新時間。** `tools/macro_release.py --check` 讀 FRED 序列的 `last_updated`——實測 `PAYEMS` 是 `2026-08-07 8:31 AM CDT`，正是 BLS 的 8:30 ET 發布時刻。**行事曆會過期，而且過期時是靜默的**：沒有人會發現今年的日期表還是去年那份，然後某個月就悄悄漏掉一次。資料的更新時間不會有這個問題。
+- **雙路徑取 `last_updated`**：有 FRED key 走 `fred/series` 端點（欄位就叫 `last_updated`）；沒有 key 就解析 `fred.stlouisfed.org/data/<ID>` 頁面。**後者是 HTML 不是文件化 API，所以解析失敗時大聲拋錯而不是回「沒有新發布」**——靜默的否定會讓整個偵測機制無聲失效，那正是這套系統反覆踩過的坑。AM／PM 邊界（12 PM＝12:00、12 AM＝00:30）已單元測試。
+- **規則有守門，不是只寫在文件裡。** 新增 `about.macro_release` 欄位存 `--check` 的原樣輸出，檢查腳本據此驗證：有 `fresh` 卻沒有對應的 slot 1 就硬失敗，欄位缺漏則警示。**這條規則一個月只觸發約三次，漏掉不會有人發現**——「規則沒有守門就是交給運氣」在這種低頻規則上代價最高。三種情境（無發布／有發布但漏圖／有發布且正確）都實測過。
+- **`--build` 刻意不產文字。** 它只把序列、軸、來源備好，`title`／`takeaway`／`reading` 一律留空，另附 `_hint` 帶算好的關鍵數值。**判讀要看當天的實際數字寫，工具產罐頭句只會讓五張圖裡有一張永遠沒有觀點。**
+- 附帶修掉 `chartkit` 的一個限制：**長條寬度寫死 1.0（＝一天）**，畫日頻沒事，但月頻資料的點距是 30 天，柱子會細成一根針。改成取相鄰日期中位距的 0.8 倍；日頻五張圖回歸測試通過。
+- 2% 目標線用常數序列實作——**這靠的是 08-06 修好的「ECharts 依日期對位」**，在那之前常數序列會被擠在圖的最左邊 1.7%。舊修正讓新功能少寫一套機制。
 
 ### 2026-08-08 · 第 10 版（PNG 頁尾靜默截斷、排程再挪 11:30、兩條取數路徑修正）
 
