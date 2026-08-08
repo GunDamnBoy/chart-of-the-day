@@ -312,6 +312,14 @@ exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8')
 
 ### 2026-08-09 · 第 12 版（token 優化：每日執行成本砍掉約六成）
 
+| | |
+|---|---|
+| **動到哪些檔** | **新增** `tools/build_series.py`、`tools/check_day.py`、`tools/rebuild_index.py`、`CHANGELOG.md`；**改** `AGENT_BRIEF.md`（§5 schema／§6 步驟／§7 改薄殼／§8 只留最新一筆）、排程 prompt |
+| **量測** | brief 35,602→15,852 字元；`series` 手打 ~34,000→0；prompt ~10,900→~3,600；每日總量 −55~60% |
+| **怎麼驗的** | `build_series --selftest` ＋ 假快取端到端（align／rebase／spec 保留／手工序列不碰）；`check_day` 三種呼叫方式（直接、env 抽取、舊字面量 hack）；`rebuild_index` 與現況逐欄比對 |
+| **怎麼倒回去** | 三項搬移都可逆：CHANGELOG 貼回 §8、`check_day.py` 內容貼回 §7、移除 §5 的 `series_spec` 段並改回手打。**`data/*.json` 完全未受影響** |
+| **當時已知的風險** | `series_spec` 改變執行者習慣，第一次實跑前無法確認會被採用 |
+
 本系統每天跑，每一字元的常態成本都乘以 365。量測後對三個大頭動刀，**原則是把「機器早就會的事」從執行者手裡拿走，把「只給維護者看的字」從每日讀取裡拿走**：
 
 - **`series_spec` 機制（省最多，每日 ~34,000 輸出字元）**。執行者原本親手把資料點打進 JSON——而那些數字 `fetch.py` 的快取裡本來就有。現在只寫「代號＋轉換」（`rebase`／`diff`／`yoy`／`ma:N`／`vol:N`），`build_series.py` 實體化。**spec 與 series 並存**，任何一天的圖連轉換方式都可考；`ma`／`vol` 自動標 `derived`，這個常被忘的旗標從此不會漏。手工序列（無 spec）仍合法。
