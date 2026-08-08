@@ -8,7 +8,7 @@
 ## 0. 執行前提（不成立就停下來回報，不要硬跑）
 
 1. **repo 資料夾已連線。** 開工前先用 Read 讀 `/Users/kenny/chart-of-the-day/AGENT_BRIEF.md`（也就是本檔）。讀不到代表資料夾沒掛上——**停下來回報「repo 資料夾未連線，今日無法產出」，不要嘗試其他路徑、也不要把檔案寫到別的地方。**
-2. **發布靠 daemon，不靠執行者。** `com.kenny.dashpush` 每 180 秒自動推送本 repo。執行者**不跑任何 git 指令**，寫完檔後依第 6 節第 10 步抓 Pages 驗證。
+2. **發布靠 daemon，不靠執行者。** `com.kenny.dashpush` 每 180 秒自動推送本 repo。執行者**不跑任何 git 指令**，寫完檔後依第 6 節最後一步抓 Pages 驗證。
 
 ---
 
@@ -253,9 +253,11 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
     "zero_line": false,
     "source": "資料來源：...（含期間）",
     "note": "計算基準、限制、取材出處",
-    "series": [{ "name":"布蘭特原油", "dates":["2026-01-02",...], "values":[60.75,...],
-                 // color 預設留空，由 PALETTE 照角色順序給；只有要指定主角時才寫
-                 "color":null, "axis":"left", "style":"line", "dash":false }],
+    // ↓ 寫 series_spec，讓 build_series.py 從快取實體化 series——**不要親手打資料點**
+    //   （手打一天 ~34,000 字元，而那些數字機器本來就有；量測見 2026-08-09 變更紀錄）
+    "series_spec": [{ "id":"BZ=F", "name":"布蘭特原油", "t":"rebase", "since":"2026-01-02" }],
+    "series_align": true,                // 跨市場比較必開：先取交易日交集再轉換
+    "series": [ /* build_series.py 寫入；spec 與 series 並存，轉換方式因此可考 */ ],
     "markers": [{ "date":"2026-03-31", "label":"油價見頂" }],
     "pts": [], "hi_pts": [],             // kind=scatter 用
     "provenance": { "inspired_by": { "outlet":"Bloomberg", "title":"...", "url":"..." } },
@@ -267,22 +269,24 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 }
 ```
 
-**`series` 一定要把資料點寫進 JSON。** 這是「歷史可查閱」的實作方式——不要只存檔名或只存來源代號。
+**`series` 一定要把資料點寫進 JSON**（「歷史可查閱」的實作方式），但**寫入的動作交給 `build_series.py`**：執行者寫 `series_spec`（代號＋轉換），工具從 `data/series/` 快取實體化。轉換有 `raw`／`rebase`／`diff`／`yoy`／`ma:N`／`vol:N`，**`ma` 與 `vol` 會自動標 `derived`**（不會再忘）。手工 `series`（無 spec）仍合法，工具不碰。
 
 ---
 
 ## 6. 每日執行步驟
 
-1. **讀上游**：`~/advisory-knowledge-hub/data/<今天>.json`。若當天檔案不存在（投顧儀表板還沒跑完或失敗），**等 15 分鐘再讀一次**；仍無則改用前一日檔案並在 `about.run` 註明。
-2. **掃圖表專欄**：Bloomberg Graphics、FT Visual & Data／LEX、Economist Graphic Detail、Reuters Graphics。**只取圖題與論點**，記下 outlet／title／url。
-3. **選題**：依第 2 節五個 slot 各挑一個，檢查 `theme` 不重複。
-4. **取數**：`python3 tools/fetch.py <ids...>`；跨市場比較先 `align()` 再 `rebase()`。
-5. **寫 JSON**：依第 5 節 schema 寫 `data/<今天>.json`，含完整 `series`。
-6. **算圖 + 檢查**：`python3 tools/render_day.py <今天>`，看 QA 旗標並依第 3.4 節處置。
-7. **更新索引**：重建 `data/index.json`。
-8. **跑發布前檢查腳本**（第 7 節），全綠才發布。
-9. **發布**：**直接用檔案工具寫入即可，絕對不要跑任何 git 指令（含 `git status`）。** 本機 `com.kenny.dashpush` 每 180 秒自動 add + commit + push；跑 git 會留下 `.git/index.lock` 把 daemon 擋住。
-10. **驗證上線**：等 2–4 分鐘後抓 `https://gundamnboy.github.io/chart-of-the-day/data/index.json`，確認 `days[0].date` 是今天。**寫完檔不等於發布成功**——這一步不做，daemon 若沒推成功不會有任何錯誤訊息。WebFetch 常拿到 CDN 快取的舊內容，此時改用 Chrome 以 `fetch(url+'?cb='+Date.now(), {cache:'no-store'})` 重抓確認。
+1. **查三大數據**：`python3 tools/macro_release.py --check`，輸出原樣寫進 `about.macro_release`。有 `fresh` → slot 1 就是它（第 2 節）。
+2. **讀上游**：`~/advisory-knowledge-hub/data/<今天>.json`。不存在就**等 15 分鐘再讀一次**；仍無則改用前一日檔案並在 `about.run` 註明。
+3. **掃圖表專欄**：Bloomberg Graphics、FT Visual & Data／LEX、Economist Graphic Detail、Reuters Graphics。**只取圖題與論點**，記下 outlet／title／url。
+4. **選題**：依第 2 節五個 slot 各挑一個，檢查 `theme` 不重複。
+5. **取數**：`python3 tools/fetch.py <ids...>`（進快取即可，數字用來寫判讀）。
+6. **寫 JSON**：依第 5 節 schema 寫 `data/<今天>.json`——**`series` 用 `series_spec`，不要手打資料點**。
+7. **實體化序列**：`python3 tools/build_series.py <今天>`。
+8. **算圖 + 檢查**：`python3 tools/render_day.py <今天>`，QA 旗標依第 3.4 節處置。
+9. **更新索引**：`python3 tools/rebuild_index.py`。
+10. **發布前檢查**：`python3 tools/check_day.py`，全綠才發布。
+11. **發布**：**直接用檔案工具寫入即可，絕對不要跑任何 git 指令（含 `git status`）。** 本機 `com.kenny.dashpush` 每 180 秒自動 add + commit + push；跑 git 會留下 `.git/index.lock` 把 daemon 擋住。
+12. **驗證上線**：等 2–4 分鐘後抓 `https://gundamnboy.github.io/chart-of-the-day/data/index.json`，確認 `days[0].date` 是今天。**寫完檔不等於發布成功**——這一步不做，daemon 若沒推成功不會有任何錯誤訊息。WebFetch 常拿到 CDN 快取的舊內容，此時改用 Chrome 以 `fetch(url+'?cb='+Date.now(), {cache:'no-store'})` 重抓確認。
 
 ---
 
@@ -306,14 +310,15 @@ exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8')
 
 > 完整紀錄在 **[CHANGELOG.md](CHANGELOG.md)**。本節只留最新一筆（維護 skill 靠它判斷認知新舊）；**加新版本時把上一筆搬過去**，不要讓這裡長回 13,000 字元——那正是 2026-08-09 搬家的原因。
 
-### 2026-08-09 · 第 11.1 版（FRED 的主備關係其實是反的）
+### 2026-08-09 · 第 12 版（token 優化：每日執行成本砍掉約六成）
 
-`--check-key` 在發布機上實測：**`fredgraph.csv` 逾時（`[Errno 60]`），`api.stlouisfed.org` 正常。**
+本系統每天跑，每一字元的常態成本都乘以 365。量測後對三個大頭動刀，**原則是把「機器早就會的事」從執行者手裡拿走，把「只給維護者看的字」從每日讀取裡拿走**：
 
-第 3.1／3.2 節原本把繪圖端點寫成「沒有 key 時的退路」，那個框架是錯的——**在這台機器上，被當成備援的那條才是壞的**。所以 FRED API key 不是可選的優化，是 FRED 這條線唯一能走的路。已改寫第 3.2 節並在 `MAINTENANCE.md` 加一列。
+- **`series_spec` 機制（省最多，每日 ~34,000 輸出字元）**。執行者原本親手把資料點打進 JSON——而那些數字 `fetch.py` 的快取裡本來就有。現在只寫「代號＋轉換」（`rebase`／`diff`／`yoy`／`ma:N`／`vol:N`），`build_series.py` 實體化。**spec 與 series 並存**，任何一天的圖連轉換方式都可考；`ma`／`vol` 自動標 `derived`，這個常被忘的旗標從此不會漏。手工序列（無 spec）仍合法。
+- **檢查腳本移到 `tools/check_day.py`（省每日 ~8,400 輸入字元）**。腳本只需要被跑、不需要被讀。§7 留薄殼，**維護 skill 的 regex 抽取與字面量替換 hack 都實測仍有效**；`CHART_REPO` 環境變數讓沙箱維護不再需要改字串。權威副本改為 `check_day.py`，「三處同步」的第三處跟著搬。
+- **變更紀錄搬到 `CHANGELOG.md`（省每日 ~12,500 輸入字元）**。§8 只留最新一筆——維護 skill 靠最上筆日期判斷認知新舊，所以不能全搬走。**加新版本時把上一筆搬過去。**
+- 另補 `rebuild_index.py`：索引欄位是前端契約，原本每天由執行者重寫一段掃描碼，同一段邏輯每天重寫既花 token 又可能各天不一致。
+- 排程 prompt 同步精簡（~10,900 → ~3,600 字元）：**指向 brief 的節號而不是複述內容**——執行者本來就會完整讀 brief，同一段話存在兩處是純粹的重複成本，而且正是歷次「兩份不同步」的根源。
 
-兩個附帶確認：官方 API 的 `DGS10` 給 **16,134 筆**（回到 1962 年），遠多於繪圖端點；ICE BofA 仍是 787 筆近三年，**第 3.2 節那條限制還成立**——`--check-key` 裡那段「若取得長於三年的歷史就更新文件」的自我檢查，這次證明它會動。
+合計每日約省 55–60% token。**沒動的**：媒體掃描與判讀寫作（那是這套系統的價值本身）、series 完整落檔（歷史可查閱不變）、所有檢查與守門。
 
-**這也讓第 11 版的 `macro_release.py` 走上好路**：`last_updated` 會用文件化的 `fred/series` 端點，而不是解析 HTML 頁面。HTML 那條備援仍保留，但實務上不會被觸發。
-
-**教訓：主備關係要實測，不能照抄「免認證的比較通用」這種直覺。** 這裡的直覺正好相反。
