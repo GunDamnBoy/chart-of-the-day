@@ -157,6 +157,29 @@ def _vis_len(s: str) -> float:
     return sum(2 if ord(c) > 0x2E80 else 1 for c in s)
 
 
+FOOT_W = 120          # 頁尾單行可容納的視覺寬度（x 0.075→0.925、fontsize 8 實測值）
+FOOT_MAX_LINES = 3    # 頁尾總行數上限，再多會吃掉圖面
+
+
+def _wrap_vis(s: str, width: int = FOOT_W) -> list:
+    """依視覺寬度斷行。中文沒有空白可斷，所以逐字元累加而不是用 textwrap。
+
+    **為什麼需要這個**：頁尾原本是 `fig.text()` 單行輸出，超出圖框就被裁掉，
+    而且不留任何痕跡。2026-08-08 實測抓到——`data/2026-08-05.json` 有一筆
+    `note` 視覺寬 224，等於在已發布的 PNG 上被砍掉快一半，
+    **而那些 PNG 正是 House View 月報直接取用的檔案**。
+    """
+    out, cur, w = [], "", 0
+    for ch in s:
+        cw = 2 if ord(ch) > 0x2E80 else 1
+        if w + cw > width and cur:
+            out.append(cur); cur, w = "", 0
+        cur += ch; w += cw
+    if cur:
+        out.append(cur)
+    return out or [""]
+
+
 def _d(s):
     return dt.date.fromisoformat(s)
 
@@ -276,11 +299,17 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
         ax.legend(handles, labels, loc="upper left", frameon=False,
                   fontsize=9, ncol=min(len(labels), 4),
                   bbox_to_anchor=(0, 1.02), handlelength=1.6)
-    # 頁尾：來源與註記優先；太長時第二行續排並讓出品牌位置，絕不互壓
+    # 頁尾：來源與註記優先；太長時續排並讓出品牌位置，絕不互壓、**也絕不靜默裁字**。
     foot = ch.source if not ch.note else f"{ch.source}    |    {ch.note}"
     if _vis_len(foot) > 78:
-        fig.text(0.075, 0.052, ch.source, fontsize=8, color=FAINT, va="bottom")
-        fig.text(0.075, 0.012, ch.note, fontsize=8, color=FAINT, va="bottom")
+        lines = _wrap_vis(ch.source) + (_wrap_vis(ch.note) if ch.note else [])
+        if len(lines) > FOOT_MAX_LINES:
+            # 超過上限就截斷，但**留一個看得見的刪節號**——
+            # 靜默裁字會讓人以為文字本來就那麼短，是這次要修掉的正是那個行為。
+            lines = lines[:FOOT_MAX_LINES]
+            lines[-1] = lines[-1][:-1] + "…"
+        for k, line in enumerate(reversed(lines)):      # 由下往上排，最後一行貼齊底部
+            fig.text(0.075, 0.012 + k * 0.024, line, fontsize=8, color=FAINT, va="bottom")
     else:
         fig.text(0.075, 0.035, foot, fontsize=8, color=FAINT, va="bottom")
         fig.text(0.925, 0.035, "每日五圖 · Chart of the Day", fontsize=8,
