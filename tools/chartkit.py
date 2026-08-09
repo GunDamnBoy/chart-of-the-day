@@ -7,12 +7,13 @@ chartkit — 每日五圖的繪圖引擎。
 兩軌若不同源就會漂移，所以永遠只從同一個 Series 物件出發。
 """
 from __future__ import annotations
-import json, os, datetime as dt
+import json, math, os, datetime as dt
 from dataclasses import dataclass, field, replace as ck_replace
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Wedge
 from matplotlib.ticker import FuncFormatter
 import matplotlib.dates as mdates
 
@@ -324,7 +325,7 @@ def _draw_heatmap(ch: Chart, ax):
         for c, v in enumerate(row):
             if v is None:
                 continue
-            ax.add_patch(plt.Rectangle((c, len(m) - 1 - r), 1, 1,
+            ax.add_patch(Rectangle((c, len(m) - 1 - r), 1, 1,
                                        facecolor=_heat_color(v, lo, hi, div),
                                        edgecolor="white", linewidth=1.4))
             # 文字色看「底色多深」，不是「值多大」。
@@ -346,13 +347,12 @@ def _draw_heatmap(ch: Chart, ax):
 
 def _draw_gauge(ch: Chart, ax):
     """量表：單一數字距離門檻多遠。用半圓弧，不用圓餅。"""
-    import math
     g = ch.gauge
     lo, hi, val = g.get("lo", 0.0), g.get("hi", 100.0), g["value"]
     frac = 0.0 if hi == lo else max(0.0, min(1.0, (val - lo) / (hi - lo)))
     for a0, a1, col, lw in ((180, 0, GRID, 26), (180, 180 - 180 * frac, ACCENT, 26)):
-        ax.add_patch(plt.matplotlib.patches.Wedge((0, 0), 1.0, min(a0, a1), max(a0, a1),
-                                                  width=0.26, facecolor=col, linewidth=0))
+        ax.add_patch(Wedge((0, 0), 1.0, min(a0, a1), max(a0, a1),
+                           width=0.26, facecolor=col, linewidth=0))
     if g.get("ref") is not None:                       # 參考線（門檻／中位數）
         rf = max(0.0, min(1.0, (g["ref"] - lo) / (hi - lo))) if hi != lo else 0
         a = math.radians(180 - 180 * rf)
