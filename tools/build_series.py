@@ -45,17 +45,55 @@ sys.path.insert(0, os.path.join(REPO, "tools"))
 import fetch as F                                       # noqa: E402
 
 
+def _is_monthly(d: list) -> bool:
+    """FRED 月頻序列一律以每月 1 號標記。"""
+    return len(d) > 2 and all(x.endswith("-01") for x in d)
+
+
+def _shift_months(day: str, n: int) -> str:
+    y, m = int(day[:4]), int(day[5:7])
+    t = y * 12 + (m - 1) - n
+    return f"{t // 12:04d}-{t % 12 + 1:02d}{day[7:]}"
+
+
 def _transform(d: list, v: list, t: str) -> tuple[list, list, bool]:
-    """回傳 (dates, values, derived)。"""
+    """回傳 (dates, values, derived)。
+
+    **`diff` 與 `yoy` 對月頻序列一律按「日曆」回推，不是按「往回數幾個觀測值」。**
+
+    2026-08-09 實測抓到的真實例子：`CPIAUCSL` 缺 2025-10（官方那個月沒發布），
+    而原本的 `v[i] / v[i-12]` 是位置對應——跨過缺口就變成**13 個月變動**，
+    卻仍標示為「年增率」。當時受影響的是 2025-11 起共 8 個點，
+    正好蓋住總體 CPI 由 2.66 跳到 4.27 的那段加速。
+    **數字看起來完全正常，不會露餡**——這正是本系統一再遇到的那類錯。
+
+    找不到對應月份就回 `None`（圖上斷開），**不要拿相鄰的月份頂替**。
+    """
     if t == "raw":
         return d, v, False
     if t == "rebase":
         s = F.rebase({"d": d, "v": v})
         return s["d"], s["v"], False
     if t == "diff":
+        if _is_monthly(d):
+            mp = dict(zip(d, v))
+            out = [(mp[x] - mp[_shift_months(x, 1)]) if _shift_months(x, 1) in mp else None
+                   for x in d[1:]]
+            return d[1:], [None if x is None else round(x, 2) for x in out], False
         return d[1:], [round(v[i] - v[i - 1], 2) for i in range(1, len(v))], False
     if t == "yoy":
-        return d[12:], [round((v[i] / v[i - 12] - 1) * 100, 2) for i in range(12, len(v))], False
+        if not _is_monthly(d):
+            raise ValueError("yoy 只支援月頻序列（FRED 以每月 1 號標記）。"
+                             "日頻資料請改用 rebase 或自行指定比較基期。")
+        mp = dict(zip(d, v))
+        dd, out = [], []
+        for x in d:
+            b = _shift_months(x, 12)
+            if b not in mp:
+                continue                      # 前 12 個月本來就沒有基期，跳過
+            dd.append(x)
+            out.append(None if mp[b] in (0, None) else round((mp[x] / mp[b] - 1) * 100, 2))
+        return dd, out, False
     if t.startswith("ma:"):
         n = int(t[3:])
         return d, [round(sum(v[max(0, i - n + 1):i + 1]) / min(i + 1, n), 2)
