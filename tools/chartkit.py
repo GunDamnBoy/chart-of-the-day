@@ -277,15 +277,26 @@ def _draw_stacked_bar(ch: Chart, ax, pct: bool = False):
     g = ch.groups
     n = len(ch.cats)
     cols = [list(x) for x in zip(*[grp["values"] for grp in g])] if g else []
-    tot = [sum(c) or 1.0 for c in cols]
-    bot = [0.0] * n
+    if pct and any(min(c) < 0 < max(c) for c in cols):
+        raise ValueError("百分比堆積不能用在正負混合的資料上——分母沒有意義。改用一般堆積。")
+    tot = [sum(abs(x) for x in c) or 1.0 for c in cols]
+    # **正負要各自堆疊。** 統一累加會把正值疊進負值那一側，
+    # 而 ECharts 預設是分開的——那就是兩軌各說各話。2026-08-09 目視驗收抓到。
+    pos = [0.0] * n
+    neg = [0.0] * n
     for j, grp in enumerate(g):
         v = [(grp["values"][i] / tot[i] * 100 if pct else grp["values"][i]) for i in range(n)]
+        bot = [pos[i] if v[i] >= 0 else neg[i] for i in range(n)]
         ax.bar(range(n), v, bottom=bot, width=0.62,
                color=grp.get("color") or PALETTE[j % len(PALETTE)],
                label=grp["name"], linewidth=0)
-        bot = [bot[i] + v[i] for i in range(n)]
+        for i in range(n):
+            if v[i] >= 0:
+                pos[i] += v[i]
+            else:
+                neg[i] += v[i]
     ax.set_xticks(range(n)); ax.set_xticklabels(ch.cats, fontsize=9)
+    ax.axhline(0, color=RULE, lw=0.9)
     ax.grid(axis="y")
 
 

@@ -113,6 +113,22 @@ for ed in sorted(ends_md - note_md):
     print(f'   ⚠ 有序列末日為 {ed}，window.note 未提及')
 
 # QA 旗標必須在 about.run 留下處置紀錄（警示級，不擋發布，但看到就要補）
+# 圖型多樣性：每期至少一張非折線。
+# 2026-08-09 量測：前五期 25 張圖有 24 張是 timeseries、53 條序列 52 條是折線，
+# 而 `bar` 明明早就支援卻五天沒被用過一次。**規則沒有守門就是交給運氣。**
+# **規則有生效日。** 對規則訂立前的舊期硬失敗，只會製造一堆「不該修也修不了」的紅字，
+# 久了就會讓人習慣忽略紅字——那比沒有檢查更糟。
+DIVERSITY_FROM = '2026-08-10'
+LINEY = ('timeseries',)
+nonline = [c for c in d['charts'] if c.get('kind') not in LINEY]
+if d['date'] < DIVERSITY_FROM:
+    print(f'   圖型多樣性：{len(nonline)} 張非折線（本期早於規則生效日 {DIVERSITY_FROM}，不列入檢查）')
+elif not nonline:
+    bad('五張圖全是折線——每期至少要有一張非折線（見 AGENT_BRIEF 第 4 節「圖型跟著問題走」）。'
+        '**若當天真的每個題目都是「兩條線的關係」，那要換的是選題角度，不是硬換圖型。**')
+else:
+    print(f'   非折線 {len(nonline)} 張：{"、".join(c.get("kind","?") for c in nonline)}')
+
 # 三大數據發布日：slot 1 必須是該數據。靠 about.macro_release 守門——
 # 規則沒有守門就是交給運氣，而這條規則一個月只觸發約三次，漏掉不會有人發現。
 mr = d.get('about', {}).get('macro_release')
