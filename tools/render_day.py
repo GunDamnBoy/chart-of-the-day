@@ -34,6 +34,13 @@ def to_chart(c: dict) -> ck.Chart:
         ch.markers.append(ck.Marker(date=m["date"], label=m["label"]))
     ch.pts = [tuple(p) for p in c.get("pts", [])]
     ch.hi_pts = [tuple(p) for p in c.get("hi_pts", [])]
+    # 非時間序列圖型的欄位一律照 dataclass 的欄位名自動帶過去。
+    # **不要改回逐欄手寫**——2026-08-09 加 `derived` 時就是在這裡漏接，
+    # 欄位加了、schema 寫了、圖卻是空的，而且不會報錯。
+    for f in ("cats", "vals", "groups", "band", "band_label", "matrix",
+              "rows", "gauge", "total_label"):
+        if f in c:
+            setattr(ch, f, c[f])
     return ch
 
 

@@ -243,7 +243,7 @@ def _draw_waterfall(ch: Chart, ax):
                 ax.plot([i + 0.31, i + 0.69], [top, top], color=RULE, lw=0.8, zorder=1)
             run = top
         off = 6 if lab >= 0 else -14
-        ax.annotate(_fmt(ch.y_fmt).format(lab), (i, top), textcoords="offset points",
+        ax.annotate(ch.y_fmt.format(lab), (i, top), textcoords="offset points",
                     xytext=(0, off), ha="center", fontsize=8.5,
                     color=(ACCENT if v is None else MUTED),
                     fontweight=("bold" if v is None else "normal"))
@@ -316,9 +316,13 @@ def _draw_heatmap(ch: Chart, ax):
             ax.add_patch(plt.Rectangle((c, len(m) - 1 - r), 1, 1,
                                        facecolor=_heat_color(v, lo, hi, div),
                                        edgecolor="white", linewidth=1.4))
-            ax.text(c + .5, len(m) - 1 - r + .5, _fmt(ch.y_fmt).format(v),
+            # 文字色看「底色多深」，不是「值多大」。
+            # 發散型的兩端都是深色——原本用 (v-lo) 判斷，藍色那端就會變成深字壓深底。
+            depth = (abs(v) / max(abs(lo), abs(hi))) if div else (
+                0.0 if hi == lo else (v - lo) / (hi - lo))
+            ax.text(c + .5, len(m) - 1 - r + .5, ch.y_fmt.format(v),
                     ha="center", va="center", fontsize=8.5,
-                    color=(INK if abs(v - lo) < (hi - lo) * .6 else "white"))
+                    color=("white" if depth > 0.55 else INK))
     ax.set_xlim(0, len(ch.cats)); ax.set_ylim(0, len(m))
     ax.set_xticks([i + .5 for i in range(len(ch.cats))])
     ax.set_xticklabels(ch.cats, fontsize=9)
@@ -345,11 +349,11 @@ def _draw_gauge(ch: Chart, ax):
                 color=INK, lw=1.6, zorder=6)
         ax.text(math.cos(a) * 1.12, math.sin(a) * 1.12, g.get("ref_label", ""),
                 ha="center", va="center", fontsize=8.5, color=MUTED)
-    ax.text(0, 0.06, _fmt(ch.y_fmt).format(val), ha="center", va="bottom",
+    ax.text(0, 0.06, ch.y_fmt.format(val), ha="center", va="bottom",
             fontsize=30, color=ACCENT, fontweight="bold")
     ax.text(0, -0.16, ch.y_label, ha="center", fontsize=9.5, color=MUTED)
-    ax.text(-1.0, -0.06, _fmt(ch.y_fmt).format(lo), ha="center", fontsize=8.5, color=FAINT)
-    ax.text(1.0, -0.06, _fmt(ch.y_fmt).format(hi), ha="center", fontsize=8.5, color=FAINT)
+    ax.text(-1.0, -0.06, ch.y_fmt.format(lo), ha="center", fontsize=8.5, color=FAINT)
+    ax.text(1.0, -0.06, ch.y_fmt.format(hi), ha="center", fontsize=8.5, color=FAINT)
     ax.set_xlim(-1.25, 1.25); ax.set_ylim(-0.3, 1.25)
     ax.set_aspect("equal"); ax.axis("off")
 
@@ -562,6 +566,116 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
             if idx is not None:
                 run.append(idx)
     return flags
+
+
+def _echarts_new_kind(ch: Chart, base: dict) -> dict:
+    """六種新圖型的互動軌。
+
+    **與 `render_static` 是一組兩份，改一邊必須改另一邊**——這套系統是雙軌產出，
+    2026-08-06 就因為 `echarts_option` 少實作了依日期對位，讓網頁上的線整條位移
+    八個交易日而 PNG 正常。新圖型更容易發生這種事，因為兩邊的資料結構差很多。
+    """
+    cat = {"type": "category", "data": list(ch.cats), "axisLine": {"lineStyle": {"color": RULE}},
+           "axisLabel": {"color": MUTED}}
+    val = {"type": "value", "name": ch.y_label, "splitLine": {"lineStyle": {"color": GRID}},
+           "axisLabel": {"color": MUTED}}
+
+    if ch.kind == "waterfall":
+        # ECharts 沒有瀑布型別，慣例是用一條透明的墊底堆疊出來
+        pad, bar, run = [], [], 0.0
+        for v in ch.vals:
+            pad.append(min(run, run + v)); bar.append(abs(v)); run += v
+        names = list(ch.cats)
+        cols = [(REF if v >= 0 else DIM) for v in ch.vals]
+        if ch.total_label:
+            names.append(ch.total_label); pad.append(0); bar.append(run); cols.append(ACCENT)
+        base.update({"xAxis": {**cat, "data": names}, "yAxis": val, "series": [
+            {"type": "bar", "stack": "w", "silent": True, "itemStyle": {"opacity": 0},
+             "data": pad, "tooltip": {"show": False}},
+            {"type": "bar", "stack": "w", "barWidth": "62%", "name": ch.y_label,
+             "data": [{"value": b, "itemStyle": {"color": c}} for b, c in zip(bar, cols)],
+             "label": {"show": True, "position": "top", "color": MUTED, "fontSize": 10}}]})
+        return base
+
+    if ch.kind in ("grouped_bar", "stacked_bar", "pct_stacked_bar"):
+        pct = ch.kind == "pct_stacked_bar"
+        stack = None if ch.kind == "grouped_bar" else "s"
+        tot = [sum(g["values"][i] for g in ch.groups) or 1.0 for i in range(len(ch.cats))]
+        base.update({"xAxis": cat, "yAxis": {**val, **({"max": 100} if pct else {})},
+                     "legend": {"top": 2, "textStyle": {"color": MUTED}},
+                     "series": [
+                         {"type": "bar", "name": g["name"], "stack": stack, "barWidth": "62%",
+                          "itemStyle": {"color": g.get("color") or PALETTE[j % len(PALETTE)]},
+                          "data": [(g["values"][i] / tot[i] * 100 if pct else g["values"][i])
+                                   for i in range(len(ch.cats))]}
+                         for j, g in enumerate(ch.groups)]})
+        return base
+
+    if ch.kind == "range_area":
+        dates = [b[0] for b in ch.band]
+        lo = [b[1] for b in ch.band]
+        rng = [b[2] - b[1] for b in ch.band]
+        by = {s.name: dict(zip(s.dates, s.values)) for s in ch.series}
+        base.update({"xAxis": {**cat, "data": dates, "boundaryGap": False}, "yAxis": val,
+                     "legend": {"top": 2, "textStyle": {"color": MUTED}},
+                     "series": [
+                         {"type": "line", "stack": "band", "silent": True, "symbol": "none",
+                          "lineStyle": {"opacity": 0}, "data": lo, "tooltip": {"show": False}},
+                         {"type": "line", "stack": "band", "silent": True, "symbol": "none",
+                          "name": ch.band_label or "區間", "lineStyle": {"opacity": 0},
+                          "areaStyle": {"color": DIM, "opacity": 0.35}, "data": rng}] + [
+                         {"type": "line", "name": s.name, "showSymbol": False,
+                          "connectNulls": True,
+                          "lineStyle": {"width": s.width,
+                                        "color": s.color or PALETTE[i % len(PALETTE)]},
+                          "itemStyle": {"color": s.color or PALETTE[i % len(PALETTE)]},
+                          "data": [by[s.name].get(d) for d in dates]}
+                         for i, s in enumerate(ch.series)]})
+        return base
+
+    if ch.kind == "heatmap":
+        flat = [v for row in ch.matrix for v in row if v is not None]
+        lo, hi = min(flat), max(flat)
+        div = lo < 0 < hi
+        data = [[c, len(ch.matrix) - 1 - r, v]
+                for r, row in enumerate(ch.matrix) for c, v in enumerate(row) if v is not None]
+        base.update({
+            "tooltip": {"trigger": "item"},
+            "grid": {"left": 92, "right": 40, "top": 34, "bottom": 46},
+            "xAxis": {**cat, "splitArea": {"show": False}},
+            "yAxis": {"type": "category", "data": list(reversed(ch.rows)),
+                      "axisLine": {"lineStyle": {"color": RULE}},
+                      "axisLabel": {"color": MUTED}},
+            "series": [{"type": "heatmap", "data": [
+                {"value": d, "itemStyle": {"color": _heat_color(d[2], lo, hi, div)},
+                 # 文字色與靜態軌同一條規則：看底色多深，不是看值多大
+                 "label": {"color": ("#FFFFFF" if (
+                     (abs(d[2]) / max(abs(lo), abs(hi))) if div else
+                     (0.0 if hi == lo else (d[2] - lo) / (hi - lo))) > 0.55 else INK)}}
+                for d in data],
+                "label": {"show": True, "fontSize": 10, "formatter": "{@[2]}"},
+                "itemStyle": {"borderColor": "#FFFFFF", "borderWidth": 2}}]})
+        return base
+
+    # gauge
+    g = ch.gauge
+    base.pop("tooltip", None)
+    base.update({"series": [{
+        "type": "gauge", "startAngle": 180, "endAngle": 0, "radius": "92%",
+        "center": ["50%", "72%"], "min": g.get("lo", 0), "max": g.get("hi", 100),
+        "progress": {"show": True, "width": 22, "itemStyle": {"color": ACCENT}},
+        "axisLine": {"lineStyle": {"width": 22, "color": [[1, GRID]]}},
+        "pointer": {"show": False}, "axisTick": {"show": False},
+        "splitLine": {"show": False},
+        "axisLabel": {"color": FAINT, "fontSize": 10, "distance": -32},
+        "title": {"show": True, "offsetCenter": [0, "26%"],
+                  "color": MUTED, "fontSize": 12},
+        "detail": {"valueAnimation": False, "offsetCenter": [0, "-8%"],
+                   "color": ACCENT, "fontSize": 30, "fontWeight": "bold",
+                   "formatter": ch.y_fmt.format(g["value"])},
+        "markLine": ({"data": [{"yAxis": g["ref"]}]} if g.get("ref") is not None else None),
+        "data": [{"value": g["value"], "name": ch.y_label}]}]})
+    return base
 
 
 def echarts_option(ch: Chart) -> dict:
