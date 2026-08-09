@@ -30,6 +30,7 @@ import json, os, re, sys, urllib.error, urllib.parse, urllib.request
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "tools"))
 import fetch as F                                        # noqa: E402  沿用取數層與 _redact
+import build_series as _bs                                # noqa: E402  轉換的唯一實作
 
 # 每個發布要用的序列。theme 固定為「央行、利率與匯率」——三者都是政策路徑的輸入。
 RELEASES = {
@@ -94,14 +95,24 @@ def check(now: dt.datetime | None = None) -> list:
 
 
 # ────────────────────────────────────────────────── 轉換
+# 轉換一律轉呼叫 build_series，**不在這裡另寫一份**。
+# 2026-08-09 這裡原本有自己的 mom_change／yoy，兩份實作必然漂移——
+# 而當時 build_series 修好了「月頻要按日曆回推」，這裡卻還是位置對應，
+# 等於同一個 CPI 序列在兩條路徑上會算出不同的年增率。
 def mom_change(d: list, v: list) -> tuple:
-    """水準值 → 月增（一階差分）。非農用。"""
-    return d[1:], [round(v[i] - v[i - 1], 1) for i in range(1, len(v))]
+    """水準值 → 月增。非農用。**缺月時回 None，不跨缺口相減。**"""
+    dd, vv, _ = _bs._transform(d, v, "diff")
+    return dd, vv
 
 
 def yoy(d: list, v: list) -> tuple:
-    """物價指數 → 年增率 %。CPI／PCE 用，需要前 12 個月才算得出第一個點。"""
-    return d[12:], [round((v[i] / v[i - 12] - 1) * 100, 2) for i in range(12, len(v))]
+    """物價指數 → 年增率 %。**按日曆回推 12 個月**，找不到基期就跳過該點。
+
+    CPIAUCSL 實測缺過 2025-10；位置對應會讓其後 8 個點變成 13 個月變動
+    卻仍標示為年增率——數字看起來完全正常，不會露餡。
+    """
+    dd, vv, _ = _bs._transform(d, v, "yoy")
+    return dd, vv
 
 
 def moving_avg(v: list, n: int = 3) -> list:
