@@ -135,7 +135,8 @@ class Chart:
     subtitle: str
     series: list = field(default_factory=list)
     markers: list = field(default_factory=list)
-    kind: str = "timeseries"        # timeseries | scatter | dist
+    # timeseries | scatter | waterfall | grouped_bar | stacked_bar | range_area | heatmap | gauge
+    kind: str = "timeseries"
     y_label: str = ""
     y2_label: str = ""
     y_fmt: str = "{:,.0f}"
@@ -148,6 +149,16 @@ class Chart:
     pts: list = field(default_factory=list)      # [(x, y), ...]
     hi_pts: list = field(default_factory=list)   # [(x, y, label), ...]
     x_label: str = ""
+    # ── 非時間序列圖型共用（2026-08-09 新增，見 AGENT_BRIEF 第 4 節「圖型跟著問題走」）
+    cats: list = field(default_factory=list)     # 類別軸標籤
+    vals: list = field(default_factory=list)     # 單一數列（waterfall／gauge 用）
+    groups: list = field(default_factory=list)   # [{"name":..,"values":[..]}, ...]
+    total_label: str = ""                        # waterfall 末端合計欄的名稱；空字串＝不畫
+    band: list = field(default_factory=list)     # range_area：[(date, lo, hi), ...]
+    band_label: str = ""                         # 區間帶的圖例名稱（例如「近十年區間」）
+    matrix: list = field(default_factory=list)   # heatmap：二維數值
+    rows: list = field(default_factory=list)     # heatmap 列標籤
+    gauge: dict = field(default_factory=dict)    # {"value":..,"lo":..,"hi":..,"ref":..}
 
 _label_slots: dict = {}
 
@@ -187,6 +198,162 @@ def _fmt(f):
     return FuncFormatter(lambda v, p: f.format(v))
 
 # ---------------------------------------------------------------- PNG / SVG
+NEW_KINDS = ("waterfall", "grouped_bar", "stacked_bar", "pct_stacked_bar",
+             "range_area", "heatmap", "gauge")
+LINE_KINDS = ("timeseries",)     # 「非折線」的判定基準，檢查腳本用它守門
+
+
+def _heat_color(v: float, lo: float, hi: float, diverge: bool):
+    """熱力圖配色。**發散型（含正負）用藍↔紅、中點灰；單向用單一紅色斜坡。**
+
+    這是唯一允許離開四角色制的地方——熱力圖的顏色編碼的是「量值大小」，
+    不是「在論證裡的角色」，用四個離散角色表達連續量會讀不出來。
+    """
+    def mix(c1, c2, t):
+        f = lambda h: tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
+        a, b = f(c1), f(c2)
+        return "#%02X%02X%02X" % tuple(round(a[k] + (b[k] - a[k]) * t) for k in range(3))
+    if diverge:
+        m = max(abs(lo), abs(hi)) or 1.0
+        t = v / m
+        return mix("#F0EFEC", REF, min(1.0, -t)) if t < 0 else mix("#F0EFEC", ACCENT, min(1.0, t))
+    t = 0.0 if hi == lo else (v - lo) / (hi - lo)
+    return mix("#FFFFFF", ACCENT, t)
+
+
+def _draw_waterfall(ch: Chart, ax):
+    """瀑布圖：拆解一個變化是誰貢獻的。
+
+    **配色刻意不用紅綠。** 增減方向已經由長條的位置與資料標籤表達；
+    紅色保留給最後那根合計（`takeaway` 講的就是它）。增用對照藍、減用背景灰，
+    同色系兩個深淺——這與第 4 節「正負值不分色、紅只給主角」是一致的。
+    """
+    cats, vals = list(ch.cats), list(ch.vals)
+    if ch.total_label:
+        cats, vals = cats + [ch.total_label], vals + [None]      # None＝合計欄
+    run = 0.0
+    for i, (c, v) in enumerate(zip(cats, vals)):
+        if v is None:                                            # 合計欄由 0 畫到 run
+            ax.bar(i, run, bottom=0, color=ACCENT, width=0.62, linewidth=0)
+            top, lab = run, run
+        else:
+            ax.bar(i, v, bottom=run, color=(REF if v >= 0 else DIM), width=0.62, linewidth=0)
+            top, lab = run + v, v
+            if i < len(cats) - 1:                                # 銜接線
+                ax.plot([i + 0.31, i + 0.69], [top, top], color=RULE, lw=0.8, zorder=1)
+            run = top
+        off = 6 if lab >= 0 else -14
+        ax.annotate(_fmt(ch.y_fmt).format(lab), (i, top), textcoords="offset points",
+                    xytext=(0, off), ha="center", fontsize=8.5,
+                    color=(ACCENT if v is None else MUTED),
+                    fontweight=("bold" if v is None else "normal"))
+    ax.set_xticks(range(len(cats)))
+    ax.set_xticklabels(cats, fontsize=9)
+    ax.axhline(0, color=RULE, lw=0.9)
+    ax.grid(axis="y")
+
+
+def _draw_grouped_bar(ch: Chart, ax):
+    """分組柱形圖：同一組對象在兩個以上口徑下的對比。"""
+    g = ch.groups
+    n, m = len(ch.cats), len(g)
+    w = 0.8 / max(m, 1)
+    for j, grp in enumerate(g):
+        xs = [i - 0.4 + w * (j + 0.5) for i in range(n)]
+        ax.bar(xs, grp["values"], width=w * 0.9,
+               color=grp.get("color") or PALETTE[j % len(PALETTE)],
+               label=grp["name"], linewidth=0)
+    ax.set_xticks(range(n)); ax.set_xticklabels(ch.cats, fontsize=9)
+    ax.axhline(0, color=RULE, lw=0.9)
+    ax.grid(axis="y")
+
+
+def _draw_stacked_bar(ch: Chart, ax, pct: bool = False):
+    """堆積柱形圖：組成隨時間怎麼變。`pct=True` 為百分比堆積。
+
+    **最多四個分項**——第五個會繞回主角紅，一張圖出現兩個主角。
+    分項超過四個就把小的併成「其他」，那也是比較好讀的圖。
+    """
+    g = ch.groups
+    n = len(ch.cats)
+    cols = [list(x) for x in zip(*[grp["values"] for grp in g])] if g else []
+    tot = [sum(c) or 1.0 for c in cols]
+    bot = [0.0] * n
+    for j, grp in enumerate(g):
+        v = [(grp["values"][i] / tot[i] * 100 if pct else grp["values"][i]) for i in range(n)]
+        ax.bar(range(n), v, bottom=bot, width=0.62,
+               color=grp.get("color") or PALETTE[j % len(PALETTE)],
+               label=grp["name"], linewidth=0)
+        bot = [bot[i] + v[i] for i in range(n)]
+    ax.set_xticks(range(n)); ax.set_xticklabels(ch.cats, fontsize=9)
+    ax.grid(axis="y")
+
+
+def _draw_range_area(ch: Chart, ax):
+    """範圍面積圖：現在落在歷史區間的哪裡。band 是背景，線才是主角。"""
+    xs = [_d(b[0]) for b in ch.band]
+    lo = [b[1] for b in ch.band]; hi = [b[2] for b in ch.band]
+    ax.fill_between(xs, lo, hi, color=DIM, alpha=0.35, linewidth=0,
+                    label=ch.band_label or None)
+    for i, s in enumerate(ch.series):
+        ax.plot([_d(x) for x in s.dates], s.values, lw=s.width,
+                color=s.color or PALETTE[i % len(PALETTE)], label=s.name)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%y/%m"))
+    ax.yaxis.set_major_formatter(_fmt(ch.y_fmt))
+    ax.grid(axis="y")
+
+
+def _draw_heatmap(ch: Chart, ax):
+    """熱力圖：一整面的關係，不是兩兩比較。"""
+    m = ch.matrix
+    flat = [v for row in m for v in row if v is not None]
+    lo, hi = min(flat), max(flat)
+    div = lo < 0 < hi
+    for r, row in enumerate(m):
+        for c, v in enumerate(row):
+            if v is None:
+                continue
+            ax.add_patch(plt.Rectangle((c, len(m) - 1 - r), 1, 1,
+                                       facecolor=_heat_color(v, lo, hi, div),
+                                       edgecolor="white", linewidth=1.4))
+            ax.text(c + .5, len(m) - 1 - r + .5, _fmt(ch.y_fmt).format(v),
+                    ha="center", va="center", fontsize=8.5,
+                    color=(INK if abs(v - lo) < (hi - lo) * .6 else "white"))
+    ax.set_xlim(0, len(ch.cats)); ax.set_ylim(0, len(m))
+    ax.set_xticks([i + .5 for i in range(len(ch.cats))])
+    ax.set_xticklabels(ch.cats, fontsize=9)
+    ax.set_yticks([len(m) - 1 - i + .5 for i in range(len(ch.rows))])
+    ax.set_yticklabels(ch.rows, fontsize=9)
+    ax.grid(False)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
+
+
+def _draw_gauge(ch: Chart, ax):
+    """量表：單一數字距離門檻多遠。用半圓弧，不用圓餅。"""
+    import math
+    g = ch.gauge
+    lo, hi, val = g.get("lo", 0.0), g.get("hi", 100.0), g["value"]
+    frac = 0.0 if hi == lo else max(0.0, min(1.0, (val - lo) / (hi - lo)))
+    for a0, a1, col, lw in ((180, 0, GRID, 26), (180, 180 - 180 * frac, ACCENT, 26)):
+        ax.add_patch(plt.matplotlib.patches.Wedge((0, 0), 1.0, min(a0, a1), max(a0, a1),
+                                                  width=0.26, facecolor=col, linewidth=0))
+    if g.get("ref") is not None:                       # 參考線（門檻／中位數）
+        rf = max(0.0, min(1.0, (g["ref"] - lo) / (hi - lo))) if hi != lo else 0
+        a = math.radians(180 - 180 * rf)
+        ax.plot([math.cos(a) * .72, math.cos(a) * 1.02], [math.sin(a) * .72, math.sin(a) * 1.02],
+                color=INK, lw=1.6, zorder=6)
+        ax.text(math.cos(a) * 1.12, math.sin(a) * 1.12, g.get("ref_label", ""),
+                ha="center", va="center", fontsize=8.5, color=MUTED)
+    ax.text(0, 0.06, _fmt(ch.y_fmt).format(val), ha="center", va="bottom",
+            fontsize=30, color=ACCENT, fontweight="bold")
+    ax.text(0, -0.16, ch.y_label, ha="center", fontsize=9.5, color=MUTED)
+    ax.text(-1.0, -0.06, _fmt(ch.y_fmt).format(lo), ha="center", fontsize=8.5, color=FAINT)
+    ax.text(1.0, -0.06, _fmt(ch.y_fmt).format(hi), ha="center", fontsize=8.5, color=FAINT)
+    ax.set_xlim(-1.25, 1.25); ax.set_ylim(-0.3, 1.25)
+    ax.set_aspect("equal"); ax.axis("off")
+
+
 def render_static(ch: Chart, outdir: str, basename: str) -> dict:
     apply_style()
     _label_slots.clear()
@@ -194,7 +361,17 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
     fig.subplots_adjust(left=0.075, right=0.925, top=0.80, bottom=0.17)
     ax2 = None
 
-    if ch.kind == "scatter":
+    if ch.kind in NEW_KINDS:
+        {"waterfall": _draw_waterfall, "grouped_bar": _draw_grouped_bar,
+         "stacked_bar": lambda c, a: _draw_stacked_bar(c, a, False),
+         "pct_stacked_bar": lambda c, a: _draw_stacked_bar(c, a, True),
+         "range_area": _draw_range_area, "heatmap": _draw_heatmap,
+         "gauge": _draw_gauge}[ch.kind](ch, ax)
+        if ch.kind not in ("gauge", "heatmap"):
+            ax.set_ylabel(ch.y_label, fontsize=9)
+        if ch.zero_line and ch.kind not in ("gauge", "heatmap"):
+            ax.axhline(0, color=RULE, lw=0.9)
+    elif ch.kind == "scatter":
         xs = [p[0] for p in ch.pts]; ys = [p[1] for p in ch.pts]
         ax.scatter(xs, ys, s=13, c=FAINT, alpha=0.55, linewidths=0)
         ax.axhline(0, color=RULE, lw=0.9); ax.axvline(0, color=RULE, lw=0.9)
@@ -397,6 +574,8 @@ def echarts_option(ch: Chart) -> dict:
         "color": PALETTE,
         "textStyle": {"fontFamily": "'Noto Sans TC','PingFang TC',sans-serif"},
     }
+    if ch.kind in NEW_KINDS:
+        return _echarts_new_kind(ch, base)
     if ch.kind == "scatter":
         base.update({
             "xAxis": {"type": "value", "name": ch.x_label, "nameLocation": "middle",
