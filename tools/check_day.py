@@ -113,6 +113,25 @@ for ed in sorted(ends_md - note_md):
     print(f'   ⚠ 有序列末日為 {ed}，window.note 未提及')
 
 # QA 旗標必須在 about.run 留下處置紀錄（警示級，不擋發布，但看到就要補）
+# repo 內不得有符號連結——**它會讓 GitHub Pages 的打包整個失敗**。
+# 2026-08-10 實測：維護時測試留下 charts/2026-08-11 -> 沙箱絕對路徑的連結，
+# dashpush 照常 commit、照常推送成功，但 `upload-pages-artifact` 打包時
+# 遇到指向樹外的連結就 exit 1——8 秒失敗、artifact 完全沒產生。
+# **推送成功不等於上線成功**，而這一層之前完全沒有防線。
+import os as _os
+_links = []
+for _root, _dirs, _files in _os.walk(REPO):
+    if '.git' in _root.split(_os.sep):
+        continue
+    for _n in _dirs + _files:
+        _p = _os.path.join(_root, _n)
+        if _os.path.islink(_p):
+            _links.append(_os.path.relpath(_p, REPO))
+if _links:
+    bad(f'repo 內有符號連結，GitHub Pages 打包會失敗：{_links}。'
+        '**維護測試時不要在指向真實 repo 的暫存目錄裡建立新項目**——'
+        '那會寫進真的 repo。')
+
 # 圖型多樣性：每期至少一張非折線。
 # 2026-08-09 量測：前五期 25 張圖有 24 張是 timeseries、53 條序列 52 條是折線，
 # 而 `bar` 明明早就支援卻五天沒被用過一次。**規則沒有守門就是交給運氣。**
