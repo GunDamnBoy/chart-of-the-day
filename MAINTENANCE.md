@@ -4,8 +4,10 @@
 
 ## 1. 動手前必讀
 
-- **`AGENT_BRIEF.md` 與排程 prompt 是一組兩份**（`~/Documents/Claude/Scheduled/chart-of-the-day-daily/SKILL.md`）。
-  只改一邊 = 製造下一次故障。最容易漂移的是第 7 節的**發布前檢查腳本**與第 2 節的**軌道輪盤**。
+- **同步組是三份，不是兩份**：`AGENT_BRIEF.md` ＋ 排程 prompt（`~/Documents/Claude/Scheduled/chart-of-the-day-daily/SKILL.md`）＋ **`/chart-maintain` 維護 skill**。
+  只改一邊 = 製造下一次故障。2026-08-10 稽核：brief 與 prompt 天天在同步，**維護 skill 六天沒動、12/12 項與現實不符**——
+  專門抓漂移的工具自己漂得最兇。skill 用 `save_skill`（`overwrite: true`）更新，直接改快取檔不會保存。
+  **skill 的鐵律：不持有會變的值**（數字、時間、規則清單一律指向 repo 內文件），只記不變的原則、程序與坑——這樣它才不需要天天同步。
 - **不要跑任何 git 指令（含 `git status`）——維護階段與每日執行都適用。**
   本機 `com.kenny.dashpush` 每 180 秒自動 add + commit + push，跑 git 會留下 `.git/index.lock` 把它擋住。
   要看狀態只用 `cat` / `ls` / `grep` / `tail`；**要看有沒有推上去，讀 `.git/logs/HEAD`（純讀檔，安全）或直接抓 GitHub Pages 上的檔案比對**。
