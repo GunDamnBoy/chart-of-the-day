@@ -10,7 +10,7 @@ check_day.py — 發布前檢查。**這裡是唯一權威副本**（2026-08-09 
 多讀 ~9,000 字元。brief 第 7 節留了薄殼，維護 skill 的 regex 抽取仍然有效（抽到的
 是殼，殼會執行本檔）。**改規則就改這裡**，並同步 brief 第 4 節散文版與排程 prompt。
 """
-import json, os, sys, glob, collections
+import json, os, re, sys, glob, collections
 REPO = os.environ.get('CHART_REPO') or os.path.expanduser('~/chart-of-the-day')  # 一律絕對路徑
 # 預設檢查最新一期；發布流程用這個。維護時要診斷舊期，傳日期進來即可：
 #     python3 -c "...exec(檢查腳本)..." 2026-08-05
@@ -48,7 +48,13 @@ for i, c in enumerate(d['charts'], 1):
     seen_theme.append(c.get('theme')); seen_slot.append(c.get('slot',''))
     if not (12 <= len(c.get("title","")) <= 30): bad(f'{p} title 長度 {len(c.get("title",""))} 不在 12–30')
     if len(c.get("takeaway","")) > 70:           bad(f"{p} takeaway 超過 70 字")
-    if not (200 <= len(c.get('reading','')) <= 520): bad(f'{p} reading 長度 {len(c.get("reading",""))} 不在 200–520')
+    if not (200 <= len(c.get('reading','')) <= 620): bad(f'{p} reading 長度 {len(c.get("reading",""))} 不在 200–620')
+    # 歷史錨點的弱檢查（2026-08-10）：出現類比詞卻整段沒有年份 → 多半是印象不是歷史。
+    # 攔不住所有編造，但攔得住最懶的那種。提示級，不擋發布。
+    _rd = c.get('reading','')
+    if re.search(r'上一次|上次|歷史上|前例|以來首次', _rd) and not re.search(r'(19|20)\d\d', _rd):
+        print(f'   ⚠ {p} reading 有「上一次／歷史上」等類比詞，但整段找不到年份——'
+              f'數字型錨點要從序列算出並帶日期，事件型類比要帶年份與關鍵差異（brief §4 歷史縱深）')
     if len(c.get('reading','').split('\n\n')) < 3:   bad(f'{p} reading 未分 3 段')
     if not c.get('watch'):  bad(f'{p} 缺 watch')
     if not (1 <= len(c.get('watch') or []) <= 3): bad(f'{p} watch {len(c.get("watch") or [])} 條，規範 1–3')
@@ -84,7 +90,7 @@ for c in d['charts']:
     elif os.path.getsize(png) < 20000: bad(f'PNG 過小可能沒畫出來：{png}')
 
 # 序列新鮮度：拿兩天前的收盤當「今天」講，是最容易發生也最難察覺的錯
-import datetime, re
+import datetime
 doc_day = datetime.date.fromisoformat(d['date'])
 ends = {}
 for c in d['charts']:
