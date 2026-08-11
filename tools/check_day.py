@@ -11,6 +11,7 @@ check_day.py — 發布前檢查。**這裡是唯一權威副本**（2026-08-09 
 是殼，殼會執行本檔）。**改規則就改這裡**，並同步 brief 第 4 節散文版與排程 prompt。
 """
 import json, os, re, sys, glob, collections
+import datetime as _dt
 REPO = os.environ.get('CHART_REPO') or os.path.expanduser('~/chart-of-the-day')  # 一律絕對路徑
 # 預設檢查最新一期；發布流程用這個。維護時要診斷舊期，傳日期進來即可：
 #     python3 -c "...exec(檢查腳本)..." 2026-08-05
@@ -69,8 +70,28 @@ for i, c in enumerate(d['charts'], 1):
         print(f'   ⚠ {p} 有 4 條序列，已用到背景色當資料序列——確認第 4 條真的只是背景')
     if not c.get('files',{}).get('png'): bad(f'{p} 未產出 PNG')
     if not c.get('option'): bad(f'{p} 未產出 ECharts option')
-    if c.get('slot') == '重製圖' and not c.get('provenance',{}).get('inspired_by',{}).get('url'):
-        bad(f'{p} 重製圖缺 provenance.inspired_by.url')
+    if c.get('slot') == '重製圖':
+        _ib = c.get('provenance', {}).get('inspired_by', {})
+        if not _ib.get('url'):
+            bad(f'{p} 重製圖缺 provenance.inspired_by.url')
+        # 原文日期（2026-08-11 起）：重製圖放寬到七天內，但要看得出「幾天前」。
+        # 沒有日期就無法檢查時效，等於把放寬變成無限放寬。
+        if DAY >= '2026-08-12':
+            _pub = _ib.get('published')
+            if not _pub:
+                bad(f'{p} 重製圖缺 provenance.inspired_by.published（原文日期）')
+            else:
+                try:
+                    _lag = (_dt.date.fromisoformat(DAY) - _dt.date.fromisoformat(_pub)).days
+                    if _lag > 7:
+                        bad(f'{p} 重製圖原文 {_pub} 距今 {_lag} 天，超過七天上限')
+                    elif _lag < 0:
+                        bad(f'{p} 重製圖原文日期 {_pub} 在未來')
+                    elif _lag >= 3:
+                        print(f'   ⚠ {p} 重製圖原文 {_pub}（{_lag} 天前）——'
+                              f'重畫必須用最新資料、話要接到今天（brief §2）')
+                except ValueError:
+                    bad(f'{p} 重製圖 published 不是 YYYY-MM-DD：{_pub}')
     # 每種圖型有自己的資料欄位——**不是每種圖都用 `series`**。
     # 原本只豁免 scatter，使 waterfall／grouped_bar／stacked_bar／pct_stacked_bar／
     # heatmap／gauge 一律硬失敗（它們用 cats／vals／groups／matrix／gauge）。
