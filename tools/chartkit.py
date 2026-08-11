@@ -201,6 +201,13 @@ def _fmt(f):
 # ---------------------------------------------------------------- PNG / SVG
 NEW_KINDS = ("waterfall", "grouped_bar", "stacked_bar", "pct_stacked_bar",
              "range_area", "heatmap", "gauge")
+
+# 有真實日期 x 軸的圖型 —— **只有這些能標 marker**。
+# 其餘新圖型（waterfall、grouped_bar、stacked_bar、heatmap、gauge）的 x 軸是類別，
+# 「在某個日期畫一條垂直線」在它們身上沒有意義。2026-08-11 那期圖 2（range_area）
+# 寫了兩個 marker、檢查通過、兩軌都沒畫出來——**規則要求標記，實作卻默默丟掉**，
+# 正是 brief §4 歷史縱深最怕的那種半殘。check_day 已據此擋下無日期軸圖型的 marker。
+DATE_AXIS_KINDS = ("timeseries", "range_area")
 LINE_KINDS = ("timeseries",)     # 「非折線」的判定基準，檢查腳本用它守門
 
 
@@ -301,6 +308,15 @@ def _draw_stacked_bar(ch: Chart, ax, pct: bool = False):
     ax.grid(axis="y")
 
 
+def _draw_markers(ch: Chart, ax):
+    """在日期軸上標歷史錨點。**timeseries 與 range_area 共用同一份實作**——
+    原本只寫在 timeseries 分支裡，range_area 就靜默漏掉了。"""
+    for m in ch.markers:
+        ax.axvline(_d(m.date), color=m.color, lw=0.9, ls=":", zorder=0)
+        ax.annotate(m.label, (_d(m.date), 1.005), xycoords=("data", "axes fraction"),
+                    fontsize=8, color=m.color, rotation=0, ha="center")
+
+
 def _draw_range_area(ch: Chart, ax):
     """範圍面積圖：現在落在歷史區間的哪裡。band 是背景，線才是主角。"""
     xs = [_d(b[0]) for b in ch.band]
@@ -386,6 +402,8 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
             ax.set_ylabel(ch.y_label, fontsize=9)
         if ch.zero_line and ch.kind not in ("gauge", "heatmap"):
             ax.axhline(0, color=RULE, lw=0.9)
+        if ch.kind in DATE_AXIS_KINDS:
+            _draw_markers(ch, ax)
     elif ch.kind == "scatter":
         xs = [p[0] for p in ch.pts]; ys = [p[1] for p in ch.pts]
         ax.scatter(xs, ys, s=13, c=FAINT, alpha=0.55, linewidths=0)
@@ -451,10 +469,7 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
                                  fontweight="bold")
         if ch.zero_line:
             ax.axhline(0, color=RULE, lw=1.0)
-        for m in ch.markers:
-            ax.axvline(_d(m.date), color=m.color, lw=0.9, ls=":", zorder=0)
-            ax.annotate(m.label, (_d(m.date), 1.005), xycoords=("data", "axes fraction"),
-                        fontsize=8, color=m.color, rotation=0, ha="center")
+        _draw_markers(ch, ax)
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%y/%m"))
         ax.yaxis.set_major_formatter(_fmt(ch.y_fmt))
         if ax2 is not None:
@@ -551,7 +566,18 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
         v = [x for x in s.values if x is not None]
         if len(v) < 30:
             continue
-        rets = [(v[i] / v[i - 1] - 1) for i in range(1, len(v)) if v[i - 1]]
+        # 穿越零的序列（買賣超、淨流量這類「流量」）不能用百分比變動：
+        # 分母趨近 0 時比值會爆炸。2026-08-11 那期外資買賣超在 2026-07-01 由
+        # −0.6 億轉為 +38 億，算出來是 **−6449%**，序列本身完全正確。
+        # 這種誤報每個月都會來好幾次，而每天人工判讀一次「這又是分母失真」
+        # 只會磨掉對紅字的敏感度——**會固定誤報的檢查，比沒有檢查更糟**。
+        # 對這類序列改用「絕對變動」的 z 分數：一樣抓得到真正突兀的跳動，
+        # 而且量綱一致。`pct` 欄位在這種情況下改記絕對變動，並標 `abs_chg`。
+        flow = min(v) < 0 < max(v)
+        if flow:
+            rets = [(v[i] - v[i - 1]) for i in range(1, len(v))]
+        else:
+            rets = [(v[i] / v[i - 1] - 1) for i in range(1, len(v)) if v[i - 1]]
         if not rets:
             continue
         mu = sum(rets) / len(rets)
@@ -566,7 +592,10 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
                 r = rets[peak - 1]
                 f = {"chart": ch.slug, "series": s.name,
                      "date": s.dates[run[0]] if run[0] < len(s.dates) else "?",
-                     "pct": round(r * 100, 2), "z": round((r - mu) / sd, 1)}
+                     "pct": round(r if flow else r * 100, 2),
+                     "z": round((r - mu) / sd, 1)}
+                if flow:
+                    f["abs_chg"] = True
                 if s.derived:
                     f["derived"] = True
                 if len(run) > 1:      # 只有跨日事件才寫 date_end 與 days
@@ -577,6 +606,14 @@ def qa_series(ch: Chart, z: float = 5.0) -> list:
             if idx is not None:
                 run.append(idx)
     return flags
+
+
+def _marker_markline(ch: Chart) -> dict:
+    """marker 的 ECharts 表示。與 `_draw_markers` 是一組兩份。"""
+    return {"silent": True, "symbol": "none",
+            "lineStyle": {"color": FAINT, "type": "dotted"},
+            "data": [{"xAxis": m.date, "label": {"formatter": m.label,
+                      "color": FAINT, "fontSize": 10}} for m in ch.markers]}
 
 
 def _echarts_new_kind(ch: Chart, base: dict) -> dict:
@@ -642,6 +679,9 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
                           "itemStyle": {"color": s.color or PALETTE[i % len(PALETTE)]},
                           "data": [by[s.name].get(d) for d in dates]}
                          for i, s in enumerate(ch.series)]})
+        if ch.markers and ch.series:
+            # 掛在主線上，不掛在墊底的兩條堆疊——那兩條是 silent 的，markLine 會被吃掉
+            base["series"][-1]["markLine"] = _marker_markline(ch)
         return base
 
     if ch.kind == "heatmap":
@@ -767,12 +807,7 @@ def echarts_option(ch: Chart) -> dict:
             item["areaStyle"] = {"opacity": 0.13}
         base["series"].append(item)
     if ch.markers and base["series"]:
-        base["series"][0]["markLine"] = {
-            "silent": True, "symbol": "none",
-            "lineStyle": {"color": FAINT, "type": "dotted"},
-            "data": [{"xAxis": m.date, "label": {"formatter": m.label,
-                      "color": FAINT, "fontSize": 10}} for m in ch.markers],
-        }
+        base["series"][0]["markLine"] = _marker_markline(ch)
     # 零線：靜態軌在 render_static() 用 axhline 畫，互動軌原本完全沒有這件事。
     # 正負值不分色之後，零線是唯一區分正負的視覺元素——兩軌都要有，否則
     # 網頁上的讀者看不出正負的分界，而 PNG 上看得出來。

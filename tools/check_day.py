@@ -71,8 +71,27 @@ for i, c in enumerate(d['charts'], 1):
     if not c.get('option'): bad(f'{p} 未產出 ECharts option')
     if c.get('slot') == '重製圖' and not c.get('provenance',{}).get('inspired_by',{}).get('url'):
         bad(f'{p} 重製圖缺 provenance.inspired_by.url')
-    if c.get('kind') != 'scatter':
-        if not c.get('series'): bad(f'{p} 缺 series')
+    # 每種圖型有自己的資料欄位——**不是每種圖都用 `series`**。
+    # 原本只豁免 scatter，使 waterfall／grouped_bar／stacked_bar／pct_stacked_bar／
+    # heatmap／gauge 一律硬失敗（它們用 cats／vals／groups／matrix／gauge）。
+    # 後果不是「報錯」而是**選題被暗中窄化**：多樣性守門要求每期至少一張非折線，
+    # 而唯一過得了關的非折線就只剩 range_area（它剛好也帶 series）。
+    # 連兩天的非折線圖都是同一型，原因在這裡，不在選題偏好。
+    _NEED = {'scatter': ('pts',), 'waterfall': ('cats', 'vals'),
+             'grouped_bar': ('cats', 'groups'), 'stacked_bar': ('cats', 'groups'),
+             'pct_stacked_bar': ('cats', 'groups'), 'heatmap': ('matrix', 'rows', 'cats'),
+             'gauge': ('gauge',), 'range_area': ('series', 'band')}
+    _kind = c.get('kind', 'timeseries')
+    for _f in _NEED.get(_kind, ('series',)):
+        if not c.get(_f):
+            bad(f'{p} kind={_kind} 缺必要欄位 `{_f}`')
+    # marker 只有日期軸畫得出來（chartkit.DATE_AXIS_KINDS）。
+    # 類別軸圖型寫了 marker 不會報錯、也不會畫出來——**規則要求標記卻靜默丟掉**，
+    # 比沒有 marker 更糟，因為 reading 會照著寫「已標在圖上」。
+    if c.get('markers') and _kind not in ('timeseries', 'range_area'):
+        bad(f'{p} kind={_kind} 是類別軸，標不出日期 marker——'
+            f'請改把錨點寫進 note，或換成有日期軸的圖型')
+    if _kind not in _NEED:
         for s in c.get('series', []):
             if len(s['dates']) != len(s['values']):
                 bad(f'{p} 序列 {s["name"]} 日期({len(s["dates"])})與值({len(s["values"])})長度不符')
