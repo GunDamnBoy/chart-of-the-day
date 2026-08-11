@@ -12,6 +12,11 @@ check_day.py — 發布前檢查。**這裡是唯一權威副本**（2026-08-09 
 """
 import json, os, re, sys, glob, collections
 import datetime as _dt
+
+# 規則生效日。**用 `d['date']`（期別）比較，不要用 `DAY`——`DAY` 是檔案路徑**，
+# 拿路徑跟日期字串比大小恆為 False（開頭的 `/` 小於數字），整段守門會靜默失效。
+# 2026-08-11 實測踩到：八個測試案例全數沒有觸發，而 exit code 是 0。
+REDRAW_LAG_FROM = '2026-08-12'
 REPO = os.environ.get('CHART_REPO') or os.path.expanduser('~/chart-of-the-day')  # 一律絕對路徑
 # 預設檢查最新一期；發布流程用這個。維護時要診斷舊期，傳日期進來即可：
 #     python3 -c "...exec(檢查腳本)..." 2026-08-05
@@ -76,13 +81,13 @@ for i, c in enumerate(d['charts'], 1):
             bad(f'{p} 重製圖缺 provenance.inspired_by.url')
         # 原文日期（2026-08-11 起）：重製圖放寬到七天內，但要看得出「幾天前」。
         # 沒有日期就無法檢查時效，等於把放寬變成無限放寬。
-        if DAY >= '2026-08-12':
+        if d['date'] >= REDRAW_LAG_FROM:
             _pub = _ib.get('published')
             if not _pub:
                 bad(f'{p} 重製圖缺 provenance.inspired_by.published（原文日期）')
             else:
                 try:
-                    _lag = (_dt.date.fromisoformat(DAY) - _dt.date.fromisoformat(_pub)).days
+                    _lag = (_dt.date.fromisoformat(d['date']) - _dt.date.fromisoformat(_pub)).days
                     if _lag > 7:
                         bad(f'{p} 重製圖原文 {_pub} 距今 {_lag} 天，超過七天上限')
                     elif _lag < 0:
@@ -282,3 +287,7 @@ for m in KNOWN.get(d.get('date',''), []):
     print(f'   · 已知歷史例外（不必修）：{m}')
 
 print('全部通過 ✓' if ok else '★ 有問題，不要發布')
+# **失敗要用 exit code 說出來。** 在此之前無論通過與否一律 exit 0——
+# 讀輸出的人看得到 ★，但任何用 `&&` 串接或看 `$?` 的自動化都會被騙過去。
+# 2026-08-11 加。這是本 repo 反覆出現的同一類坑：否定訊號必須大聲。
+sys.exit(0 if ok else 1)
