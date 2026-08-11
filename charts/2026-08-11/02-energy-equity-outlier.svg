@@ -36,6 +36,16 @@ L 46.44 70.56
 z
 " style="fill: #ffffff"/>
    </g>
+   <g id="line2d_1">
+    <path d="M 88.363636 292.824 
+L 88.363636 70.56 
+" clip-path="url(#p590cffd353)" style="fill: none; stroke-dasharray: 0.9,1.485; stroke-dashoffset: 0; stroke: #9ba0a6; stroke-width: 0.9"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 389.127273 292.824 
+L 389.127273 70.56 
+" clip-path="url(#p590cffd353)" style="fill: none; stroke-dasharray: 0.9,1.485; stroke-dashoffset: 0; stroke: #9ba0a6; stroke-width: 0.9"/>
+   </g>
    <g id="FillBetweenPolyCollection_1">
     <defs>
      <path id="mcad6420a18" d="M 70.363636 -188.50222 
@@ -2057,7 +2067,7 @@ z
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
-     <g id="line2d_1"/>
+     <g id="line2d_3"/>
      <g id="text_1">
       <!-- 22/07 -->
       <g style="fill: #6b7076" transform="translate(45.845859 303.487437) scale(0.09 -0.09)">
@@ -2117,7 +2127,7 @@ z
      </g>
     </g>
     <g id="xtick_2">
-     <g id="line2d_2"/>
+     <g id="line2d_4"/>
      <g id="text_2">
       <!-- 23/01 -->
       <g style="fill: #6b7076" transform="translate(106.064041 303.487437) scale(0.09 -0.09)">
@@ -2165,7 +2175,7 @@ z
      </g>
     </g>
     <g id="xtick_3">
-     <g id="line2d_3"/>
+     <g id="line2d_5"/>
      <g id="text_3">
       <!-- 23/07 -->
       <g style="fill: #6b7076" transform="translate(165.300405 303.487437) scale(0.09 -0.09)">
@@ -2178,7 +2188,7 @@ z
      </g>
     </g>
     <g id="xtick_4">
-     <g id="line2d_4"/>
+     <g id="line2d_6"/>
      <g id="text_4">
       <!-- 24/01 -->
       <g style="fill: #6b7076" transform="translate(225.518587 303.487437) scale(0.09 -0.09)">
@@ -2215,7 +2225,7 @@ z
      </g>
     </g>
     <g id="xtick_5">
-     <g id="line2d_5"/>
+     <g id="line2d_7"/>
      <g id="text_5">
       <!-- 24/07 -->
       <g style="fill: #6b7076" transform="translate(285.082223 303.487437) scale(0.09 -0.09)">
@@ -2228,7 +2238,7 @@ z
      </g>
     </g>
     <g id="xtick_6">
-     <g id="line2d_6"/>
+     <g id="line2d_8"/>
      <g id="text_6">
       <!-- 25/01 -->
       <g style="fill: #6b7076" transform="translate(345.300405 303.487437) scale(0.09 -0.09)">
@@ -2261,7 +2271,7 @@ z
      </g>
     </g>
     <g id="xtick_7">
-     <g id="line2d_7"/>
+     <g id="line2d_9"/>
      <g id="text_7">
       <!-- 25/07 -->
       <g style="fill: #6b7076" transform="translate(404.536768 303.487437) scale(0.09 -0.09)">
@@ -2274,7 +2284,7 @@ z
      </g>
     </g>
     <g id="xtick_8">
-     <g id="line2d_8"/>
+     <g id="line2d_10"/>
      <g id="text_8">
       <!-- 26/01 -->
       <g style="fill: #6b7076" transform="translate(464.75495 303.487437) scale(0.09 -0.09)">
@@ -2307,7 +2317,7 @@ z
      </g>
     </g>
     <g id="xtick_9">
-     <g id="line2d_9"/>
+     <g id="line2d_11"/>
      <g id="text_9">
       <!-- 26/07 -->
       <g style="fill: #6b7076" transform="translate(523.991314 303.487437) scale(0.09 -0.09)">
@@ -2322,7 +2332,7 @@ z
    </g>
    <g id="matplotlib.axis_2">
     <g id="ytick_1">
-     <g id="line2d_10"/>
+     <g id="line2d_12"/>
      <g id="text_10">
       <!-- 25 -->
       <g style="fill: #6b7076" transform="translate(32.95 275.555576) scale(0.09 -0.09)">
@@ -2332,7 +2342,7 @@ z
      </g>
     </g>
     <g id="ytick_2">
-     <g id="line2d_11"/>
+     <g id="line2d_13"/>
      <g id="text_11">
       <!-- 30 -->
       <g style="fill: #6b7076" transform="translate(32.95 250.088197) scale(0.09 -0.09)">
@@ -2342,7 +2352,7 @@ z
      </g>
     </g>
     <g id="ytick_3">
-     <g id="line2d_12"/>
+     <g id="line2d_14"/>
      <g id="text_12">
       <!-- 35 -->
       <g style="fill: #6b7076" transform="translate(32.95 224.620819) scale(0.09 -0.09)">
@@ -2352,7 +2362,7 @@ z
      </g>
     </g>
     <g id="ytick_4">
-     <g id="line2d_13"/>
+     <g id="line2d_15"/>
      <g id="text_13">
       <!-- 40 -->
       <g style="fill: #6b7076" transform="translate(32.95 199.15344) scale(0.09 -0.09)">
@@ -2362,7 +2372,7 @@ z
      </g>
     </g>
     <g id="ytick_5">
-     <g id="line2d_14"/>
+     <g id="line2d_16"/>
      <g id="text_14">
       <!-- 45 -->
       <g style="fill: #6b7076" transform="translate(32.95 173.686061) scale(0.09 -0.09)">
@@ -2372,7 +2382,7 @@ z
      </g>
     </g>
     <g id="ytick_6">
-     <g id="line2d_15"/>
+     <g id="line2d_17"/>
      <g id="text_15">
       <!-- 50 -->
       <g style="fill: #6b7076" transform="translate(32.95 148.218683) scale(0.09 -0.09)">
@@ -2382,7 +2392,7 @@ z
      </g>
     </g>
     <g id="ytick_7">
-     <g id="line2d_16"/>
+     <g id="line2d_18"/>
      <g id="text_16">
       <!-- 55 -->
       <g style="fill: #6b7076" transform="translate(32.95 122.751304) scale(0.09 -0.09)">
@@ -2392,7 +2402,7 @@ z
      </g>
     </g>
     <g id="ytick_8">
-     <g id="line2d_17"/>
+     <g id="line2d_19"/>
      <g id="text_17">
       <!-- 60 -->
       <g style="fill: #6b7076" transform="translate(32.95 97.283926) scale(0.09 -0.09)">
@@ -2488,7 +2498,7 @@ z
      </g>
     </g>
    </g>
-   <g id="line2d_18">
+   <g id="line2d_20">
     <path d="M 70.363636 208.942095 
 L 70.690909 207.566857 
 L 71.018182 200.970806 
@@ -3415,6 +3425,83 @@ L 548.836364 92.785381
 L 572.76 292.824 
 " style="fill: none; stroke: #c9c5c0; stroke-width: 0.9; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
+   <g id="text_19">
+    <!-- +5.65% -->
+    <g style="fill: #9ba0a6" transform="translate(74.688011 69.44868) scale(0.08 -0.08)">
+     <defs>
+      <path id="NotoSansCJKtc-Regular-2b" d="M 1542 742 
+L 2010 742 
+L 2010 2144 
+L 3315 2144 
+L 3315 2579 
+L 2010 2579 
+L 2010 3981 
+L 1542 3981 
+L 1542 2579 
+L 243 2579 
+L 243 2144 
+L 1542 2144 
+L 1542 742 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-2e" d="M 890 -83 
+C 1120 -83 1312 96 1312 358 
+C 1312 627 1120 806 890 806 
+C 653 806 467 627 467 358 
+C 467 96 653 -83 890 -83 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-25" d="M 1312 1818 
+C 1958 1818 2381 2362 2381 3309 
+C 2381 4243 1958 4774 1312 4774 
+C 672 4774 250 4243 250 3309 
+C 250 2362 672 1818 1312 1818 
+z
+M 1312 2176 
+C 941 2176 691 2560 691 3309 
+C 691 4058 941 4416 1312 4416 
+C 1683 4416 1933 4058 1933 3309 
+C 1933 2560 1683 2176 1312 2176 
+z
+M 1446 -83 
+L 1843 -83 
+L 4435 4774 
+L 4038 4774 
+L 1446 -83 
+z
+M 4582 -83 
+C 5222 -83 5645 454 5645 1402 
+C 5645 2342 5222 2874 4582 2874 
+C 3942 2874 3520 2342 3520 1402 
+C 3520 454 3942 -83 4582 -83 
+z
+M 4582 275 
+C 4211 275 3955 653 3955 1402 
+C 3955 2150 4211 2515 4582 2515 
+C 4947 2515 5210 2150 5210 1402 
+C 5210 653 4947 275 4582 275 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#NotoSansCJKtc-Regular-2b"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-35" transform="translate(55.499985 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-2e" transform="translate(110.999969 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-36" transform="translate(138.799957 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-35" transform="translate(194.299942 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-25" transform="translate(249.799927 0)"/>
+    </g>
+   </g>
+   <g id="text_20">
+    <!-- +7.74% -->
+    <g style="fill: #9ba0a6" transform="translate(375.451648 69.44868) scale(0.08 -0.08)">
+     <use xlink:href="#NotoSansCJKtc-Regular-2b"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-37" transform="translate(55.499985 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-2e" transform="translate(110.999969 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-37" transform="translate(138.799957 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-34" transform="translate(194.299942 0)"/>
+     <use xlink:href="#NotoSansCJKtc-Regular-25" transform="translate(249.799927 0)"/>
+    </g>
+   </g>
    <g id="legend_1">
     <g id="patch_4">
      <path d="M 54.54 81.378157 
@@ -3424,7 +3511,7 @@ L 54.54 75.078157
 z
 " style="fill: #b8bbbe; fill-opacity: 0.35"/>
     </g>
-    <g id="text_19">
+    <g id="text_21">
      <!-- 250 日滾動區間 -->
      <g style="fill: #14161a" transform="translate(76.14 81.378157) scale(0.09 -0.09)">
       <defs>
@@ -3742,13 +3829,13 @@ z
       <use xlink:href="#NotoSansCJKtc-Regular-9593" transform="translate(588.899887 0)"/>
      </g>
     </g>
-    <g id="line2d_19">
+    <g id="line2d_21">
      <path d="M 156.141562 78.228157 
 L 163.341562 78.228157 
 L 170.541562 78.228157 
 " style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
-    <g id="text_20">
+    <g id="text_22">
      <!-- 能源類股 ETF（XLE） -->
      <g style="fill: #14161a" transform="translate(177.741562 81.378157) scale(0.09 -0.09)">
       <defs>
@@ -4181,7 +4268,7 @@ z
     </g>
    </g>
   </g>
-  <g id="text_21">
+  <g id="text_23">
    <!-- 能源股單日漲 4.7%，五年來只有兩天更猛 -->
    <g style="fill: #14161a" transform="translate(46.44 30.974547) scale(0.145 -0.145)">
     <defs>
@@ -5053,7 +5140,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Bold-731b" transform="translate(1769.49971 0)"/>
    </g>
   </g>
-  <g id="text_22">
+  <g id="text_24">
    <!-- 能源類股 ETF（XLE）日收盤與 250 日滾動高低區間，2022-08 至 2026-08-10（美元） -->
    <g style="fill: #6b7076" transform="translate(46.44 54.528975) scale(0.1 -0.1)">
     <defs>
@@ -5511,7 +5598,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Regular-ff09" transform="translate(3704.099319 0)"/>
    </g>
   </g>
-  <g id="text_23">
+  <g id="text_25">
    <!-- 區間帶為 250 交易日滾動高低收盤；XLE 為類股 ETF，水準不等於個別能源股報酬。 -->
    <g style="fill: #9ba0a6" transform="translate(46.44 346.7339) scale(0.08 -0.08)">
     <defs>
@@ -6337,7 +6424,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Regular-3002" transform="translate(3600.599426 0)"/>
    </g>
   </g>
-  <g id="text_24">
+  <g id="text_26">
    <!-- 資料來源：Yahoo Finance XLE 日收盤，2021-08-11 至 2026-08-10（布蘭特 BZ=F 同期） -->
    <g style="fill: #9ba0a6" transform="translate(46.44 338.2667) scale(0.08 -0.08)">
     <defs>
