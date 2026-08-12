@@ -639,7 +639,7 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
         # 同一個「正負分開堆疊」的坑，`_draw_stacked_bar` 的註解 2026-08-09 就記過一次。
         pad, bar, run = [], [], 0.0
         for v in ch.vals:
-            pad.append(min(run, run + v)); bar.append(abs(v)); run += v
+            pad.append(round(min(run, run + v), 6)); bar.append(abs(v)); run += v
         names = list(ch.cats)
         cols = [(REF if v >= 0 else DIM) for v in ch.vals]
         # 資料標籤要顯示原始的帶號值——可見長條的高度是 abs()，直接印會讓 −6.35 變成 6.35
