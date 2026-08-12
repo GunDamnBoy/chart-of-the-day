@@ -410,19 +410,19 @@ exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8')
 
 > 完整紀錄在 **[CHANGELOG.md](CHANGELOG.md)**。本節只留最新一筆（維護 skill 靠它判斷認知新舊）；**加新版本時把上一筆搬過去**，不要讓這裡長回 13,000 字元——那正是 2026-08-09 搬家的原因。
 
-### 2026-08-11 · 第 22 版（新增兩個取材來源，並更正它們的更新頻率）
+### 2026-08-12 · 第 23 版（gauge 首次使用當天讓整頁掛掉：參考線不能用 markLine）
 
 | | |
 |---|---|
-| **動到哪些檔** | `AGENT_BRIEF.md` §2 優先掃描清單＋兩條新規（彙整型來源往上追一層、不得變成翻譯）、§3.3 取用性表＋更新頻率段、§8；`MAINTENANCE.md` §4 兩筆待辦；排程 prompt |
-| **量測** | `chartsofthe.day`：首頁索引與 `/p/<slug>` **免登入全文可讀**，每期約 5 則帶圖論點；封存實際日期 08-11、08-07、08-06、08-05、08-04、07-29、07-28、07-24、07-23、07-17…**每週約 3–4 期**。`dbresearch.com` CoTD：清單頁約 **58,600 字元**，含標題／日期／分析師／導言；最新一期 **2026-08-03**，停更前為週間近乎每日 |
-| **怎麼驗的** | 兩個 URL 各自實抓；`chartsofthe.day` 另抓一篇個別文章確認免登入且內容完整；DB 清單頁逐條讀出日期序列與最新一期內文 |
-| **怎麼倒回去** | 從 §2 優先掃描清單與 §3.3 表格移除兩列即可，無程式相依 |
-| **當時已知的風險** | 「不要變成翻譯」是寫作紀律**沒有守門**；`chartsofthe.day` 好抓又是同類產品，最省力的做法就是照它第一則做。已列入 §4 觀察 |
+| **動到哪些檔** | `tools/chartkit.py`（`echarts_option` 的 gauge 分支）、`data/2026-08-12.json` 的 `option`（以 `rebuild_option.py` 重建，事實與紀錄未動）、`MAINTENANCE.md` §2、`CHANGELOG.md`、`AGENT_BRIEF.md` §8 |
+| **量測** | 修前：網站整頁只剩「載入失敗：Cannot read properties of undefined (reading 'getAxis')」，`#charts` 內 **0 個 ECharts 實例**，五張圖全部看不到（PNG 全部正常）。修後：**5 個實例、0 例外**。另修 `splitNumber` 預設 10 → 1，弧線上的刻度數字由 **10 個減為 2 個**（下緣與上緣），與靜態軌讀法一致 |
+| **怎麼驗的** | 以 Chrome 實載 Pages 頁面，讀 `#charts` 內 `[_echarts_instance_]` 數與 `.empty` 錯誤節點，並截圖確認量表與參考刻度；`check_day.py` 重跑全綠；`rebuild_option.py` 的逐欄位比對確認只有 `option` 改變 |
+| **怎麼倒回去** | 把 gauge 分支還原成單一 series ＋ `markLine`，再跑 `python3 tools/rebuild_option.py 2026-08-12`。**注意順序**：先改 `chartkit.py` 再重建 option，反過來會把舊的壞 option 寫回去 |
+| **當時已知的風險** | 參考刻度改用第二條 gauge 疊色段，**與靜態軌不是同一套實作**（靜態是 `axhline` 式的 zorder 疊圖），仍屬雙軌兩份；`ref_label` 在網頁上併進 series 名稱、在 PNG 上貼在刻度旁，位置不同。gauge 以外的五種新圖型**仍然沒有任何機制把 option 餵進 ECharts 驗證過** |
 
-**使用者給的更新頻率，兩個都與實測不符，而且方向相反。**
+**`check_day.py` 全綠、五張 PNG 都對，網站卻整頁空白——因為沒有任何檢查會把 `option` 交給 ECharts 執行。**
 
-- **`chartsofthe.day` 說是「每日」，實際每週約三到四期**，週間也跳日。差別有實務後果：若寫成每日，某天沒有新一期就會被當成取數失敗去排查。**掃到沒東西是常態，要先寫進規格才不會被誤判成故障。**
-- **DB Research 說是「每週」，實際停更前是週間近乎每日；而它現在停更中**——2026-08-03 那期內文明寫「This will be the last CoTD until September」。**它現存最新的一期（08-03）已經超過 slot 3 昨天才訂的七天上限**，所以在九月復刊之前，這個來源實際上取不到可用題材。仍然登錄它，但把停更與復刊查核日寫在旁邊；**登錄一個取不到東西的來源而不註明，就是昨天 Bloomberg Graphics 那個坑的翻版**。
-- 順帶補兩條規範。**彙整型來源要往上追一層**：`chartsofthe.day` 是策展型電子報，圖多半出自摩根大通、Bloomberg 等第三方，只記彙整方會讓日後的回頭查核停在轉手的那一層。**不要讓 slot 3 變成別人電子報的翻譯**：這幾個來源本身就是「每日一圖」產品，天天照它第一則做，我們就只是譯者——**取它的題目，但問題要自己重新提**。
-
+- 直接原因很小：gauge 不掛在直角座標系上，`markLine: {"data":[{"yAxis": ref}]}` 會讓 ECharts 去問一個不存在的軸。真正的問題是 `index.html` 只有一層 `boot().catch`，**一張圖丟例外就整頁只剩一行錯誤字**——五張圖的產出被一個參考刻度全部吃掉。
+- **這是「新圖型的互動軌沒有被跑過」這一類坑的第三次**：v7 是 category 軸按位置貼資料（網頁錯、PNG 對）、v20 是 marker 在新圖型靜默丟失、這次是 gauge 的參考線讓整頁掛掉。三次的共同形狀都一樣——**`render_static` 與 `echarts_option` 是一組兩份，而只有前者每天被執行**。`check_day` 檢查的是 JSON 欄位齊不齊，看不到 ECharts 會不會吃。
+- **六種新圖型裡，這是第一種真的被用出去的。** v16 加了圖型、v20 才發現 check_day 只讓 `range_area` 過關，而 waterfall／grouped_bar／gauge 一直到今天（2026-08-12）才第一次同時上線——**加了功能沒有人用，等於沒有被測過**。剩下的 `stacked_bar`／`pct_stacked_bar`／`heatmap` 目前仍是零使用，下次首用時要預期同一類問題。
+- 沒有一併加自動守門（例如在 CI 用 headless 跑一次 `setOption`），因為那需要在 repo 裡帶 Node 與 ECharts；先記在 `MAINTENANCE.md` §4 待辦，並在首用新圖型的當天以人工實載頁面驗證。
