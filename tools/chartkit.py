@@ -649,10 +649,19 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
         pct = ch.kind == "pct_stacked_bar"
         stack = None if ch.kind == "grouped_bar" else "s"
         tot = [sum(g["values"][i] for g in ch.groups) or 1.0 for i in range(len(ch.cats))]
+        # **`barWidth` 是「每一條」的寬度，不是「一整組」的寬度。**
+        # 堆疊圖每條都疊在同一個位置，62% 就是整組 62%，與靜態軌的 width=0.62 相符；
+        # 但分組圖是並排的，兩條各 62% 會讓一組佔掉類別帶的 143%（還要加 barGap），
+        # 溢出的部分被 ECharts 往旁邊推，柱子就與 x 軸標籤對不上——
+        # 2026-08-12 grouped_bar 首次上線即如此（PNG 正確、網頁位移）。
+        # 分組圖改用 `barCategoryGap` 指定「一整組佔類別帶多少」，寬度交給 ECharts 均分，
+        # 對齊靜態軌的 0.8／組、組內 0.9 佔比。
+        width = {"barCategoryGap": "20%", "barGap": "10%"} if stack is None \
+            else {"barWidth": "62%"}
         base.update({"xAxis": cat, "yAxis": {**val, **({"max": 100} if pct else {})},
                      "legend": {"top": 2, "textStyle": {"color": MUTED}},
                      "series": [
-                         {"type": "bar", "name": g["name"], "stack": stack, "barWidth": "62%",
+                         {"type": "bar", "name": g["name"], "stack": stack, **width,
                           "itemStyle": {"color": g.get("color") or PALETTE[j % len(PALETTE)]},
                           "data": [(g["values"][i] / tot[i] * 100 if pct else g["values"][i])
                                    for i in range(len(ch.cats))]}

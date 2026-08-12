@@ -106,6 +106,7 @@ v12 的變更紀錄把每日手打 `series` 寫成「~34,000 字元」——那�
 | **「回空殼」被誤判成「被封鎖」** | 前端渲染的頁面用一般抓取只拿得到外殼，看起來像被擋 | **處置相反**：空殼換瀏覽器就讀得到（Bloomberg Graphics 索引頁免登入即有圖題、論點與日期）；封鎖不該繞。誤判的代價是白白放棄一個可用來源 |
 | **生效日守門寫成 `DAY >= '2026-08-12'` 而恆為 False** | **`DAY` 是檔案路徑不是日期字串**（`REPO + '/data/....json'`），開頭的 `/` 小於數字，比較永遠不成立。八個測試案例全數靜默不觸發、exit code 0 | 期別一律用 `d['date']`。**同一次修正裡 `_lag` 也用了 `DAY`**，`fromisoformat` 拋的 ValueError 被自己的 `except` 吞掉，八個案例又全報「格式錯誤」——**改一半比沒改更難發現** |
 | **五張 PNG 都對、`check_day` 全綠，網站卻整頁只剩「載入失敗」** | **新圖型的 ECharts option 從來沒有被真的執行過。** 2026-08-12 首次使用 `gauge`：`markLine: {"data":[{"yAxis": ref}]}` 在沒有直角座標系的 gauge 上會丟 `Cannot read properties of undefined (reading 'getAxis')`，而 `index.html` 只有一層 `boot().catch`，**一張圖丟例外就整頁死掉** | gauge 的參考刻度改用第二條 gauge 疊一小段深色 `axisLine`（`z:10` 蓋在 progress 之上），並把 `splitNumber` 設 1 避免弧線上印出十個刻度數字。**首次使用任何一種新圖型的當天，一定要實載網頁看一眼**——`check_day` 檢查欄位齊不齊，不會把 option 餵進 ECharts。目前仍零使用的是 `stacked_bar`／`pct_stacked_bar`／`heatmap` |
+| **網頁上的分組柱形圖整組與 x 軸標籤錯位，PNG 卻正確** | **`barWidth` 是每一條的寬度，不是一整組的寬度。** grouped_bar 兩條 series 各給 62%，一組實佔類別帶 143%（含 barGap），溢出後被 ECharts 往旁邊推。堆疊圖不會有這問題，因為每條疊在同一個位置 | 分組圖改用 `barCategoryGap`（一整組佔類別帶多少）＋`barGap`，寬度交給 ECharts 均分；`barWidth` 只留給 stacked／pct_stacked。**這是軟失敗——不丟例外、數字也對，只有位置錯**，任何自動檢查都照不到，只能靠首用當天實載網頁目視 |
 | **`check_day` 失敗仍 exit 0** | `bad()` 只設旗標並印 `★`，從不 `sys.exit(1)` | 已加 `sys.exit(0 if ok else 1)`。讀輸出的人看得到 ★，但用 `&&` 串接或看 `$?` 的自動化會被騙過去 |
 
 ## 2.1 建置當天踩到的兩個坑（下次開新知識庫會再遇到）
