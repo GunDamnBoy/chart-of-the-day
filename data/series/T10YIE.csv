@@ -1,4 +1,4 @@
-# T10YIE | FRED (browser graph) | fetched 2026-08-11
+# T10YIE | FRED (browser graph) | fetched 2026-08-12
 date,value
 2021-08-02,2.37
 2021-08-03,2.38
@@ -1255,3 +1255,4 @@ date,value
 2026-08-06,2.26
 2026-08-07,2.25
 2026-08-10,2.29
+2026-08-11,2.27

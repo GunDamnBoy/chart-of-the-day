@@ -1,4 +1,4 @@
-# DGS2 | FRED (browser graph) | fetched 2026-08-11
+# DGS2 | FRED (browser graph) | fetched 2026-08-12
 date,value
 2021-08-02,0.17
 2021-08-03,0.17
@@ -1254,3 +1254,4 @@ date,value
 2026-08-05,4.18
 2026-08-06,4.25
 2026-08-07,4.19
+2026-08-10,4.25
