@@ -731,7 +731,7 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
         rf = max(0.0, min(1.0, (ref - lo) / (hi - lo)))
         w, clear = 0.005, "rgba(0,0,0,0)"
         marks = [{"type": "gauge", "startAngle": 180, "endAngle": 0, "radius": "92%",
-                  "center": ["50%", "72%"], "min": lo, "max": hi, "silent": True,
+                  "center": ["50%", "72%"], "min": lo, "max": hi, "silent": True, "z": 10,
                   "progress": {"show": False}, "pointer": {"show": False},
                   "axisTick": {"show": False}, "splitLine": {"show": False},
                   "axisLabel": {"show": False}, "detail": {"show": False},
@@ -743,12 +743,16 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
             name = f'{ch.y_label}｜{g["ref_label"]}'
     base.update({"series": [{
         "type": "gauge", "startAngle": 180, "endAngle": 0, "radius": "92%",
-        "center": ["50%", "72%"], "min": lo, "max": hi,
+        "center": ["50%", "72%"], "min": lo, "max": hi, "z": 1,
         "progress": {"show": True, "width": 22, "itemStyle": {"color": ACCENT}},
         "axisLine": {"lineStyle": {"width": 22, "color": [[1, GRID]]}},
         "pointer": {"show": False}, "axisTick": {"show": False},
         "splitLine": {"show": False},
-        "axisLabel": {"color": FAINT, "fontSize": 10, "distance": -32},
+        # splitNumber 預設 10，會沿著弧線印出十個刻度數字把圖蓋滿；
+        # 靜態軌只標下緣與上緣兩個值，這裡對齊成同一種讀法。
+        "splitNumber": 1,
+        "axisLabel": {"color": FAINT, "fontSize": 10, "distance": -32,
+                      "formatter": "{value}"},
         "title": {"show": True, "offsetCenter": [0, "26%"],
                   "color": MUTED, "fontSize": 12},
         "detail": {"valueAnimation": False, "offsetCenter": [0, "-8%"],
