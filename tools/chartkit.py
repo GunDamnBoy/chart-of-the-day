@@ -709,11 +709,41 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
         return base
 
     # gauge
+    #
+    # **參考線不能用 `markLine`。** gauge 不掛在直角座標系上，`{"yAxis": ref}` 會讓
+    # ECharts 去問一個不存在的軸，丟 `Cannot read properties of undefined (reading 'getAxis')`；
+    # 而 index.html 只有一層 `boot().catch`，**一張圖丟例外就整頁只剩「載入失敗」**。
+    # 2026-08-12 首次使用 gauge 當天就撞上——**新圖型的互動軌沒有被任何檢查跑過**，
+    # check_day 檢查的是 JSON 欄位齊不齊，不會把 option 餵進 ECharts。
+    #
+    # 改法：參考刻度用第二條 gauge 疊上去，只在 ref 的角度留一小段深色 axisLine，
+    # 其餘透明。角度由 ECharts 自己換算，不必手算 pointer 長度；疊在主序列之後
+    # 所以不會被紅色 progress 蓋掉（靜態軌是靠 zorder=6 達到同一件事）。
+    # ref_label 併進主序列的 name——gauge 的 title 是固定偏移、不跟著角度走，
+    # 硬要貼在刻度旁邊會在 ref 靠近兩端時飛出圖外。
     g = ch.gauge
     base.pop("tooltip", None)
+    base.pop("grid", None)
+    lo, hi, ref = g.get("lo", 0.0), g.get("hi", 100.0), g.get("ref")
+    name = ch.y_label
+    marks = []
+    if ref is not None and hi != lo:
+        rf = max(0.0, min(1.0, (ref - lo) / (hi - lo)))
+        w, clear = 0.005, "rgba(0,0,0,0)"
+        marks = [{"type": "gauge", "startAngle": 180, "endAngle": 0, "radius": "92%",
+                  "center": ["50%", "72%"], "min": lo, "max": hi, "silent": True,
+                  "progress": {"show": False}, "pointer": {"show": False},
+                  "axisTick": {"show": False}, "splitLine": {"show": False},
+                  "axisLabel": {"show": False}, "detail": {"show": False},
+                  "title": {"show": False},
+                  "axisLine": {"lineStyle": {"width": 22, "color": [
+                      [max(0.0, rf - w), clear], [min(1.0, rf + w), INK], [1, clear]]}},
+                  "data": []}]
+        if g.get("ref_label"):
+            name = f'{ch.y_label}｜{g["ref_label"]}'
     base.update({"series": [{
         "type": "gauge", "startAngle": 180, "endAngle": 0, "radius": "92%",
-        "center": ["50%", "72%"], "min": g.get("lo", 0), "max": g.get("hi", 100),
+        "center": ["50%", "72%"], "min": lo, "max": hi,
         "progress": {"show": True, "width": 22, "itemStyle": {"color": ACCENT}},
         "axisLine": {"lineStyle": {"width": 22, "color": [[1, GRID]]}},
         "pointer": {"show": False}, "axisTick": {"show": False},
@@ -724,8 +754,7 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
         "detail": {"valueAnimation": False, "offsetCenter": [0, "-8%"],
                    "color": ACCENT, "fontSize": 30, "fontWeight": "bold",
                    "formatter": ch.y_fmt.format(g["value"])},
-        "markLine": ({"data": [{"yAxis": g["ref"]}]} if g.get("ref") is not None else None),
-        "data": [{"value": g["value"], "name": ch.y_label}]}]})
+        "data": [{"value": g["value"], "name": name}]}] + marks})
     return base
 
 
