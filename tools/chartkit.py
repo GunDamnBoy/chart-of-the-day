@@ -629,19 +629,32 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
            "axisLabel": {"color": MUTED}}
 
     if ch.kind == "waterfall":
-        # ECharts 沒有瀑布型別，慣例是用一條透明的墊底堆疊出來
+        # ECharts 沒有瀑布型別，慣例是用一條透明的墊底堆疊出來。
+        #
+        # **但 ECharts 預設把正值與負值分開堆疊**（`stackStrategy: "samesign"`）。
+        # 墊底是負的、可見長條是 abs()＝正的，兩者因此各走各的堆疊，
+        # 每根都從 0 往上長——整座階梯消失、跌的日子看起來像漲的，而且不丟任何例外。
+        # 2026-08-12 waterfall 首次上線即如此（PNG 正確）。`stackStrategy: "all"`
+        # （ECharts ≥5.3.3，本站載 5.5.0）才會把正負一起累加。
+        # 同一個「正負分開堆疊」的坑，`_draw_stacked_bar` 的註解 2026-08-09 就記過一次。
         pad, bar, run = [], [], 0.0
         for v in ch.vals:
             pad.append(min(run, run + v)); bar.append(abs(v)); run += v
         names = list(ch.cats)
         cols = [(REF if v >= 0 else DIM) for v in ch.vals]
+        # 資料標籤要顯示原始的帶號值——可見長條的高度是 abs()，直接印會讓 −6.35 變成 6.35
+        labs = [{"formatter": ch.y_fmt.format(v), "color": MUTED} for v in ch.vals]
         if ch.total_label:
             names.append(ch.total_label); pad.append(0); bar.append(run); cols.append(ACCENT)
+            labs.append({"formatter": ch.y_fmt.format(run), "color": ACCENT,
+                         "fontWeight": "bold"})
         base.update({"xAxis": {**cat, "data": names}, "yAxis": val, "series": [
-            {"type": "bar", "stack": "w", "silent": True, "itemStyle": {"opacity": 0},
-             "data": pad, "tooltip": {"show": False}},
-            {"type": "bar", "stack": "w", "barWidth": "62%", "name": ch.y_label,
-             "data": [{"value": b, "itemStyle": {"color": c}} for b, c in zip(bar, cols)],
+            {"type": "bar", "stack": "w", "stackStrategy": "all", "silent": True,
+             "itemStyle": {"opacity": 0}, "data": pad, "tooltip": {"show": False}},
+            {"type": "bar", "stack": "w", "stackStrategy": "all", "barWidth": "62%",
+             "name": ch.y_label,
+             "data": [{"value": b, "itemStyle": {"color": c}, "label": lb}
+                      for b, c, lb in zip(bar, cols, labs)],
              "label": {"show": True, "position": "top", "color": MUTED, "fontSize": 10}}]})
         return base
 
