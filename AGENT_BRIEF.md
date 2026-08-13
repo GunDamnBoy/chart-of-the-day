@@ -414,21 +414,22 @@ exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8')
 
 > 完整紀錄在 **[CHANGELOG.md](CHANGELOG.md)**。本節只留最新一筆（維護 skill 靠它判斷認知新舊）；**加新版本時把上一筆搬過去**，不要讓這裡長回 13,000 字元——那正是 2026-08-09 搬家的原因。
 
-### 2026-08-12 · 第 23 版（三種新圖型同日首次上線，互動軌三個缺陷全中：gauge 讓整頁掛掉、grouped_bar 柱子錯位、waterfall 階梯消失）
+### 2026-08-13 · 第 24 版（三大數據發布日第一次真的畫 CPI，一次撞出四個「規範自己禁止自己」的缺口）
 
 | | |
 |---|---|
-| **動到哪些檔** | `tools/chartkit.py`（`echarts_option` 的 gauge 分支）、`data/2026-08-12.json` 的 `option`（以 `rebuild_option.py` 重建，事實與紀錄未動）、`MAINTENANCE.md` §2、`CHANGELOG.md`、`AGENT_BRIEF.md` §8 |
-| **量測** | ①gauge：修前網站整頁只剩「載入失敗：Cannot read properties of undefined (reading 'getAxis')」，`#charts` 內 **0 個 ECharts 實例**，五張圖全部看不到（PNG 全部正常）；修後 **5 個實例、0 例外**。另把 `splitNumber` 預設 10 改為 1，弧線上的刻度數字由 **10 個減為 2 個**（下緣與上緣），與靜態軌讀法一致。②grouped_bar：兩條 series 各給 `barWidth: 62%`，一組實佔類別帶 **62%×2＋barGap 30% ≈ 143%**，溢出後柱子與 x 軸標籤整組錯位（PNG 正確）；改用 `barCategoryGap: 20%`＋`barGap: 10%` 由 ECharts 均分，對齊靜態軌的每組 0.8、組內 0.9。③waterfall：ECharts 預設 `stackStrategy: "samesign"`，負的墊底與 abs() 後為正的可見長條**各走各的堆疊**，**八根長條全部從 0 往上長、整座階梯消失**，跌的兩天畫成正的 6.35 與 4.41（PNG 正確）；改 `stackStrategy: "all"` 並讓資料標籤印原始帶號值 |
-| **怎麼驗的** | 以 Chrome 實載 Pages 頁面，讀 `#charts` 內 `[_echarts_instance_]` 數與 `.empty` 錯誤節點，並截圖確認量表與參考刻度；`check_day.py` 重跑全綠；`rebuild_option.py` 的逐欄位比對確認只有 `option` 改變 |
-| **怎麼倒回去** | 把 gauge 分支還原成單一 series ＋ `markLine`，再跑 `python3 tools/rebuild_option.py 2026-08-12`。**注意順序**：先改 `chartkit.py` 再重建 option，反過來會把舊的壞 option 寫回去 |
-| **當時已知的風險** | 參考刻度改用第二條 gauge 疊色段，**與靜態軌不是同一套實作**（靜態是 zorder 疊圖），仍屬雙軌兩份；`ref_label` 在網頁上併進 series 名稱、在 PNG 上貼在刻度旁，位置不同。`stacked_bar` 沿用 `barWidth: 62%` 是對的（堆疊同位置），但**那條路徑同樣沒有被跑過**，且它一旦遇到正負混合的資料會撞上與 waterfall 同一個 `stackStrategy` 問題（靜態軌 2026-08-09 已為此特別處理過正負分堆）；`stacked_bar`／`pct_stacked_bar`／`heatmap` 仍是零使用，且**仍然沒有任何機制把 option 餵進 ECharts 驗證** |
+| **動到哪些檔** | `tools/check_day.py`（序列新鮮度拆日頻／月頻）、`tools/macro_release.py`（2% 目標線補滿日期）、`tools/build_series.py`（`yoy` 自動標 `derived` ＋ selftest 期望值）、`tools/chartkit.py`（heatmap 左邊界、末值標籤碰撞改用同軸聯集範圍）、`AGENT_BRIEF.md` §3.4／§3.5／§8、`CHANGELOG.md`、`MAINTENANCE.md` §2。**未動 `data/` 的既有期別**（08-12 曾被誤覆寫後已自 git 物件還原為原始 blob，見下） |
+| **量測** | ①月頻新鮮度：CPI 觀測 `2026-07-01` 在 08-13 那輪落後 **43 天**，舊規則直接硬失敗；改判後為「月頻落後 0 期」，通過。②2% 目標線：工具產出 **2 點**，而 `check_day` 要求 timeseries 每條 ≥ **20 點**——工具自己的產出過不了同一份規範；補滿後 78 點。③`yoy` 誤報：CPI 兩條年增率共 **2 筆** 5σ 旗標（總體 2020-06 **+260.00%** z=7.4、核心 2021-04 **+80.61%** z=6.2），標 `derived` 後由逐筆處置改為整條說明一次。④heatmap 首用：靜態軌左邊界 `left=0.075`，「南韓 KOSPI」「費城半導體」被切掉左半邊（互動軌 `grid.left` 早就是 92），改 `0.155` 後完整。⑤末值標籤：美光 319.29 與希捷 318.90 疊印成一團——碰撞判斷用的是**各序列自己的 min/max**（frac 0.66 對 0.73，差 0.07 剛好大於門檻 0.06），改用同軸聯集範圍後分開 |
+| **怎麼驗的** | `check_day.py` 由 exit 1 轉全綠（唯一警示是布蘭特落後 2 天，已在 note 與 `window.note` 標明基準日）；`build_series --selftest`、`macro_release --selftest` 均通過；五張 PNG 逐張目視；heatmap 首用依 `MAINTENANCE` §4 實載 Pages 頁面確認 ECharts 實例數與例外 |
+| **怎麼倒回去** | 四個檔案各自獨立，可分別還原。**注意順序**：`chartkit.py` 與 `macro_release.py` 還原後要重跑 `render_day.py`（或舊期用 `rebuild_option.py`）；`build_series.py` 的 `yoy` derived 若還原，既有 JSON 裡已寫入的 `"derived": true` 不會自己消失，需一併處理 |
+| **當時已知的風險** | `heatmap` 是六種新圖型裡第四種真的被用出去的，**`stacked_bar`／`pct_stacked_bar` 仍是零使用**，下次首用要預期同一類問題。月頻門檻「≥3 期硬失敗」是憑「漏掉一次發布」推出來的，**沒有實際樣本校準過**。末值標籤的碰撞門檻仍固定 0.06，序列超過三條時仍可能不夠。**排程 prompt（`~/Documents/Claude/Scheduled/chart-of-the-day-daily/SKILL.md`）不在本輪可寫入的路徑內，§3.4／§3.5 的兩條新規則尚未同步到第三處** |
 
-**`check_day.py` 全綠、五張 PNG 都對，網站卻整頁空白——因為沒有任何檢查會把 `option` 交給 ECharts 執行。**
+**四個缺口的形狀完全一樣：規範 A 要求做某件事，規範 B 禁止它，而兩者從來沒有在同一天被同時執行過。**
 
-- 直接原因很小：gauge 不掛在直角座標系上，`markLine: {"data":[{"yAxis": ref}]}` 會讓 ECharts 去問一個不存在的軸。真正的問題是 `index.html` 只有一層 `boot().catch`，**一張圖丟例外就整頁只剩一行錯誤字**——五張圖的產出被一個參考刻度全部吃掉。
-- **同一天、同一個根因，三種新圖型三個缺陷，一個都沒躲掉。** gauge 是硬失敗（丟例外、整頁掛掉，一眼看得出來）；grouped_bar 與 waterfall 都是**軟失敗**——不丟例外、數字也對、圖照樣畫出來，只有位置或方向錯，而 PNG 全部正確。waterfall 那個尤其嚴重：**跌的兩天被畫成漲的**，圖上的結論與 `takeaway` 完全相反，卻沒有任何紅字。
-- **軟失敗才是這類坑的主體。** 硬失敗當天就會被人看到；軟失敗可以掛在網站上好幾期沒人發現，而下游 House View 取的是 PNG，也不會替我們把它抓出來。
-- **這是「新圖型的互動軌沒有被跑過」這一類坑的第三次**：v7 是 category 軸按位置貼資料（網頁錯、PNG 對）、v20 是 marker 在新圖型靜默丟失、這次是 gauge 的參考線讓整頁掛掉。三次的共同形狀都一樣——**`render_static` 與 `echarts_option` 是一組兩份，而只有前者每天被執行**。`check_day` 檢查的是 JSON 欄位齊不齊，看不到 ECharts 會不會吃。
-- **六種新圖型裡，這是第一種真的被用出去的。** v16 加了圖型、v20 才發現 check_day 只讓 `range_area` 過關，而 waterfall／grouped_bar／gauge 一直到今天（2026-08-12）才第一次同時上線——**加了功能沒有人用，等於沒有被測過**。剩下的 `stacked_bar`／`pct_stacked_bar`／`heatmap` 目前仍是零使用，下次首用時要預期同一類問題。
-- 沒有一併加自動守門（例如在 CI 用 headless 跑一次 `setOption`），因為那需要在 repo 裡帶 Node 與 ECharts；先記在 `MAINTENANCE.md` §4 待辦，並在首用新圖型的當天以人工實載頁面驗證。
+- 第 11 版（08-09）訂下「三大數據發布日 slot 1 必畫該數據」，第 3.5 節的新鮮度門檻更早就在。**兩者中間隔了四天，而這四天剛好沒有任何一次發布**——規則寫下去之後**第一次真的觸發是 2026-08-13**，一觸發就同時撞到三個。
+- **「加了功能沒有人用，等於沒有被測過」在這裡的變體是「加了規則沒有被觸發，等於沒有被驗證過」。** 前者 08-12 已經吃過一次（gauge 首用整頁掛掉），後者是同一件事換一個位置。
+- 值得注意的是**它們全都是硬失敗，所以當天就被擋住**。真正該擔心的仍是軟失敗——heatmap 的列標籤被切掉、末值標籤疊印，`check_day` 一個都照不到，只有人眼看得出來。**這一輪五張 PNG 逐張目視，兩個缺陷都是這樣抓到的。**
+
+**另有一起執行事故（非程式缺陷）**：撰稿階段以 `/tmp` 下的同名舊腳本執行，把 `data/2026-08-12.json` 覆寫成 15KB 空殼，且該版本一度被 dashpush 推上 Pages。已直接讀 `.git` 鬆散物件（zlib 解壓，**未執行任何 git 指令**），自覆寫前最後一個 commit `84da62f` 取回原始 blob 還原（120,292 bytes、5 圖、`option` 齊全、2,872 個序列點）。教訓有兩層：**暫存腳本一律寫在 outputs 並帶日期**，不要用 `/tmp` 的通用檔名；以及 **Pages 不是備份**——它跟著 daemon 走，180 秒內就會把錯的版本蓋上去，唯一可靠的還原點是 `.git` 物件。
+
+---

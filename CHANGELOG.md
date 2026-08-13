@@ -55,6 +55,7 @@ EOF
 
 | 版 | 日期 | 一句話 | 動到已發布資料？ | 動到 cron？ |
 |---|---|---|---|---|
+| **24** | 08-13 | 三大數據發布日首次實作，四個「規範自己禁止自己」的缺口 | 否（08-12 誤覆寫已自 git 物件還原） | 否 |
 | **23** | 08-12 | 三種新圖型同日首用，互動軌三個缺陷全中（含 waterfall 階梯消失） | **`option` 重建**（衍生產物） | 否 |
 | **22** | 08-11 | 新增 chartsofthe.day 與 DB Research 兩個取材來源 | 否 | 否 |
 | **21** | 08-11 | 重製圖取材改判準、時效放寬七天、check_day 失敗回傳 1 | 否 | 是 |
@@ -81,6 +82,27 @@ EOF
 | **1** | 08-05 | 建立 | —（起點） | 建立 `0 9` |
 
 **「動到已發布資料」那欄要分三級看**：`series`／`about` 是**事實與紀錄**，只有 v6 破例動過一次（經同意，理由是該期為試作首版且是全部歷史）；`option`／PNG 是**衍生產物**，可用 `rebuild_option.py` 重建，事實不變；其餘版本完全沒碰 `data/`。
+
+---
+
+### 2026-08-12 · 第 23 版（三種新圖型同日首次上線，互動軌三個缺陷全中：gauge 讓整頁掛掉、grouped_bar 柱子錯位、waterfall 階梯消失）
+
+| | |
+|---|---|
+| **動到哪些檔** | `tools/chartkit.py`（`echarts_option` 的 gauge 分支）、`data/2026-08-12.json` 的 `option`（以 `rebuild_option.py` 重建，事實與紀錄未動）、`MAINTENANCE.md` §2、`CHANGELOG.md`、`AGENT_BRIEF.md` §8 |
+| **量測** | ①gauge：修前網站整頁只剩「載入失敗：Cannot read properties of undefined (reading 'getAxis')」，`#charts` 內 **0 個 ECharts 實例**，五張圖全部看不到（PNG 全部正常）；修後 **5 個實例、0 例外**。另把 `splitNumber` 預設 10 改為 1，弧線上的刻度數字由 **10 個減為 2 個**（下緣與上緣），與靜態軌讀法一致。②grouped_bar：兩條 series 各給 `barWidth: 62%`，一組實佔類別帶 **62%×2＋barGap 30% ≈ 143%**，溢出後柱子與 x 軸標籤整組錯位（PNG 正確）；改用 `barCategoryGap: 20%`＋`barGap: 10%` 由 ECharts 均分，對齊靜態軌的每組 0.8、組內 0.9。③waterfall：ECharts 預設 `stackStrategy: "samesign"`，負的墊底與 abs() 後為正的可見長條**各走各的堆疊**，**八根長條全部從 0 往上長、整座階梯消失**，跌的兩天畫成正的 6.35 與 4.41（PNG 正確）；改 `stackStrategy: "all"` 並讓資料標籤印原始帶號值 |
+| **怎麼驗的** | 以 Chrome 實載 Pages 頁面，讀 `#charts` 內 `[_echarts_instance_]` 數與 `.empty` 錯誤節點，並截圖確認量表與參考刻度；`check_day.py` 重跑全綠；`rebuild_option.py` 的逐欄位比對確認只有 `option` 改變 |
+| **怎麼倒回去** | 把 gauge 分支還原成單一 series ＋ `markLine`，再跑 `python3 tools/rebuild_option.py 2026-08-12`。**注意順序**：先改 `chartkit.py` 再重建 option，反過來會把舊的壞 option 寫回去 |
+| **當時已知的風險** | 參考刻度改用第二條 gauge 疊色段，**與靜態軌不是同一套實作**（靜態是 zorder 疊圖），仍屬雙軌兩份；`ref_label` 在網頁上併進 series 名稱、在 PNG 上貼在刻度旁，位置不同。`stacked_bar` 沿用 `barWidth: 62%` 是對的（堆疊同位置），但**那條路徑同樣沒有被跑過**，且它一旦遇到正負混合的資料會撞上與 waterfall 同一個 `stackStrategy` 問題（靜態軌 2026-08-09 已為此特別處理過正負分堆）；`stacked_bar`／`pct_stacked_bar`／`heatmap` 仍是零使用，且**仍然沒有任何機制把 option 餵進 ECharts 驗證** |
+
+**`check_day.py` 全綠、五張 PNG 都對，網站卻整頁空白——因為沒有任何檢查會把 `option` 交給 ECharts 執行。**
+
+- 直接原因很小：gauge 不掛在直角座標系上，`markLine: {"data":[{"yAxis": ref}]}` 會讓 ECharts 去問一個不存在的軸。真正的問題是 `index.html` 只有一層 `boot().catch`，**一張圖丟例外就整頁只剩一行錯誤字**——五張圖的產出被一個參考刻度全部吃掉。
+- **同一天、同一個根因，三種新圖型三個缺陷，一個都沒躲掉。** gauge 是硬失敗（丟例外、整頁掛掉，一眼看得出來）；grouped_bar 與 waterfall 都是**軟失敗**——不丟例外、數字也對、圖照樣畫出來，只有位置或方向錯，而 PNG 全部正確。waterfall 那個尤其嚴重：**跌的兩天被畫成漲的**，圖上的結論與 `takeaway` 完全相反，卻沒有任何紅字。
+- **軟失敗才是這類坑的主體。** 硬失敗當天就會被人看到；軟失敗可以掛在網站上好幾期沒人發現，而下游 House View 取的是 PNG，也不會替我們把它抓出來。
+- **這是「新圖型的互動軌沒有被跑過」這一類坑的第三次**：v7 是 category 軸按位置貼資料（網頁錯、PNG 對）、v20 是 marker 在新圖型靜默丟失、這次是 gauge 的參考線讓整頁掛掉。三次的共同形狀都一樣——**`render_static` 與 `echarts_option` 是一組兩份，而只有前者每天被執行**。`check_day` 檢查的是 JSON 欄位齊不齊，看不到 ECharts 會不會吃。
+- **六種新圖型裡，這是第一種真的被用出去的。** v16 加了圖型、v20 才發現 check_day 只讓 `range_area` 過關，而 waterfall／grouped_bar／gauge 一直到今天（2026-08-12）才第一次同時上線——**加了功能沒有人用，等於沒有被測過**。剩下的 `stacked_bar`／`pct_stacked_bar`／`heatmap` 目前仍是零使用，下次首用時要預期同一類問題。
+- 沒有一併加自動守門（例如在 CI 用 headless 跑一次 `setOption`），因為那需要在 repo 裡帶 Node 與 ECharts；先記在 `MAINTENANCE.md` §4 待辦，並在首用新圖型的當天以人工實載頁面驗證。
 
 ---
 
