@@ -135,12 +135,27 @@ for c in d['charts']:
     elif os.path.getsize(png) < 20000: bad(f'PNG 過小可能沒畫出來：{png}')
 
 # 序列新鮮度：拿兩天前的收盤當「今天」講，是最容易發生也最難察覺的錯
+#
+# **日頻與月頻要分開判。** 2/5 天的門檻是為日收盤序列訂的（brief §3.5 的原始案例是
+# 「^SOX 止於 08-03 卻用來算 08-05 的跌幅」）。但 brief §2 規定三大數據發布當日
+# slot 1 必須是該數據的圖，而 CPI／PCE／非農都是**月頻**：7 月觀測值標記為
+# 2026-07-01，在 8 月 13 日那輪一律落後 43 天——**照日頻門檻算是硬失敗，
+# 等於同一份規範自己禁止自己**。2026-08-13 首次真的畫 CPI 當天撞上。
+# 月頻改判「距今幾個月」：落後兩期以上才是真的舊（那代表漏掉了一次發布）。
 import datetime
 doc_day = datetime.date.fromisoformat(d['date'])
-ends = {}
+
+
+def _monthly(s):
+    """FRED 月頻序列一律以每月 1 號標記（與 build_series._is_monthly 同一條判準）。"""
+    return len(s['dates']) > 2 and all(x.endswith('-01') for x in s['dates'])
+
+
+ends, ends_m = {}, {}
 for c in d['charts']:
     for s in c.get('series', []):
-        ends.setdefault(s['dates'][-1], []).append(f"{c['slug']}／{s['name']}")
+        (ends_m if _monthly(s) else ends).setdefault(
+            s['dates'][-1], []).append(f"{c['slug']}／{s['name']}")
 print('   序列新鮮度：')
 for last in sorted(ends, reverse=True):
     gap = (doc_day - datetime.date.fromisoformat(last)).days
@@ -151,6 +166,18 @@ for last in sorted(ends, reverse=True):
               '｜凡以此序列計算的「今天」數字，subtitle 或 note 必須寫出實際基準日')
     else:
         print(f'     {gap} 天（末日 {last}）：{len(ends[last])} 條序列')
+for last in sorted(ends_m, reverse=True):
+    ld = datetime.date.fromisoformat(last)
+    months = (doc_day.year - ld.year) * 12 + (doc_day.month - ld.month)
+    if months >= 3:
+        bad(f'月頻序列已落後 {months} 期（最新觀測 {last[:7]}）：{"、".join(ends_m[last])}'
+            '——那代表漏掉了一次以上的官方發布，不要照原樣出圖')
+    elif months >= 2:
+        print(f'   ⚠ 月頻落後 {months} 期（最新觀測 {last[:7]}）：{"、".join(ends_m[last])}'
+              '｜subtitle 或 note 必須寫出參照月份')
+    else:
+        print(f'     月頻（最新觀測 {last[:7]}）：{len(ends_m[last])} 條序列')
+ends = {**ends, **ends_m}          # window.note 的雙向比對仍涵蓋月頻末日
 
 # window.note 必須與實際末日相符——寫錯比不寫更糟，它會讓讀者以為資料是新的
 # 一律比對 MM-DD：note 常把年份省略成「2026-08-04／08-05」。

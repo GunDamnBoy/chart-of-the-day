@@ -156,9 +156,13 @@ def build(kind: str, months: int = 30) -> dict:
             hint[cfg["series"][i]] = {"最新": vv[-1], "前值": vv[-2], "月份": dd[-1][:7]}
         # 2% 目標線：常數序列，**只要日期涵蓋頭尾就會連成完整橫線**
         # （2026-08-06 修好 ECharts 依日期對位之後才成立，先前會被擠在最左邊）。
-        span = [series[0]["dates"][0], series[0]["dates"][-1]]
-        series.append({"name": "聯準會 2% 目標", "dates": span, "values": [2.0, 2.0],
-                       "dash": True})
+        # **但不能只給頭尾兩點。** check_day 對 timeseries 的每條序列要求至少 20 點
+        # （防「序列太短畫不出東西」），兩點的參考線會被硬失敗擋下來——
+        # 工具產出的圖過不了同一份規範的檢查。2026-08-13 首次真的畫 CPI 當天發現。
+        # 補滿與主序列同樣的日期即可，ECharts 依日期對位、matplotlib 用真實日期，兩軌都正確。
+        span = list(series[0]["dates"])
+        series.append({"name": "聯準會 2% 目標", "dates": span, "values": [2.0] * len(span),
+                       "dash": True, "color": "#B8BBBE"})
         y_label, y_fmt, zero = "年增率（%）", "{:.1f}", False
 
     return {

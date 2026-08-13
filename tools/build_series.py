@@ -93,7 +93,12 @@ def _transform(d: list, v: list, t: str) -> tuple[list, list, bool]:
                 continue                      # 前 12 個月本來就沒有基期，跳過
             dd.append(x)
             out.append(None if mp[b] in (0, None) else round((mp[x] / mp[b] - 1) * 100, 2))
-        return dd, out, False
+        # **yoy 也標 derived。** 年增率是導出量，而 `qa_series` 抓的是「相鄰觀測的
+        # 百分比變動」——當年增率本身接近零（2020-05 總體 CPI 年增 0.2%），
+        # 下一個月 0.72% 就會被算成 +260%、z＝7.4，固定誤報。這與 MAINTENANCE §2
+        # 記過的「不要餵原始報酬率給 qa_series」是同一個坑：**分母趨近零的導出序列**。
+        # 標了之後旗標改為整條說明一次，序列本身仍然正確、照常出圖。
+        return dd, out, True
     if t.startswith("ma:"):
         n = int(t[3:])
         return d, [round(sum(v[max(0, i - n + 1):i + 1]) / min(i + 1, n), 2)
@@ -172,7 +177,7 @@ def selftest() -> int:
     v = [float(100 + i) for i in range(13)]
     for t, exp_len, exp_last, exp_derived in [
             ("raw", 13, 112.0, False), ("rebase", 13, 112.0, False),
-            ("diff", 12, 1.0, False), ("yoy", 1, 12.0, False),
+            ("diff", 12, 1.0, False), ("yoy", 1, 12.0, True),
             ("ma:3", 13, 111.0, True)]:
         dd, vv, der = _transform(d, v, t)
         if len(vv) != exp_len or abs(vv[-1] - exp_last) > 1e-9 or der != exp_derived:
