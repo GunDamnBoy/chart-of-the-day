@@ -356,6 +356,11 @@ def _draw_heatmap(ch: Chart, ax):
     ax.set_xticklabels(ch.cats, fontsize=9)
     ax.set_yticks([len(m) - 1 - i + .5 for i in range(len(ch.rows))])
     ax.set_yticklabels(ch.rows, fontsize=9)
+    # **左邊界要為列標籤讓位。** render_static 的 left=0.075 是給 y 軸刻度數字用的，
+    # 熱力圖的 y 軸放的是中文列名（「費城半導體」＝五個全形字），2026-08-13 首次使用
+    # 時「南韓 KOSPI」「費城半導體」都被切掉左半邊——PNG 是 House View 直接取用的檔案，
+    # 所以那是實際流出去的缺陷。互動軌的 grid.left 早就設了 92，只有靜態軌沒跟上。
+    ax.figure.subplots_adjust(left=0.155)
     ax.grid(False)
     for sp in ax.spines.values():
         sp.set_visible(False)
@@ -453,11 +458,19 @@ def render_static(ch: Chart, outdir: str, basename: str) -> dict:
             if s.style != "bar" and s.values:
                 last = next((v for v in reversed(s.values) if v is not None), None)
                 if last is not None:
-                    # 以「軸內相對位置」判斷碰撞——雙軸時兩條線的絕對值不可比
-                    lo_, hi_ = min(v for v in s.values if v is not None), \
-                               max(v for v in s.values if v is not None)
+                    # 以「軸內相對位置」判斷碰撞——雙軸時兩條線的絕對值不可比。
+                    # **範圍要取同一軸上所有序列的聯集，不是這一條自己的 min/max。**
+                    # 用自己的範圍等於各自歸一化，兩條末值幾乎相同的線會算出不同的
+                    # frac 而被判為不碰撞：2026-08-13 memory-vs-sox 的美光 319.29 與
+                    # 希捷 318.90 就是這樣疊印成一團（frac 0.66 對 0.73，差 0.07 剛好
+                    # 大於門檻 0.06）。同軸序列本來就共用刻度，範圍當然要一起算。
+                    axis_key = s.axis or "left"
+                    same = [t for t in ch.series if (t.axis or "left") == axis_key
+                            and t.style != "bar"]
+                    pool = [v for t in same for v in t.values if v is not None]
+                    lo_, hi_ = (min(pool), max(pool)) if pool else (0.0, 1.0)
                     frac = (last - lo_) / (hi_ - lo_) if hi_ > lo_ else 0.5
-                    used = _label_slots.setdefault("all", [])
+                    used = _label_slots.setdefault(axis_key, [])
                     dy = -3
                     for prev in used:
                         if abs(prev - frac) < 0.06:
