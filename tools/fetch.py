@@ -180,8 +180,11 @@ def tiingo_key():
 # 沒有免費來源提供費城半導體指數本身（指數授權限制，不是技術問題）。
 # SOXQ 直接追蹤 PHLX Semiconductor Sector Index，是最貼近的代理；
 # **但它是 ETF 不是指數**——用了就要在 note 寫明，比照既有的 XLE 註記。
+# **這張表是給人看的，不是給取數層自動替換用的。** 要用代理就在 series_spec
+# 直接寫 ETF 代號，並依 §3.2 在 note 標明「ETF 非指數」——替換必須是有意識的決定。
 PROXY = {"^SOX": ("SOXQ", "SOXQ ETF（追蹤 PHLX 半導體指數；ETF 非指數本身）"),
-         "^STOXX50E": ("FEZ", "FEZ ETF（追蹤歐洲 Stoxx 50；ETF 非指數本身）")}
+         "^STOXX50E": ("FEZ", "FEZ ETF（追蹤歐洲 Stoxx 50；ETF 非指數本身）"),
+         "HG=F": ("CPER", "CPER ETF（追蹤銅期貨；ETF 非期貨本身，有轉倉成本）")}
 
 
 def tiingo(symbol: str, since: str = "2015-01-01") -> dict:
@@ -271,8 +274,18 @@ def route_of(ident: str) -> str:
     不要各自重算一份，否則兩邊對同一個代號的判斷會漂移。"""
     safe = ident.replace("^", "_").replace("=", "-").replace("/", "-")
     path = os.path.join(CACHE, f"{safe}.csv")
-    return (_cached_source(path) or _guess_source(ident)) if _ambiguous(ident) \
+    src = (_cached_source(path) or _guess_source(ident)) if _ambiguous(ident) \
         else _guess_source(ident)
+    # 判定為 Yahoo 的**美股個股與 ETF**（沒有 `^` 也沒有 `=`），若有 Tiingo key 就走 Tiingo。
+    # 理由不是「Yahoo 現在不通」，而是 §3.1 的既有偏好：**有文件、有認證的來源優先**。
+    # 指數（`^...`）與期貨／匯率（`...=...`）Tiingo 沒有，維持 Yahoo。
+    #
+    # 2026-08-14 踩到：`GLD`／`XLE`／`MU`／`STX` 原本判為 yahoo，而 prefetch 的熔斷
+    # **在呼叫之前就攔截**，於是 `_route_and_fetch` 裡的 Tiingo 回退永遠到不了。
+    # **回退路徑若只存在於例外處理裡，任何提前中止的機制都會讓它形同不存在。**
+    if src == "yahoo" and not any(c in ident for c in "^=") and tiingo_key():
+        return "tiingo"
+    return src
 
 
 def _route_and_fetch(ident: str, since: str, path: str) -> dict:
@@ -293,24 +306,22 @@ def _route_and_fetch(ident: str, since: str, path: str) -> dict:
         return tiingo(ident, since)
 
     if src == "yahoo":
-        try:
-            return yahoo(ident)
-        except Exception as e:
-            # **這不是規避 Yahoo 的限流，是改用另一個有授權的來源拿同一份公開資料。**
-            # 規範禁止的是「換 host／改用瀏覽器去繞過同一個站台的速率限制」，
-            # 不是禁止換一家供應商。沒有 Tiingo key 就照實失敗，不要退回瀏覽器。
-            if ("429" in str(e) or "Too Many Requests" in str(e)) and tiingo_key():
-                sym, _note = PROXY.get(ident, (ident, None))
-                if sym.startswith("^"):
-                    raise                     # 指數沒有免費替代，誠實失敗
-                return tiingo(sym, since)
-            raise
+        # **不做靜默的代理替換。** 曾經寫成「`^SOX` 取不到就改抓 `SOXQ`」，
+        # 但那會把 ETF 的資料寫進 `^SOX` 的快取檔，圖上標的是指數、數字卻是 ETF——
+        # **正是 brief §3.2 要求「用代理必須在 note 標明」所要防的事。**
+        # 代理要換就在 series_spec 明寫 `SOXQ`，由判讀負責說明，不由取數層偷偷決定。
+        return yahoo(ident)
 
     try:
         return fred(ident, since)
     except Exception as e:
+        # FRED 回 400＝這個代號不是它的。純大寫代號分不出是 FRED 序列還是美股代號
+        # （`GLD` 與 `DGS10` 長得一樣），所以第一次用一定會先白打一次 FRED。
+        # **抓到之後快取檔頭就記住了來源，之後不會再繞這一圈。**
         if "400" in str(e) or "Bad Request" in str(e):
-            return yahoo(ident)        # 不是 FRED 的代號，改試 Yahoo
+            if tiingo_key() and not any(c in ident for c in "^="):
+                return tiingo(ident, since)     # 有文件、有認證的優先
+            return yahoo(ident)
         raise
 
 

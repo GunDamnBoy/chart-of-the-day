@@ -52,6 +52,9 @@ CORE = [
     "BZ=F", "GLD", "HG=F", "XLE",
     # 三大月度數據
     "CPIAUCSL", "CPILFESL", "PAYEMS", "PCEPI", "PCEPILFE",
+    # 指數與期貨的 ETF 代理（見 fetch.PROXY）。**以自己的代號預抓，不冒充原標的**——
+    # 要用就在 series_spec 明寫，並依 brief §3.2 在 note 標明「ETF 非指數」。
+    "SOXQ", "FEZ", "CPER",
 ]
 
 # Yahoo 代號的 FRED 等價序列。
