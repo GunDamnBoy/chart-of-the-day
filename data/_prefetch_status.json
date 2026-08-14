@@ -1,33 +1,28 @@
 {
- "started": "2026-08-14T15:10:06+08:00",
- "finished": "2026-08-14T15:36:28+08:00",
+ "started": "2026-08-14T16:20:57+08:00",
+ "finished": "2026-08-14T16:28:57+08:00",
  "host": "MacBook-Pro.local",
- "requested": 36,
- "ok": 13,
+ "requested": 43,
+ "ok": 27,
  "failed": {
   "^TNX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
   "^TYX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETYX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^IRX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIRX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "JPY=X": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/JPY%3DX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來",
-  "^VIX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來",
-  "^SOX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^IXIC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIXIC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來",
-  "^TWII": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來",
-  "2330.TW": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=2330.TW&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "2317.TW": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=2317.TW&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "BZ=F": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/BZ%3DF?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "GLD": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=GLD&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "HG=F": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "XLE": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=XLE&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "2344.TW": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=2344.TW&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "2382.TW": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=2382.TW&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "2408.TW": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=2408.TW&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "8069.TWO": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=8069.TWO&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "MU": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=MU&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "STX": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=STX&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "^N225": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EN225?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來",
-  "^STOXX50E": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ESTOXX50E?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其"
+  "^IRX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIRX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規"
+ },
+ "skipped": {
+  "JPY=X": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^VIX": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^GSPC": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^SOX": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^IXIC": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "BZ=F": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "GLD": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "HG=F": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "XLE": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "MU": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "STX": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^N225": "yahoo 連續 3 次被限流，本輪不再嘗試",
+  "^STOXX50E": "yahoo 連續 3 次被限流，本輪不再嘗試"
  },
  "series": [
   {
@@ -71,6 +66,21 @@
    "last": "2026-08-12"
   },
   {
+   "id": "^TWII",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "2330.TW",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "2317.TW",
+   "n": 472,
+   "last": "2026-08-14"
+  },
+  {
    "id": "CPIAUCSL",
    "n": 138,
    "last": "2026-07-01"
@@ -94,6 +104,61 @@
    "id": "PCEPILFE",
    "n": 138,
    "last": "2026-06-01"
+  },
+  {
+   "id": "2344.TW",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "2382.TW",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "2408.TW",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "8069.TWO",
+   "n": 473,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "DTB3",
+   "n": 2904,
+   "last": "2026-08-12"
+  },
+  {
+   "id": "DEXJPUS",
+   "n": 2899,
+   "last": "2026-08-07"
+  },
+  {
+   "id": "VIXCLS",
+   "n": 2951,
+   "last": "2026-08-12"
+  },
+  {
+   "id": "SP500",
+   "n": 2513,
+   "last": "2026-08-13"
+  },
+  {
+   "id": "NASDAQCOM",
+   "n": 2921,
+   "last": "2026-08-13"
+  },
+  {
+   "id": "DCOILBRENTEU",
+   "n": 2947,
+   "last": "2026-08-11"
+  },
+  {
+   "id": "NIKKEI225",
+   "n": 2837,
+   "last": "2026-08-13"
   }
  ]
 }
