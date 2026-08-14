@@ -134,13 +134,27 @@ def fred_via_graph(series_id: str, since: str) -> dict:
     return {"id": series_id, "source": "FRED (graph)", "d": d, "v": v}
 
 
+class NotFredSeries(RuntimeError):
+    """FRED 明確表示「沒有這個序列代號」。**與「連不上」是兩回事，處置也不同。**"""
+
+
 def fred(series_id: str, since: str = "2015-01-01") -> dict:
-    """有 key 走官方 API；失敗或沒有 key 就退回繪圖端點。兩條路都斷才拋錯。"""
+    """有 key 走官方 API；**連不上**才退回繪圖端點。兩條路都斷才拋錯。
+
+    **400 是「查無此序列」，不是「連不上」，不該退回繪圖端點。**
+    2026-08-14 實測踩到：`SOXQ`／`FEZ` 是美股 ETF 不是 FRED 序列，API 回 400，
+    但這裡把 400 也當成「API 失敗」而去打 fredgraph，fredgraph 再逾時 30 秒，
+    最後拋出來的是逾時錯誤——**外層負責「400 就改試 Tiingo」的判斷因此完全認不出來**，
+    只看到一個逾時。**回退機制把原始錯誤變形，外層就失去了判斷依據。**
+    現在 400 直接拋 `NotFredSeries`，讓呼叫端知道「這代號不屬於 FRED」。
+    """
     key = fred_key()
     if key:
         try:
             return fred_via_api(series_id, since, key)
         except Exception as e:
+            if "400" in str(e) or "Bad Request" in str(e):
+                raise NotFredSeries(f"{series_id} 不是 FRED 序列代號") from None
             print(f"  [fred] API 失敗，退回繪圖端點：{_redact(e)}")
     return fred_via_graph(series_id, since)
 
@@ -314,15 +328,12 @@ def _route_and_fetch(ident: str, since: str, path: str) -> dict:
 
     try:
         return fred(ident, since)
-    except Exception as e:
-        # FRED 回 400＝這個代號不是它的。純大寫代號分不出是 FRED 序列還是美股代號
-        # （`GLD` 與 `DGS10` 長得一樣），所以第一次用一定會先白打一次 FRED。
-        # **抓到之後快取檔頭就記住了來源，之後不會再繞這一圈。**
-        if "400" in str(e) or "Bad Request" in str(e):
-            if tiingo_key() and not any(c in ident for c in "^="):
-                return tiingo(ident, since)     # 有文件、有認證的優先
-            return yahoo(ident)
-        raise
+    except NotFredSeries:
+        # 純大寫代號分不出是 FRED 序列還是美股代號（`GLD` 與 `DGS10` 長得一樣），
+        # 所以第一次用一定會先白打一次 FRED。**抓到之後快取檔頭就記住來源，不會再繞。**
+        if tiingo_key() and not any(c in ident for c in "^="):
+            return tiingo(ident, since)         # 有文件、有認證的優先
+        return yahoo(ident)
 
 
 def get(ident: str, since: str = "2015-01-01", use_cache: bool = True) -> dict:
