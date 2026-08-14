@@ -1,15 +1,13 @@
 {
- "started": "2026-08-14T16:33:48+08:00",
- "finished": "2026-08-14T16:44:05+08:00",
+ "started": "2026-08-14T17:57:21+08:00",
+ "finished": "2026-08-14T18:07:37+08:00",
  "host": "MacBook-Pro.local",
  "requested": 46,
- "ok": 32,
+ "ok": 34,
  "failed": {
   "^TNX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
   "^TYX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETYX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^IRX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIRX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "SOXQ": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOXQ&cosd=2015-01-01\n  [Errno 60] Operation timed out",
-  "FEZ": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEZ&cosd=2015-01-01\n  [Errno 60] Operation timed out"
+  "^IRX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIRX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規"
  },
  "skipped": {
   "JPY=X": "yahoo 連續 3 次被限流，本輪不再嘗試",
@@ -112,6 +110,16 @@
    "id": "PCEPILFE",
    "n": 138,
    "last": "2026-06-01"
+  },
+  {
+   "id": "SOXQ",
+   "n": 1299,
+   "last": "2026-08-13"
+  },
+  {
+   "id": "FEZ",
+   "n": 2920,
+   "last": "2026-08-13"
   },
   {
    "id": "CPER",
