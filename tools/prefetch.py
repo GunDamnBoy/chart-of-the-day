@@ -54,6 +54,17 @@ CORE = [
     "CPIAUCSL", "CPILFESL", "PAYEMS", "PCEPI", "PCEPILFE",
 ]
 
+# Yahoo 代號的 FRED 等價序列。
+# 2026-08-14 首跑實測 Yahoo 整批 429、FRED 13/13 全通（API key 正常）。
+# **這不是「繞過 Yahoo」，是改用有文件、有認證的官方 API** —— brief §3.1 本來就偏好那條。
+# 代價寫在 brief §3.2：**FRED 的日頻序列比 Yahoo 慢一個交易日**，
+# 所以「講當日事件反應」的圖仍應優先用 Yahoo；這裡預抓只是確保 Yahoo 不通時有底。
+FRED_EQUIV = {
+    "^VIX": "VIXCLS", "^GSPC": "SP500", "^IXIC": "NASDAQCOM",
+    "^IRX": "DTB3", "^TNX": "DGS10", "^TYX": "DGS30",
+    "JPY=X": "DEXJPUS", "^N225": "NIKKEI225", "BZ=F": "DCOILBRENTEU",
+}
+
 
 def recent_ids(days: int = RECENT_DAYS) -> list:
     """近 N 期實際用過的序列 id。
@@ -80,7 +91,10 @@ def recent_ids(days: int = RECENT_DAYS) -> list:
 
 def targets() -> list:
     seen, out = set(), []
-    for i in CORE + recent_ids():
+    base = CORE + recent_ids()
+    # 用到的 Yahoo 代號若有 FRED 等價序列，兩個都抓——Yahoo 不通時才有替代品可用
+    base += [FRED_EQUIV[i] for i in base if i in FRED_EQUIV]
+    for i in base:
         if i not in seen:
             seen.add(i)
             out.append(i)
@@ -98,21 +112,38 @@ def main(argv):
         return 0
 
     started = datetime.datetime.now().astimezone()
-    ok, failed = [], {}
-    for n, ident in enumerate(ids, 1):
+    ok, failed, skipped = [], {}, {}
+    # 熔斷：同一個來源連續 N 次被限流就停止再試它。
+    # 2026-08-14 首跑實測：13 個 Yahoo 代號各退避 20＋40 秒後仍 429，白耗約 13 分鐘。
+    # **規格說「429 是等不是繞」，但對一個明確說「不」的站台連敲 13 次不是等，是敲。**
+    # 熔斷後其餘同來源標的記為 skipped（不是 failed）——它們沒被試過，不該算失敗。
+    BREAK_AFTER = 3
+    streak = {"yahoo": 0, "fred": 0, "?": 0}
+
+    for i, ident in enumerate(ids, 1):
+        src = F._cached_source(os.path.join(F.CACHE, ident.replace("^","_").replace("=","-")
+                                            .replace("/","-") + ".csv")) or F._guess_source(ident)
+        if streak.get(src, 0) >= BREAK_AFTER:
+            skipped[ident] = f"{src} 連續 {BREAK_AFTER} 次被限流，本輪不再嘗試"
+            if not quiet:
+                print(f"  [{i}/{len(ids)}] {ident:<16} — 跳過（{src} 已熔斷）")
+            continue
         try:
             # use_cache=False：預抓的重點就是刷新，讀快取等於什麼都沒做
             s = F.get(ident, use_cache=False)
             last = s["d"][-1] if s.get("d") else "?"
             ok.append({"id": ident, "n": len(s.get("d") or []), "last": last})
+            streak[src] = 0
             if not quiet:
-                print(f"  [{n}/{len(ids)}] {ident:<16} {len(s.get('d') or []):>5} 點，末日 {last}")
+                print(f"  [{i}/{len(ids)}] {ident:<16} {len(s.get('d') or []):>5} 點，末日 {last}")
         except Exception as e:
-            # **失敗要逐條記下來，不要整批 abort** —— 一條抓不到不該讓其餘 30 條也沒有
-            failed[ident] = f"{type(e).__name__}: {e}"[:200]
+            msg = f"{type(e).__name__}: {e}"[:200]
+            failed[ident] = msg
+            if "429" in msg or "Too Many Requests" in msg:
+                streak[src] = streak.get(src, 0) + 1
             if not quiet:
-                print(f"  [{n}/{len(ids)}] {ident:<16} ✗ {failed[ident]}")
-        time.sleep(1.0)          # 逐標的間隔，見 brief §3.2：429 是等不是繞
+                print(f"  [{i}/{len(ids)}] {ident:<16} ✗ {msg.splitlines()[0][:110]}")
+        time.sleep(1.0)          # 逐標的間隔，見 brief §3.2
 
     status = {
         "started": started.isoformat(timespec="seconds"),
@@ -121,13 +152,15 @@ def main(argv):
         "requested": len(ids),
         "ok": len(ok),
         "failed": failed,
+        "skipped": skipped,
         "series": ok,
     }
     with open(STATUS, "w", encoding="utf-8") as f:
         json.dump(status, f, ensure_ascii=False, indent=1)
 
     print(f"預抓完成：{len(ok)}/{len(ids)} 成功"
-          + (f"，{len(failed)} 條失敗：{', '.join(list(failed)[:6])}" if failed else ""))
+          + (f"，{len(failed)} 條失敗：{', '.join(list(failed)[:6])}" if failed else "")
+          + (f"，{len(skipped)} 條因熔斷未嘗試" if skipped else ""))
     # 全部失敗＝網路整條不通，要讓 launchd 的錯誤日誌看得出來
     return 1 if not ok else 0
 

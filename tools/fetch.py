@@ -165,8 +165,66 @@ def yahoo(symbol: str, rng: str = "5y") -> dict:
 
 
 # ────────────────────────────────────────────────── 對外
+def _cached_source(path: str) -> str | None:
+    """從快取檔頭讀出上次是從哪裡抓到的。
+
+    檔頭長這樣：`# GLD | Yahoo (browser) | fetched 2026-08-13`
+    **這一行本來就存在，只是從來沒被拿來當路由用。** 它比任何字串啟發式都可靠，
+    因為它記的是「實際成功過」的來源，不是猜的。
+    """
+    try:
+        with open(path, encoding="utf-8") as f:
+            head = f.readline()
+    except OSError:
+        return None
+    if not head.startswith("#"):
+        return None
+    parts = [p.strip() for p in head.lstrip("#").split("|")]
+    if len(parts) < 2:
+        return None
+    src = parts[1].lower()
+    if "yahoo" in src:
+        return "yahoo"
+    if "fred" in src:
+        return "fred"
+    return None
+
+
+def _guess_source(ident: str) -> str:
+    """沒有快取可參考時的猜測。
+
+    FRED 的序列代號是純大寫英數（DGS10、BAMLH0A0HYM2、CPIAUCSL），
+    **不含 `.`、`^`、`=`，也沒有小寫**。所以：
+      有 `^` `=` `.` 或小寫  → Yahoo
+      其餘                 → FRED
+
+    2026-08-14 修正：原本漏了 `.`，使 `2330.TW`／`8069.TWO` 被送去 FRED。
+    **仍有無法分辨的一類**：`GLD`、`XLE`、`MU`、`STX` 這種純大寫的美股代號，
+    長得與 FRED 序列代號一模一樣。那一類靠快取檔頭路由，或由下面的 400 回退接住。
+    """
+    return "yahoo" if (any(c in ident for c in "^=.") or ident != ident.upper()) else "fred"
+
+
+def _route_and_fetch(ident: str, since: str, path: str) -> dict:
+    """決定來源並取數；FRED 說「查無此序列」時改試 Yahoo。
+
+    **FRED 回 400 代表代號不是它的，不是認證問題**——原本會退回 fredgraph 繪圖端點，
+    在發布機上那條又是不通的，於是每條白等 30 秒逾時才失敗。
+    2026-08-14 實測：9 條 Yahoo 代號因此各耗 30 秒且全部失敗。
+    """
+    src = _cached_source(path) or _guess_source(ident)
+    if src == "yahoo":
+        return yahoo(ident)
+    try:
+        return fred(ident, since)
+    except Exception as e:
+        if "400" in str(e) or "Bad Request" in str(e):
+            return yahoo(ident)        # 不是 FRED 的代號，改試 Yahoo
+        raise
+
+
 def get(ident: str, since: str = "2015-01-01", use_cache: bool = True) -> dict:
-    """自動判斷來源：含 ^ 或 = 或有小寫字母的視為 Yahoo，其餘視為 FRED 序列代號。"""
+    """自動判斷來源。路由優先序：快取檔頭記錄的來源 → 字串啟發式 → FRED 400 時回退 Yahoo。"""
     os.makedirs(CACHE, exist_ok=True)
     safe = ident.replace("^", "_").replace("=", "-").replace("/", "-")
     path = os.path.join(CACHE, f"{safe}.csv")
@@ -183,8 +241,7 @@ def get(ident: str, since: str = "2015-01-01", use_cache: bool = True) -> dict:
                     d.append(a); v.append(float(b))
             return {"id": ident, "source": "cache", "d": d, "v": v}
 
-    is_yahoo = any(ch in ident for ch in "^=") or ident != ident.upper()
-    s = yahoo(ident) if is_yahoo else fred(ident, since)
+    s = _route_and_fetch(ident, since, path)
 
     with open(path, "w", encoding="utf-8") as f:
         f.write(f"# {ident} | {s['source']} | fetched {today}\n")
