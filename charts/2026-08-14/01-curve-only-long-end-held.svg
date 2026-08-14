@@ -2982,29 +2982,8 @@ z
    </g>
   </g>
   <g id="text_19">
-   <!-- 。 -->
+   <!-- 變動基準為 2026-08-06 與 2026-07-14 收盤。30 年期 5.213% 在 DGS30 自 2010 年以來僅 7 個交易日出現。 -->
    <g style="fill: #9ba0a6" transform="translate(46.44 346.7339) scale(0.08 -0.08)">
-    <defs>
-     <path id="NotoSansCJKtc-Regular-3002" d="M 3219 3398 
-C 2688 3398 2246 2963 2246 2426 
-C 2246 1888 2688 1453 3219 1453 
-C 3757 1453 4192 1888 4192 2426 
-C 4192 2963 3757 3398 3219 3398 
-z
-M 3219 1779 
-C 2867 1779 2573 2067 2573 2426 
-C 2573 2784 2867 3072 3219 3072 
-C 3578 3072 3866 2784 3866 2426 
-C 3866 2067 3578 1779 3219 1779 
-z
-" transform="scale(0.015625)"/>
-    </defs>
-    <use xlink:href="#NotoSansCJKtc-Regular-3002"/>
-   </g>
-  </g>
-  <g id="text_20">
-   <!-- 變動基準為 2026-08-06 與 2026-07-14 收盤。30 年期 5.213% 在 DGS30 自 2010 年以來僅 7 個交易日出現，全在 2026-07-30 之後 -->
-   <g style="fill: #9ba0a6" transform="translate(46.44 338.2667) scale(0.08 -0.08)">
     <defs>
      <path id="NotoSansCJKtc-Regular-70ba" d="M 4083 1197 
 C 4275 934 4474 563 4550 326 
@@ -3244,6 +3223,19 @@ L 4045 1126
 L 4890 1126 
 L 4890 70 
 L 4045 70 
+z
+" transform="scale(0.015625)"/>
+     <path id="NotoSansCJKtc-Regular-3002" d="M 3219 3398 
+C 2688 3398 2246 2963 2246 2426 
+C 2246 1888 2688 1453 3219 1453 
+C 3757 1453 4192 1888 4192 2426 
+C 4192 2963 3757 3398 3219 3398 
+z
+M 3219 1779 
+C 2867 1779 2573 2067 2573 2426 
+C 2573 2784 2867 3072 3219 3072 
+C 3578 3072 3866 2784 3866 2426 
+C 3866 2067 3578 1779 3219 1779 
 z
 " transform="scale(0.015625)"/>
      <path id="NotoSansCJKtc-Regular-671f" d="M 1139 915 
@@ -3798,132 +3790,6 @@ L 5824 5094
 L 2816 5094 
 z
 " transform="scale(0.015625)"/>
-     <path id="NotoSansCJKtc-Regular-5168" d="M 486 102 
-L 486 -333 
-L 5946 -333 
-L 5946 102 
-L 3430 102 
-L 3430 1178 
-L 5261 1178 
-L 5261 1600 
-L 3430 1600 
-L 3430 2586 
-L 5005 2586 
-L 5005 3014 
-L 1408 3014 
-L 1408 2586 
-L 2931 2586 
-L 2931 1600 
-L 1126 1600 
-L 1126 1178 
-L 2931 1178 
-L 2931 102 
-L 486 102 
-z
-M 1491 5203 
-L 1491 4749 
-L 2630 4749 
-C 1990 4045 1043 3322 237 2938 
-C 352 2842 474 2675 544 2554 
-C 1446 3034 2534 3930 3194 4749 
-C 3859 3891 4877 3059 5850 2598 
-C 5926 2726 6080 2918 6182 3021 
-C 5158 3443 4051 4314 3456 5203 
-L 1491 5203 
-z
-" transform="scale(0.015625)"/>
-     <path id="NotoSansCJKtc-Regular-4e4b" d="M 1498 851 
-C 1165 851 742 506 314 32 
-L 672 -403 
-C 973 19 1274 397 1485 397 
-C 1626 397 1830 179 2086 19 
-C 2522 -256 3040 -326 3821 -326 
-C 4442 -326 5542 -294 6016 -262 
-C 6022 -122 6106 134 6157 262 
-C 5542 192 4589 141 3834 141 
-C 3123 141 2592 186 2189 448 
-L 2022 557 
-C 3341 1376 4774 2714 5555 3898 
-L 5197 4134 
-L 5101 4109 
-L 640 4109 
-L 640 3635 
-L 4742 3635 
-C 4013 2662 2739 1510 1581 838 
-L 1498 851 
-z
-M 2656 5184 
-C 2906 4858 3206 4390 3328 4109 
-L 3782 4365 
-C 3642 4634 3334 5075 3085 5408 
-L 2656 5184 
-z
-" transform="scale(0.015625)"/>
-     <path id="NotoSansCJKtc-Regular-5f8c" d="M 1562 5376 
-C 1299 4922 768 4378 294 4032 
-C 378 3949 506 3776 563 3680 
-C 1082 4077 1645 4672 1997 5210 
-L 1562 5376 
-z
-M 2195 2426 
-C 2323 2470 2490 2496 3411 2560 
-C 3245 2272 3040 2003 2816 1754 
-C 2739 1862 2669 1971 2605 2086 
-L 2214 1952 
-C 2304 1779 2406 1619 2522 1466 
-C 2342 1306 2157 1165 1971 1043 
-C 2067 960 2234 781 2298 685 
-C 2470 806 2643 947 2810 1107 
-C 3021 864 3258 653 3520 454 
-C 3002 186 2413 -6 1824 -115 
-C 1907 -218 2016 -410 2061 -531 
-C 2720 -384 3366 -154 3942 179 
-C 4474 -134 5094 -371 5766 -518 
-C 5824 -397 5952 -205 6054 -102 
-C 5440 13 4864 198 4365 461 
-C 4890 845 5318 1338 5587 1952 
-L 5286 2106 
-L 5197 2080 
-L 3635 2080 
-C 3744 2246 3846 2419 3936 2598 
-L 5363 2682 
-C 5504 2490 5619 2304 5702 2150 
-L 6099 2387 
-C 5882 2758 5421 3354 5043 3770 
-L 4666 3584 
-C 4806 3424 4954 3238 5101 3053 
-L 3091 2938 
-C 3872 3354 4672 3891 5427 4512 
-L 4986 4762 
-C 4723 4525 4422 4288 4134 4070 
-L 2995 4038 
-C 3411 4333 3834 4710 4211 5101 
-L 3744 5318 
-C 3354 4832 2784 4378 2611 4256 
-C 2445 4134 2310 4045 2189 4026 
-C 2246 3904 2323 3674 2342 3565 
-C 2445 3610 2611 3635 3565 3680 
-C 3213 3443 2912 3264 2765 3187 
-C 2464 3014 2234 2899 2061 2880 
-C 2106 2752 2176 2522 2195 2426 
-z
-M 3098 1402 
-L 3341 1683 
-L 4934 1683 
-C 4691 1299 4346 973 3942 704 
-C 3622 902 3341 1139 3098 1402 
-z
-M 1715 4070 
-C 1363 3392 787 2726 230 2285 
-C 320 2189 467 1958 512 1862 
-C 717 2035 922 2240 1120 2464 
-L 1120 -531 
-L 1581 -531 
-L 1581 3034 
-C 1792 3322 1990 3622 2150 3923 
-L 1715 4070 
-z
-" transform="scale(0.015625)"/>
     </defs>
     <use xlink:href="#NotoSansCJKtc-Regular-8b8a"/>
     <use xlink:href="#NotoSansCJKtc-Regular-52d5" transform="translate(99.999985 0)"/>
@@ -3999,28 +3865,12 @@ z
     <use xlink:href="#NotoSansCJKtc-Regular-65e5" transform="translate(4356.699112 0)"/>
     <use xlink:href="#NotoSansCJKtc-Regular-51fa" transform="translate(4456.699097 0)"/>
     <use xlink:href="#NotoSansCJKtc-Regular-73fe" transform="translate(4556.699081 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-ff0c" transform="translate(4656.699066 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-5168" transform="translate(4756.699051 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-5728" transform="translate(4856.699036 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-20" transform="translate(4956.69902 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-32" transform="translate(4979.099014 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-30" transform="translate(5034.598999 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-32" transform="translate(5090.098984 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-36" transform="translate(5145.598969 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-2d" transform="translate(5201.098953 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-30" transform="translate(5235.79895 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-37" transform="translate(5291.298935 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-2d" transform="translate(5346.79892 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-33" transform="translate(5381.498917 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-30" transform="translate(5436.998901 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-20" transform="translate(5492.498886 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-4e4b" transform="translate(5514.89888 0)"/>
-    <use xlink:href="#NotoSansCJKtc-Regular-5f8c" transform="translate(5614.898865 0)"/>
+    <use xlink:href="#NotoSansCJKtc-Regular-3002" transform="translate(4656.699066 0)"/>
    </g>
   </g>
-  <g id="text_21">
+  <g id="text_20">
    <!-- 資料來源：Yahoo Finance 公債殖利率日收盤，至 2026-08-13 -->
-   <g style="fill: #9ba0a6" transform="translate(46.44 329.7995) scale(0.08 -0.08)">
+   <g style="fill: #9ba0a6" transform="translate(46.44 338.2667) scale(0.08 -0.08)">
     <defs>
      <path id="NotoSansCJKtc-Regular-8cc7" d="M 1626 2035 
 L 4851 2035 
