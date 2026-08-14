@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  每日五圖 · 序列預抓 launchd 設定（repo 內參考副本）
+  安裝位置：~/Library/LaunchAgents/com.kenny.chartfetch.plist
+
+  為什麼是 11:00：執行輪次排在 11:31，預抓 36 條約需 2–3 分鐘，
+  留半小時緩衝，且早於執行輪次讀快取的時點。
+
+  RunAtLoad 設為 false —— 載入時不要立刻跑，避免安裝當下打一輪外部站台。
+  要手動驗證請直接跑 tools/prefetch.py，不要靠 load 觸發。
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.kenny.chartfetch</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-c</string>
+    <string>$HOME/.chartfetch/prefetch.sh</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>11</integer>
+    <key>Minute</key><integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/chartfetch.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/chartfetch.err</string>
+</dict>
+</plist>
