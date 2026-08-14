@@ -118,11 +118,10 @@ def main(argv):
     # **規格說「429 是等不是繞」，但對一個明確說「不」的站台連敲 13 次不是等，是敲。**
     # 熔斷後其餘同來源標的記為 skipped（不是 failed）——它們沒被試過，不該算失敗。
     BREAK_AFTER = 3
-    streak = {"yahoo": 0, "fred": 0, "?": 0}
+    streak = {"yahoo": 0, "fred": 0, "tiingo": 0, "tw": 0}
 
     for i, ident in enumerate(ids, 1):
-        src = F._cached_source(os.path.join(F.CACHE, ident.replace("^","_").replace("=","-")
-                                            .replace("/","-") + ".csv")) or F._guess_source(ident)
+        src = F.route_of(ident)
         if streak.get(src, 0) >= BREAK_AFTER:
             skipped[ident] = f"{src} 連續 {BREAK_AFTER} 次被限流，本輪不再嘗試"
             if not quiet:

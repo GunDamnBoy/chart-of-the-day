@@ -266,6 +266,15 @@ def _ambiguous(ident: str) -> bool:
     return ident.isalnum() and ident == ident.upper()
 
 
+def route_of(ident: str) -> str:
+    """這個代號會走哪個來源。**單一實作**——prefetch 與診斷都用它，
+    不要各自重算一份，否則兩邊對同一個代號的判斷會漂移。"""
+    safe = ident.replace("^", "_").replace("=", "-").replace("/", "-")
+    path = os.path.join(CACHE, f"{safe}.csv")
+    return (_cached_source(path) or _guess_source(ident)) if _ambiguous(ident) \
+        else _guess_source(ident)
+
+
 def _route_and_fetch(ident: str, since: str, path: str) -> dict:
     """決定來源並取數；FRED 說「查無此序列」時改試 Yahoo。
 
@@ -273,8 +282,7 @@ def _route_and_fetch(ident: str, since: str, path: str) -> dict:
     在發布機上那條又是不通的，於是每條白等 30 秒逾時才失敗。
     2026-08-14 實測：9 條 Yahoo 代號因此各耗 30 秒且全部失敗。
     """
-    src = (_cached_source(path) or _guess_source(ident)) if _ambiguous(ident) \
-        else (_guess_source(ident))
+    src = route_of(ident)
 
     if src == "tw":
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
