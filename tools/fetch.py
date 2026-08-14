@@ -165,6 +165,47 @@ def yahoo(symbol: str, rng: str = "5y") -> dict:
 
 
 # ────────────────────────────────────────────────── 對外
+def tiingo_key():
+    """Tiingo 的 key，比照 FRED：環境變數或 ~/.config/tiingo/api_key，**不進版控**。"""
+    k = os.environ.get("TIINGO_API_KEY", "").strip()
+    if k:
+        return k
+    p = os.path.expanduser("~/.config/tiingo/api_key")
+    if os.path.exists(p):
+        with open(p, encoding="utf-8") as f:
+            return f.read().strip()
+    return ""
+
+
+# 沒有免費來源提供費城半導體指數本身（指數授權限制，不是技術問題）。
+# SOXQ 直接追蹤 PHLX Semiconductor Sector Index，是最貼近的代理；
+# **但它是 ETF 不是指數**——用了就要在 note 寫明，比照既有的 XLE 註記。
+PROXY = {"^SOX": ("SOXQ", "SOXQ ETF（追蹤 PHLX 半導體指數；ETF 非指數本身）"),
+         "^STOXX50E": ("FEZ", "FEZ ETF（追蹤歐洲 Stoxx 50；ETF 非指數本身）")}
+
+
+def tiingo(symbol: str, since: str = "2015-01-01") -> dict:
+    """美股個股與 ETF 日線。**有文件、有認證的來源**，優於非文件化的 Yahoo 端點。
+
+    免費方案實測上限：每日 1,000 次、每小時 50 次，歷史 30 年以上。
+    """
+    key = tiingo_key()
+    if not key:
+        raise RuntimeError("找不到 Tiingo API key（TIINGO_API_KEY 或 ~/.config/tiingo/api_key）")
+    url = (f"https://api.tiingo.com/tiingo/daily/{urllib.parse.quote(symbol)}/prices"
+           f"?startDate={since}&token={key}")
+    rows = json.loads(_get(url).decode("utf-8"))
+    if not isinstance(rows, list) or not rows:
+        raise RuntimeError(f"Tiingo 回傳空資料：{symbol}")
+    d, v = [], []
+    for r in rows:
+        # adjClose 已還原除權息，跨期比較要用它；close 是原始收盤
+        c = r.get("adjClose", r.get("close"))
+        if c is not None:
+            d.append(str(r["date"])[:10]); v.append(float(c))
+    return {"id": symbol, "source": "Tiingo", "d": d, "v": v}
+
+
 def _cached_source(path: str) -> str | None:
     """從快取檔頭讀出上次是從哪裡抓到的。
 
@@ -187,6 +228,10 @@ def _cached_source(path: str) -> str | None:
         return "yahoo"
     if "fred" in src:
         return "fred"
+    if "tiingo" in src:
+        return "tiingo"
+    if "twse" in src or "tpex" in src:
+        return "tw"
     return None
 
 
@@ -202,7 +247,23 @@ def _guess_source(ident: str) -> str:
     **仍有無法分辨的一類**：`GLD`、`XLE`、`MU`、`STX` 這種純大寫的美股代號，
     長得與 FRED 序列代號一模一樣。那一類靠快取檔頭路由，或由下面的 400 回退接住。
     """
+    if ident in ("^TWII", "TAIEX") or ident.upper().endswith((".TW", ".TWO")):
+        return "tw"
     return "yahoo" if (any(c in ident for c in "^=.") or ident != ident.upper()) else "fred"
+
+
+def _ambiguous(ident: str) -> bool:
+    """這個代號分不分得出來源？
+
+    **純大寫英數、無標點的代號是唯一分不出來的一類**：`GLD`（美股 ETF）與
+    `DGS10`（FRED 序列）長得一模一樣。只有這一類才需要靠快取檔頭拆解。
+
+    其餘代號的樣式本身就明確（`.TW`、`^`、`=`、小寫），**樣式要優先於檔頭**——
+    檔頭記的是「過去從哪抓到的」，而換來源的時候，過去正是我們要離開的東西。
+    2026-08-14 踩到：台股快取檔頭都寫 Yahoo（先前用瀏覽器抓的），
+    差點讓新接的證交所官方端點完全不會被走到。
+    """
+    return ident.isalnum() and ident == ident.upper()
 
 
 def _route_and_fetch(ident: str, since: str, path: str) -> dict:
@@ -212,9 +273,31 @@ def _route_and_fetch(ident: str, since: str, path: str) -> dict:
     在發布機上那條又是不通的，於是每條白等 30 秒逾時才失敗。
     2026-08-14 實測：9 條 Yahoo 代號因此各耗 30 秒且全部失敗。
     """
-    src = _cached_source(path) or _guess_source(ident)
+    src = (_cached_source(path) or _guess_source(ident)) if _ambiguous(ident) \
+        else (_guess_source(ident))
+
+    if src == "tw":
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import fetch_tw_price as TW
+        return TW.series(ident)
+
+    if src == "tiingo":
+        return tiingo(ident, since)
+
     if src == "yahoo":
-        return yahoo(ident)
+        try:
+            return yahoo(ident)
+        except Exception as e:
+            # **這不是規避 Yahoo 的限流，是改用另一個有授權的來源拿同一份公開資料。**
+            # 規範禁止的是「換 host／改用瀏覽器去繞過同一個站台的速率限制」，
+            # 不是禁止換一家供應商。沒有 Tiingo key 就照實失敗，不要退回瀏覽器。
+            if ("429" in str(e) or "Too Many Requests" in str(e)) and tiingo_key():
+                sym, _note = PROXY.get(ident, (ident, None))
+                if sym.startswith("^"):
+                    raise                     # 指數沒有免費替代，誠實失敗
+                return tiingo(sym, since)
+            raise
+
     try:
         return fred(ident, since)
     except Exception as e:
@@ -302,6 +385,17 @@ def check_key() -> int:
 
 
 if __name__ == "__main__":
+    if "--check-tiingo" in sys.argv:
+        k = tiingo_key()
+        print(f"Tiingo key：{'找到，' + str(len(k)) + ' 字元，前四碼 ' + k[:4] if k else '找不到'}")
+        if k:
+            try:
+                s_ = tiingo("SPY", "2026-08-01")
+                print(f"  實測 SPY：{len(s_['d'])} 點，末日 {s_['d'][-1]}，末值 {s_['v'][-1]:,.2f}")
+            except Exception as e:                    # noqa: BLE001
+                print(f"  ✗ 實測失敗：{_redact(e)}")
+                sys.exit(1)
+        sys.exit(0 if k else 1)
     if "--check-key" in sys.argv:
         sys.exit(check_key())
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
