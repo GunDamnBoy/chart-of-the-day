@@ -17,6 +17,11 @@ import datetime as _dt
 # 拿路徑跟日期字串比大小恆為 False（開頭的 `/` 小於數字），整段守門會靜默失效。
 # 2026-08-11 實測踩到：八個測試案例全數沒有觸發，而 exit code 是 0。
 REDRAW_LAG_FROM = '2026-08-12'
+REBASE_BASE_FROM = '2026-08-15'
+# 連續走備援路徑幾天要大聲警示。取 3 是因為：一兩天是偶發，
+# 連續三天代表主路徑壞了而不是抖動。2026-08-06～08-14 連續九天沒有人升級成問題，
+# 就是因為每天單看都「成功」——**降級的嚴重性藏在連續性裡，不在單日**。
+DEGRADED_STREAK_WARN = 3
 REPO = os.environ.get('CHART_REPO') or os.path.expanduser('~/chart-of-the-day')  # 一律絕對路徑
 # 預設檢查最新一期；發布流程用這個。維護時要診斷舊期，傳日期進來即可：
 #     python3 -c "...exec(檢查腳本)..." 2026-08-05
@@ -111,6 +116,31 @@ for i, c in enumerate(d['charts'], 1):
     for _f in _NEED.get(_kind, ('series',)):
         if not c.get(_f):
             bad(f'{p} kind={_kind} 缺必要欄位 `{_f}`')
+    # rebase 基期 vs 文字裡的基期日期（2026-08-15 起）。
+    # 2026-08-14 圖 4：`since` 寫 2026-01-02，但 subtitle 與判讀的「今年以來」
+    # 是用 2025-12-31 收盤算的，差一個交易日，圖上末值與文字的 +164.8% 對不起來。
+    # **兩邊各自都正確，合起來才錯** —— 這種軟失敗逐張目視才看得到，
+    # 但至少 rebase 這一類可以機械比對：文字提到的年月日若與 since 同月而不同日，就問一句。
+    if d['date'] >= REBASE_BASE_FROM:
+        _sp = c.get('series_spec') or []
+        _since = {s.get('since') for s in _sp
+                  if s.get('since') and str(s.get('t', '')).startswith('rebase')}
+        if len(_since) == 1:
+            _sv = _since.pop()
+            _txt = f"{c.get('subtitle','')} {c.get('reading','')} {c.get('note','')}"
+            _cand = set(re.findall(r'(20\d\d)[-/年](\d{1,2})[-/月](\d{1,2})', _txt))
+            for _y, _m, _dd in _cand:
+                _iso = f'{_y}-{int(_m):02d}-{int(_dd):02d}'
+                # 只在「相差 1–5 天」時警示：同一個基期打錯一兩天最難發現，
+                # 差很多的多半是在講別的事件，報了只會變雜訊。
+                try:
+                    _gap = abs((_dt.date.fromisoformat(_iso) - _dt.date.fromisoformat(_sv)).days)
+                except ValueError:
+                    continue
+                if 1 <= _gap <= 5:
+                    print(f'   ⚠ {p} rebase 基期是 {_sv}，但文字出現 {_iso}（相差 {_gap} 天）'
+                          f'——確認圖與文用的是同一個基期，否則末值與報酬率會對不起來')
+
     # marker 只有日期軸畫得出來（chartkit.DATE_AXIS_KINDS）。
     # 類別軸圖型寫了 marker 不會報錯、也不會畫出來——**規則要求標記卻靜默丟掉**，
     # 比沒有 marker 更糟，因為 reading 會照著寫「已標在圖上」。
@@ -312,6 +342,49 @@ for i, c in enumerate(d['charts'], 1):
 
 for m in KNOWN.get(d.get('date',''), []):
     print(f'   · 已知歷史例外（不必修）：{m}')
+
+# 取數路徑的連續降級累計。單日降級不算問題，連續才是。
+_paths = []
+for _p in sorted(glob.glob(os.path.join(REPO, 'data', '20*.json')), reverse=True)[:14]:
+    try:
+        _doc = json.load(open(_p, encoding='utf-8'))
+    except Exception:
+        continue
+    _dp = (_doc.get('about') or {}).get('data_path')
+    if _dp is None:                       # 舊期沒有這個欄位，從 run 文字推斷
+        _r = (_doc.get('about') or {}).get('run', '')
+        _dp = 'browser' if ('瀏覽器同源' in _r or '瀏覽器備援' in _r) else 'direct'
+    _paths.append((os.path.basename(_p)[:10], _dp))
+_streak = 0
+for _day, _dp in _paths:
+    if _dp == 'direct':
+        break
+    _streak += 1
+if _streak >= DEGRADED_STREAK_WARN:
+    print(f'   ⚠ 取數已連續 {_streak} 期未走主路徑（最近一次走 direct 是 '
+          f'{next((x[0] for x in _paths if x[1] == "direct"), "近 14 期內沒有")}）'
+          f'——這不是單日降級，是主路徑壞了。查 tools/prefetch.py 的預抓是否在跑'
+          f'（data/_prefetch_status.json），以及沙箱對外連線是否仍被擋')
+elif _streak:
+    print(f'   取數路徑：本期走備援（連續 {_streak} 期）')
+
+_ps = os.path.join(REPO, 'data', '_prefetch_status.json')
+if os.path.exists(_ps):
+    try:
+        _st = json.load(open(_ps, encoding='utf-8'))
+        _age = (_dt.datetime.now().astimezone()
+                - _dt.datetime.fromisoformat(_st['finished'])).total_seconds() / 3600
+        _msg = f"   預抓：{_st['ok']}/{_st['requested']} 條，{_age:.1f} 小時前"
+        if _age > 30:
+            print(_msg + ' ⚠ 超過 30 小時未更新，launchd 可能沒在跑')
+        elif _st.get('failed'):
+            print(_msg + f" ⚠ {len(_st['failed'])} 條失敗：{', '.join(list(_st['failed'])[:5])}")
+        else:
+            print(_msg)
+    except Exception as _e:
+        print(f'   ⚠ 預抓狀態檔讀不動（{type(_e).__name__}）——當成沒有預抓處理')
+else:
+    print('   預抓：無狀態檔（tools/prefetch.py 尚未安裝或從未跑過）')
 
 print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 # **失敗要用 exit code 說出來。** 在此之前無論通過與否一律 exit 0——

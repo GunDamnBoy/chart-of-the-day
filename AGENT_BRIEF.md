@@ -144,7 +144,34 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 1. **FRED 一次只能抓一條序列。** `fredgraph.csv?id=A,B` 會回傳 **zip**，不是 CSV。`fetch.py` 已對 `PK` 開頭做偵測並拋錯。
 2. **ICE BofA 利差序列（`BAMLxxx`）只有近三年。** 這不是端點限制，是 FRED 的政策——序列頁面明載「Starting in April 2026, this series will only include 3 years of observations.」，資料本身受 ICE Data Indices 版權保護。**申請 FRED API key 不會解決這件事**，換 API 端點也不會。因此凡是用到 HY／IG OAS 的圖，分位數與中位數一律標明「近三年」，**不可以寫成「歷史低點」**。要更長的歷史只能改用其他來源（如 ICE 官方或 Bloomberg 授權資料）。
 
-### 3.3 本機直連失敗時的備援（已實測可行）
+### 3.3 取數路徑：主路徑、預抓、與備援
+
+**三條路徑，優先序由上而下。每天都要在 `about.data_path` 寫下實際走了哪一條**（`direct`／`prefetch`／`browser`）——單日降級不嚴重，**連續降級才是故障，而連續性只有被記錄下來才看得見**。
+
+| 路徑 | 什麼時候用 | 前提 |
+|---|---|---|
+| **`direct`（主路徑）** | `tools/fetch.py` 直連 FRED／Yahoo／證交所 | 執行環境對外連線正常 |
+| **`prefetch`（本機預抓）** | 讀 `data/series` 快取，由 Mac 上的 `com.kenny.chartfetch` 每日 11:00 刷新 | launchd 有在跑；**只涵蓋核心清單 ∪ 近 14 天用過的序列**，當天臨時想到的新序列抓不到 |
+| **`browser`（備援）** | 前兩條都拿不到時 | **需要有 Chrome 執行個體在線並經人工指定——無人值守輪次實際上不可用** |
+
+**2026-08-06 起沙箱對外連線被出口代理擋掉**（FRED／Yahoo／證交所一律 Tunnel 403，只有 pypi 通），至 08-14 已連續九期靠 `browser` 取數。**08-14 11:30 那輪因為當下沒有 Chrome 在線而完全沒有產出**，13:44 有人在場重試才過。
+
+**這件事真正的教訓不在那天的失敗，在前八天的成功。** 每天都「降級但成功」，於是一個持續九天的結構性故障從來沒有被升級成問題——**降級若每天都成功，就沒有人會把它當故障處理**。`check_day` 已加連續降級累計警示（`DEGRADED_STREAK_WARN`），連續三期未走主路徑就會大聲說出來。
+
+**本機預抓的安裝（一次性，在 Mac 上做，不在沙箱）：**
+
+```
+mkdir -p ~/.chartfetch
+cp ~/chart-of-the-day/tools/prefetch-launchd.sh ~/.chartfetch/prefetch.sh
+chmod +x ~/.chartfetch/prefetch.sh
+cp ~/chart-of-the-day/tools/com.kenny.chartfetch.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.kenny.chartfetch.plist
+python3 ~/chart-of-the-day/tools/prefetch.py
+```
+
+最後一行是手動驗證，會印出每條序列的點數與末日，並寫出 `data/_prefetch_status.json`。
+**沒有狀態檔＝預抓從未跑過**，`check_day` 會這樣報，不會假裝一切正常。
+`launchctl list | grep chartfetch` 看有沒有載入；日誌在 `~/.chartfetch/prefetch.log`。
 
 **先分清楚兩種「失敗」——處置完全相反：**
 
@@ -365,6 +392,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
     "markers": [{ "date":"2026-03-31", "label":"油價見頂" }],
     "pts": [], "hi_pts": [],             // kind=scatter 用
     "provenance": { "inspired_by": { "outlet":"Bloomberg", "title":"...", "url":"...", "published":"2026-08-09" } },
+    // about 另有 "data_path": "direct" | "prefetch" | "browser"（見 §3.3，每期必填）
     "takeaway": "...", "reading": "...\n\n...", "so_what": "...",
     "watch": ["...", "..."], "tags": ["..."],
     "files":  {},                        // render_day.py 寫入
@@ -414,22 +442,22 @@ exec(compile(open(os.path.join(REPO, 'tools', 'check_day.py'), encoding='utf-8')
 
 > 完整紀錄在 **[CHANGELOG.md](CHANGELOG.md)**。本節只留最新一筆（維護 skill 靠它判斷認知新舊）；**加新版本時把上一筆搬過去**，不要讓這裡長回 13,000 字元——那正是 2026-08-09 搬家的原因。
 
-### 2026-08-13 · 第 24 版（三大數據發布日第一次真的畫 CPI，一次撞出四個「規範自己禁止自己」的缺口）
+### 2026-08-14 · 第 23 版（取數主路徑已死九天：本機預抓、連續降級警示、基期守門）
 
 | | |
 |---|---|
-| **動到哪些檔** | `tools/check_day.py`（序列新鮮度拆日頻／月頻）、`tools/macro_release.py`（2% 目標線補滿日期）、`tools/build_series.py`（`yoy` 自動標 `derived` ＋ selftest 期望值）、`tools/chartkit.py`（heatmap 左邊界、末值標籤碰撞改用同軸聯集範圍）、`AGENT_BRIEF.md` §3.4／§3.5／§8、`CHANGELOG.md`、`MAINTENANCE.md` §2。**未動 `data/` 的既有期別**（08-12 曾被誤覆寫後已自 git 物件還原為原始 blob，見下） |
-| **量測** | ①月頻新鮮度：CPI 觀測 `2026-07-01` 在 08-13 那輪落後 **43 天**，舊規則直接硬失敗；改判後為「月頻落後 0 期」，通過。②2% 目標線：工具產出 **2 點**，而 `check_day` 要求 timeseries 每條 ≥ **20 點**——工具自己的產出過不了同一份規範；補滿後 78 點。③`yoy` 誤報：CPI 兩條年增率共 **2 筆** 5σ 旗標（總體 2020-06 **+260.00%** z=7.4、核心 2021-04 **+80.61%** z=6.2），標 `derived` 後由逐筆處置改為整條說明一次。④heatmap 首用：靜態軌左邊界 `left=0.075`，「南韓 KOSPI」「費城半導體」被切掉左半邊（互動軌 `grid.left` 早就是 92），改 `0.155` 後完整。⑤末值標籤：美光 319.29 與希捷 318.90 疊印成一團——碰撞判斷用的是**各序列自己的 min/max**（frac 0.66 對 0.73，差 0.07 剛好大於門檻 0.06），改用同軸聯集範圍後分開 |
-| **怎麼驗的** | `check_day.py` 由 exit 1 轉全綠（唯一警示是布蘭特落後 2 天，已在 note 與 `window.note` 標明基準日）；`build_series --selftest`、`macro_release --selftest` 均通過；五張 PNG 逐張目視；heatmap 首用依 `MAINTENANCE` §4 實載 Pages 頁面確認 ECharts 實例數與例外 |
-| **怎麼倒回去** | 四個檔案各自獨立，可分別還原。**注意順序**：`chartkit.py` 與 `macro_release.py` 還原後要重跑 `render_day.py`（或舊期用 `rebuild_option.py`）；`build_series.py` 的 `yoy` derived 若還原，既有 JSON 裡已寫入的 `"derived": true` 不會自己消失，需一併處理 |
-| **當時已知的風險** | `heatmap` 是六種新圖型裡第四種真的被用出去的，**`stacked_bar`／`pct_stacked_bar` 仍是零使用**，下次首用要預期同一類問題。月頻門檻「≥3 期硬失敗」是憑「漏掉一次發布」推出來的，**沒有實際樣本校準過**。末值標籤的碰撞門檻仍固定 0.06，序列超過三條時仍可能不夠。**排程 prompt（`~/Documents/Claude/Scheduled/chart-of-the-day-daily/SKILL.md`）不在本輪可寫入的路徑內，§3.4／§3.5 的兩條新規則尚未同步到第三處** |
+| **動到哪些檔** | **新增** `tools/prefetch.py`、`tools/prefetch-launchd.sh`、`tools/com.kenny.chartfetch.plist`；**改** `tools/check_day.py`（連續降級累計、預抓狀態、rebase 基期一致性）、`AGENT_BRIEF.md` §3.3 全面改寫＋§5 schema 加 `data_path`＋§8、`MAINTENANCE.md`（4 條坑、2 筆待辦）、排程 prompt |
+| **量測** | 沙庫對外連線**連續 9 期被擋**（2026-08-06～08-14，最後一次走主路徑是 08-05）；本 session 實測 FRED／Yahoo／證交所皆不通、pypi 通 200。預抓清單 **36 條**（核心 28 ∪ 近 14 天用過）。`check_day` 10,968→17,472 字元 |
+| **怎麼驗的** | 降級累計對真實資料實跑，正確報出「連續 9 期、最後一次 direct 是 2026-08-05」；基期檢查在 temp repo 用**今天實際犯的那個錯**（`since` 2026-01-02 vs 文字 2025-12-31）驗證會觸發，正確值與無關日期靜默；`prefetch.py --list` 實跑確認清單邏輯。**預抓的連外部分無法在沙箱驗證，已列為待辦要求真機驗收** |
+| **怎麼倒回去** | `launchctl unload ~/Library/LaunchAgents/com.kenny.chartfetch.plist` 並刪三個新檔；`check_day` 移除三段（各自獨立）。**預抓只寫快取不改任何既有資料，移除無副作用** |
+| **當時已知的風險** | **`prefetch.py` 尚未在真機跑過**——沙箱無網路測不了連外部分，違反「未實測的程式碼不進每日關鍵路徑」，因此排程 prompt 寫成「有就用、沒有就往下走」，不硬依賴。另：預抓只涵蓋核心與近期序列，臨時題材仍需 browser |
 
-**四個缺口的形狀完全一樣：規範 A 要求做某件事，規範 B 禁止它，而兩者從來沒有在同一天被同時執行過。**
+**這次要檢討的不是 08-14 的失敗，是 08-06 到 08-13 的成功。**
 
-- 第 11 版（08-09）訂下「三大數據發布日 slot 1 必畫該數據」，第 3.5 節的新鮮度門檻更早就在。**兩者中間隔了四天，而這四天剛好沒有任何一次發布**——規則寫下去之後**第一次真的觸發是 2026-08-13**，一觸發就同時撞到三個。
-- **「加了功能沒有人用，等於沒有被測過」在這裡的變體是「加了規則沒有被觸發，等於沒有被驗證過」。** 前者 08-12 已經吃過一次（gauge 首用整頁掛掉），後者是同一件事換一個位置。
-- 值得注意的是**它們全都是硬失敗，所以當天就被擋住**。真正該擔心的仍是軟失敗——heatmap 的列標籤被切掉、末值標籤疊印，`check_day` 一個都照不到，只有人眼看得出來。**這一輪五張 PNG 逐張目視，兩個缺陷都是這樣抓到的。**
+- **根因九天前就存在**：沙箱出口代理擋掉所有資料來源，`fetch.py` 這條主路徑實質失效。**近因今天才觸發**：唯一還活著的 `browser` 路徑需要 Chrome 在線，11:30 那輪剛好沒有。
+- **每天都「降級但成功」，所以沒有人升級成問題。** 報告裡那行「降級與替換」讀起來像例行註記，連續九天沒有任何機制把它加總起來看。所以這版加的第一件事就是**連續性**：`about.data_path` 記錄每期實際路徑，`check_day` 連續三期未走主路徑就大聲警示並印出最後一次走主路徑是哪天。**降級的嚴重性藏在連續性裡，不在單日；只記單日等於永遠不會升級。**
+- **無人值守的系統裡，任何需要人的步驟都不是備援，是單點故障。** brief §3.3 原本把瀏覽器同源 fetch 寫成「網路被擋」的標準解法，卻沒記載它需要人工指定 Chrome。已改寫成三條路徑的優先序表並標明各自前提。
+- **解法是把取數搬回網路正常的那台機器。** `com.kenny.chartfetch` 每日 11:00 在 Mac 上跑 `prefetch.py`，把核心清單與近 14 天用過的序列刷進快取，執行輪次讀快取即可。**清單自己維護自己**——用過一次的序列會保持新鮮 14 天再自然淘汰，硬寫死的清單一定會爛掉。沿用 dashpush 的 launchd 模式，但**這支不跑 git**。
+- 順帶補上 `macro_release` 的一個結構性弱點：它當初的設計重點是「不靠人、不靠會過期的行事曆」，**但它依賴網路，網路一斷就只能由人重建**——今天就是這樣。**設計不靠人的機制時，要一併問它自己依賴什麼**；依賴鏈上任何一環需要人，整條就需要人。
+- 另外把今天那個自我修正變成守門：`rebase` 的 `since` 與文字裡出現的日期相差 1–5 天就警示。**這類「兩邊各自正確、合起來錯」的軟失敗形態很多**（疊印、標籤、基期），機械檢查只能逐類補，逐張目視 PNG 仍是主要防線。
 
-**另有一起執行事故（非程式缺陷）**：撰稿階段以 `/tmp` 下的同名舊腳本執行，把 `data/2026-08-12.json` 覆寫成 15KB 空殼，且該版本一度被 dashpush 推上 Pages。已直接讀 `.git` 鬆散物件（zlib 解壓，**未執行任何 git 指令**），自覆寫前最後一個 commit `84da62f` 取回原始 blob 還原（120,292 bytes、5 圖、`option` 齊全、2,872 個序列點）。教訓有兩層：**暫存腳本一律寫在 outputs 並帶日期**，不要用 `/tmp` 的通用檔名；以及 **Pages 不是備份**——它跟著 daemon 走，180 秒內就會把錯的版本蓋上去，唯一可靠的還原點是 `.git` 物件。
-
----
