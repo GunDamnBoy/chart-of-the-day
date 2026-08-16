@@ -123,7 +123,20 @@ def main(argv):
     BREAK_AFTER = 3
     streak = {"yahoo": 0, "fred": 0, "tiingo": 0, "tw": 0}
 
+    # 已知被擋的來源每天只試一條當哨兵（canary）。
+    # **全部不試就再也不會發現它恢復了；全部都試就每天白耗好幾分鐘。**
+    # 選最有代表性的那條：^GSPC 是最常用、也最能代表 Yahoo 整體狀態的標的。
+    CANARY = "^GSPC"
+    canary_done = False
+
     for i, ident in enumerate(ids, 1):
+        if ident in F.BLOCKED and not (ident == CANARY and not canary_done):
+            skipped[ident] = f"來源已知被擋，改用 {F.BLOCKED[ident]}（brief §3.2）"
+            if not quiet:
+                print(f"  [{i}/{len(ids)}] {ident:<16} — 略過（已知被擋，用 {F.BLOCKED[ident]}）")
+            continue
+        if ident == CANARY:
+            canary_done = True
         src = F.route_of(ident)
         if streak.get(src, 0) >= BREAK_AFTER:
             skipped[ident] = f"{src} 連續 {BREAK_AFTER} 次被限流，本輪不再嘗試"
@@ -136,6 +149,9 @@ def main(argv):
             last = s["d"][-1] if s.get("d") else "?"
             ok.append({"id": ident, "n": len(s.get("d") or []), "last": last})
             streak[src] = 0
+            if ident in F.BLOCKED:
+                print(f"  ★ {ident} 又通了——Yahoo 可能已解除封鎖，"
+                      f"請重新評估 brief §3.2 的替代方案是否仍必要")
             if not quiet:
                 print(f"  [{i}/{len(ids)}] {ident:<16} {len(s.get('d') or []):>5} 點，末日 {last}")
         except Exception as e:
@@ -160,9 +176,13 @@ def main(argv):
     with open(STATUS, "w", encoding="utf-8") as f:
         json.dump(status, f, ensure_ascii=False, indent=1)
 
+    # **兩種「未嘗試」的成因不同，混在一起講會讓人以為今天出了 11 個問題。**
+    _n_blocked = sum(1 for v in skipped.values() if "已知被擋" in v)
+    _n_break = len(skipped) - _n_blocked
     print(f"預抓完成：{len(ok)}/{len(ids)} 成功"
           + (f"，{len(failed)} 條失敗：{', '.join(list(failed)[:6])}" if failed else "")
-          + (f"，{len(skipped)} 條因熔斷未嘗試" if skipped else ""))
+          + (f"，{_n_blocked} 條來源已知被擋（用替代品）" if _n_blocked else "")
+          + (f"，{_n_break} 條因熔斷未嘗試" if _n_break else ""))
     # 全部失敗＝網路整條不通，要讓 launchd 的錯誤日誌看得出來
     return 1 if not ok else 0
 

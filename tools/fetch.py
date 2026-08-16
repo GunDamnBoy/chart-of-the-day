@@ -96,8 +96,12 @@ def _get(url: str, tries: int = 3) -> bytes:
             time.sleep(1.5 * (k + 1))
     hint = ""
     if isinstance(last, urllib.error.HTTPError) and last.code == 429:
-        hint = ("\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 "
-                "data/series/ 快取不再打站台。**不要改用其他來源來規避限流。**")
+        hint = ("\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）："
+                "\n    · 打了一陣子才 429 ＝ 累積型限流 → **等，不要繞**。"
+                "\n    · 第一個請求就 429 ＝ 這個用戶端被擋 → 等再久也沒用，"
+                "**改用有授權的其他供應商**（換供應商不是規避限流）。"
+                "\n  Yahoo 對本機屬後者（2026-08-14 首測、08-16 複測，零流量下單一標的仍 429）。"
+                "\n  替代對照見 brief §3.2：指數用 FRED 等價或 ETF 代理、美股走 Tiingo、台股走證交所。")
     raise RuntimeError(f"取數失敗 {_redact(url)}\n  {_redact(last)}{hint}")
 
 
@@ -196,6 +200,17 @@ def tiingo_key():
 # **但它是 ETF 不是指數**——用了就要在 note 寫明，比照既有的 XLE 註記。
 # **這張表是給人看的，不是給取數層自動替換用的。** 要用代理就在 series_spec
 # 直接寫 ETF 代號，並依 §3.2 在 note 標明「ETF 非指數」——替換必須是有意識的決定。
+# 已知在本機不可用的來源代號。**這不是「暫時失敗」，是複測確認過的封鎖**：
+# 2026-08-14 首測 13 條全 429，08-16 複測單一標的、零流量、仍第一個請求就 429。
+# 預抓不再每天對它們白試（見 prefetch.CANARY 的例外），但**保留在這裡而不是刪掉**——
+# 哪天恢復了要看得出來，而且讀程式的人需要知道為什麼這些代號從清單裡消失。
+BLOCKED = {
+    "^GSPC": "SP500", "^VIX": "VIXCLS", "^IXIC": "NASDAQCOM",
+    "^TNX": "DGS10", "^TYX": "DGS30", "^IRX": "DTB3",
+    "JPY=X": "DEXJPUS", "^N225": "NIKKEI225", "BZ=F": "DCOILBRENTEU",
+    "^SOX": "SOXQ（ETF 代理）", "^STOXX50E": "FEZ（ETF 代理）", "HG=F": "CPER（ETF 代理）",
+}
+
 PROXY = {"^SOX": ("SOXQ", "SOXQ ETF（追蹤 PHLX 半導體指數；ETF 非指數本身）"),
          "^STOXX50E": ("FEZ", "FEZ ETF（追蹤歐洲 Stoxx 50；ETF 非指數本身）"),
          "HG=F": ("CPER", "CPER ETF（追蹤銅期貨；ETF 非期貨本身，有轉倉成本）")}
