@@ -343,7 +343,17 @@ for i, c in enumerate(d['charts'], 1):
 for m in KNOWN.get(d.get('date',''), []):
     print(f'   · 已知歷史例外（不必修）：{m}')
 
-# 取數路徑的連續降級累計。單日降級不算問題，連續才是。
+# ── 取數路徑的健康度 ──────────────────────────────────────────────
+# **`prefetch` 不是降級。** 它的資料一樣出自 FRED／Tiingo／證交所的正規 API，
+# 只是由本機在執行輪次之前抓好——資料品質沒有折損，只有取數的機器不同。
+#
+# 2026-08-16 修正：原本把「非 direct」一律算成降級並每天大聲警示，
+# 而 `prefetch` 已是設計上的穩定狀態，於是變成一個**每天都會響、且預期永遠會響**的警報。
+# **會固定響的警報就是雜訊，而雜訊訓練人忽略警報**——這正是這個計數器當初要防的事，
+# 它自己變成了那個東西。現在只有兩種情況才大聲：
+#   (a) 走 `browser`（需要人、無人值守會失敗），連續 ≥ 門檻
+#   (b) `prefetch` 過期，或**本期實際用到的序列**落在 failed／skipped 裡
+# 沙箱能不能連外改用一行中性狀態陳述，讓它保持可見但不冒充故障。
 _paths = []
 for _p in sorted(glob.glob(os.path.join(REPO, 'data', '20*.json')), reverse=True)[:14]:
     try:
@@ -355,18 +365,21 @@ for _p in sorted(glob.glob(os.path.join(REPO, 'data', '20*.json')), reverse=True
         _r = (_doc.get('about') or {}).get('run', '')
         _dp = 'browser' if ('瀏覽器同源' in _r or '瀏覽器備援' in _r) else 'direct'
     _paths.append((os.path.basename(_p)[:10], _dp))
-_streak = 0
+
+_today_path = _paths[0][1] if _paths else '?'
+_browser_streak = 0
 for _day, _dp in _paths:
-    if _dp == 'direct':
+    if _dp != 'browser':
         break
-    _streak += 1
-if _streak >= DEGRADED_STREAK_WARN:
-    print(f'   ⚠ 取數已連續 {_streak} 期未走主路徑（最近一次走 direct 是 '
-          f'{next((x[0] for x in _paths if x[1] == "direct"), "近 14 期內沒有")}）'
-          f'——這不是單日降級，是主路徑壞了。查 tools/prefetch.py 的預抓是否在跑'
-          f'（data/_prefetch_status.json），以及沙箱對外連線是否仍被擋')
-elif _streak:
-    print(f'   取數路徑：本期走備援（連續 {_streak} 期）')
+    _browser_streak += 1
+if _browser_streak >= DEGRADED_STREAK_WARN:
+    bad(f'取數已連續 {_browser_streak} 期走 browser 備援——那條路需要有人指定 Chrome，'
+        f'無人值守輪次會直接失敗（2026-08-14 發生過）。先確認 tools/prefetch.py 的 launchd 有沒有在跑')
+elif _today_path == 'browser':
+    print('   ⚠ 本期走 browser 備援——需要人在場，不可長期依賴')
+
+# 本期用到的序列（用來判斷預抓的缺口是否真的影響到今天）
+_used = {s.get('id') for c_ in d['charts'] for s in (c_.get('series_spec') or []) if s.get('id')}
 
 _ps = os.path.join(REPO, 'data', '_prefetch_status.json')
 if os.path.exists(_ps):
@@ -374,17 +387,29 @@ if os.path.exists(_ps):
         _st = json.load(open(_ps, encoding='utf-8'))
         _age = (_dt.datetime.now().astimezone()
                 - _dt.datetime.fromisoformat(_st['finished'])).total_seconds() / 3600
-        _msg = f"   預抓：{_st['ok']}/{_st['requested']} 條，{_age:.1f} 小時前"
+        _miss = sorted((set(_st.get('failed') or {}) | set(_st.get('skipped') or {})) & _used)
+        _line = f"   取數路徑：{_today_path}｜預抓 {_st['ok']}/{_st['requested']} 條，{_age:.1f} 小時前"
         if _age > 30:
-            print(_msg + ' ⚠ 超過 30 小時未更新，launchd 可能沒在跑')
-        elif _st.get('failed'):
-            print(_msg + f" ⚠ {len(_st['failed'])} 條失敗：{', '.join(list(_st['failed'])[:5])}")
+            bad(f'預抓已 {_age:.0f} 小時未更新（>30h）——launchd 可能沒在跑，'
+                f'本期用到的快取可能是舊資料')
+        elif _miss:
+            bad(f'本期用到的序列有 {len(_miss)} 條在預抓的失敗／跳過清單裡：{_miss}'
+                f'——這幾條的快取不是今天的，確認來源或改題')
         else:
-            print(_msg)
+            _other = len((set(_st.get('failed') or {}) | set(_st.get('skipped') or {})) - _used)
+            print(_line + (f'（另有 {_other} 條未取得，但本期沒用到）' if _other else ''))
     except Exception as _e:
-        print(f'   ⚠ 預抓狀態檔讀不動（{type(_e).__name__}）——當成沒有預抓處理')
+        bad(f'預抓狀態檔讀不動（{type(_e).__name__}）——當成沒有預抓處理')
+elif _today_path == 'prefetch':
+    bad('本期宣稱走 prefetch，但沒有 data/_prefetch_status.json——無從確認快取何時刷新')
 else:
-    print('   預抓：無狀態檔（tools/prefetch.py 尚未安裝或從未跑過）')
+    print(f'   取數路徑：{_today_path}｜預抓：無狀態檔')
+
+# 環境狀態：中性陳述，不冒充故障。**沙箱連不連得出去與資料好不好是兩件事。**
+_last_direct = next((x[0] for x in _paths if x[1] == 'direct'), None)
+print(f"   執行環境：最近一次由執行輪次直連取數是 "
+      f"{_last_direct if _last_direct else '近 14 期內沒有'}"
+      f"（沙箱對外連線自 2026-08-06 起被出口代理擋掉，預抓即為因應）")
 
 print('全部通過 ✓' if ok else '★ 有問題，不要發布')
 # **失敗要用 exit code 說出來。** 在此之前無論通過與否一律 exit 0——
