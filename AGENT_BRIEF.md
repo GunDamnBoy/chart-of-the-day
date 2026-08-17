@@ -401,7 +401,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
     "slot": "當日主圖",
     "theme": "能源與原物料",              // 必須是投顧儀表板 15 個子類別之一
     "title": "...", "subtitle": "...",
-    "kind": "timeseries",                // timeseries | scatter
+    "kind": "timeseries",                // 可選值見第 4 節那張表（**不在這裡列舉，列舉會過期**）
     "y_label": "...", "y2_label": "...",
     "y_fmt": "{:,.0f}", "y2_fmt": "{:,.2f}",
     "y_log": false,                      // 利差、倍數這類「比例才有意義」的量請開 true
@@ -413,14 +413,15 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
     "series_spec": [{ "id":"BZ=F", "name":"布蘭特原油", "t":"rebase", "since":"2026-01-02" }],
     "series_align": true,                // 跨市場比較必開：先取交易日交集再轉換
     "series": [ /* build_series.py 寫入；spec 與 series 並存，轉換方式因此可考 */ ],
-    // ↓ 非折線圖型的欄位（依 kind 擇一組，見第 4 節「圖型跟著問題走」）
-    "cats": ["住房","食品","能源"],      // 類別軸：waterfall／grouped_bar／stacked_bar／heatmap
-    "vals": [1.62, 0.41, -0.55],         // waterfall 的各項貢獻
-    "total_label": "總體年增",            // waterfall 末端合計欄；空字串＝不畫
-    "groups": [{"name":"今年以來","values":[11.2,17.0]}],   // grouped/stacked，**最多四組**
-    "band": [["2026-01-01", 1.2, 4.9]],  // range_area：[日期, 下緣, 上緣]
+    // ↓ 非折線圖型的欄位。**哪個 kind 該帶哪幾個欄位，看第 4 節「圖型跟著問題走」那張表**——
+    //   這裡只給每個欄位長什麼形狀。（那張表是唯一來源；加新圖型時改那裡，別在這裡再寫一份對照。）
+    "cats": ["住房","食品","能源"],
+    "vals": [1.62, 0.41, -0.55],
+    "total_label": "總體年增",            // 末端合計欄；空字串＝不畫
+    "groups": [{"name":"今年以來","values":[11.2,17.0]}],   // **最多四組**
+    "band": [["2026-01-01", 1.2, 4.9]],  // [日期, 下緣, 上緣]
     "band_label": "近十年區間",
-    "rows": ["標普500","美債"],           // heatmap 列標籤
+    "rows": ["標普500","美債"],           // 列標籤
     "matrix": [[1.0, 0.32], [0.32, 1.0]],
     "gauge": {"value":93,"lo":0,"hi":100,"ref":50,"ref_label":"中位數"},
     "markers": [{ "date":"2026-03-31", "label":"油價見頂" }],
@@ -466,7 +467,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 
 ## 8. 變更紀錄
 
-**現行第 30 版 · 2026-08-17。**
+**現行第 31 版 · 2026-08-17。**
 
 完整紀錄在 **[CHANGELOG.md](CHANGELOG.md)**（含五欄結構化區塊與跨版本量測表）——**維護時讀，每日執行不必讀**。
 
