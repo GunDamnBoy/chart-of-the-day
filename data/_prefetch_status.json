@@ -1,24 +1,24 @@
 {
- "started": "2026-08-16T11:00:00+08:00",
- "finished": "2026-08-16T11:08:53+08:00",
+ "started": "2026-08-17T11:00:00+08:00",
+ "finished": "2026-08-17T11:06:58+08:00",
  "host": "MacBook-Pro.local",
  "requested": 46,
  "ok": 34,
  "failed": {
-  "^TNX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^TYX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5ETYX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規",
-  "^IRX": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EIRX?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 是限流不是壞掉。稍後重跑即可；同日已抓過的序列會走 data/series/ 快取不再打站台。**不要改用其他來源來規"
+  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等"
  },
  "skipped": {
-  "JPY=X": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^VIX": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^GSPC": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^SOX": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^IXIC": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "BZ=F": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "HG=F": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^N225": "yahoo 連續 3 次被限流，本輪不再嘗試",
-  "^STOXX50E": "yahoo 連續 3 次被限流，本輪不再嘗試"
+  "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
+  "^TYX": "來源已知被擋，改用 DGS30（brief §3.2）",
+  "^IRX": "來源已知被擋，改用 DTB3（brief §3.2）",
+  "JPY=X": "來源已知被擋，改用 DEXJPUS（brief §3.2）",
+  "^VIX": "來源已知被擋，改用 VIXCLS（brief §3.2）",
+  "^SOX": "來源已知被擋，改用 SOXQ（ETF 代理）（brief §3.2）",
+  "^IXIC": "來源已知被擋，改用 NASDAQCOM（brief §3.2）",
+  "BZ=F": "來源已知被擋，改用 DCOILBRENTEU（brief §3.2）",
+  "HG=F": "來源已知被擋，改用 CPER（ETF 代理）（brief §3.2）",
+  "^N225": "來源已知被擋，改用 NIKKEI225（brief §3.2）",
+  "^STOXX50E": "來源已知被擋，改用 FEZ（ETF 代理）（brief §3.2）"
  },
  "series": [
   {
@@ -152,6 +152,16 @@
    "last": "2026-08-14"
   },
   {
+   "id": "NIKKEI225",
+   "n": 2838,
+   "last": "2026-08-14"
+  },
+  {
+   "id": "SP500",
+   "n": 2514,
+   "last": "2026-08-14"
+  },
+  {
    "id": "STX",
    "n": 2921,
    "last": "2026-08-14"
@@ -172,11 +182,6 @@
    "last": "2026-08-13"
   },
   {
-   "id": "SP500",
-   "n": 2514,
-   "last": "2026-08-14"
-  },
-  {
    "id": "NASDAQCOM",
    "n": 2922,
    "last": "2026-08-14"
@@ -185,11 +190,6 @@
    "id": "DCOILBRENTEU",
    "n": 2947,
    "last": "2026-08-11"
-  },
-  {
-   "id": "NIKKEI225",
-   "n": 2838,
-   "last": "2026-08-14"
   }
  ]
 }
