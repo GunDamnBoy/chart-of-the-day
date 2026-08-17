@@ -37,18 +37,13 @@ z
 " style="fill: #ffffff"/>
    </g>
    <g id="line2d_1">
-    <path d="M 434.08951 292.824 
-L 434.08951 70.56 
-" clip-path="url(#p590cffd353)" style="fill: none; stroke-dasharray: 0.9,1.485; stroke-dashoffset: 0; stroke: #9ba0a6; stroke-width: 0.9"/>
-   </g>
-   <g id="line2d_2">
     <path d="M 390.788811 292.824 
 L 390.788811 70.56 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke-dasharray: 0.9,1.485; stroke-dashoffset: 0; stroke: #9ba0a6; stroke-width: 0.9"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
-     <g id="line2d_3"/>
+     <g id="line2d_2"/>
      <g id="text_1">
       <!-- 26/01 -->
       <g style="fill: #6b7076" transform="translate(49.949356 303.487437) scale(0.09 -0.09)">
@@ -130,7 +125,7 @@ z
      </g>
     </g>
     <g id="xtick_2">
-     <g id="line2d_4"/>
+     <g id="line2d_3"/>
      <g id="text_2">
       <!-- 26/02 -->
       <g style="fill: #6b7076" transform="translate(117.06544 303.487437) scale(0.09 -0.09)">
@@ -143,7 +138,7 @@ z
      </g>
     </g>
     <g id="xtick_3">
-     <g id="line2d_5"/>
+     <g id="line2d_4"/>
      <g id="text_3">
       <!-- 26/03 -->
       <g style="fill: #6b7076" transform="translate(177.686419 303.487437) scale(0.09 -0.09)">
@@ -177,7 +172,7 @@ z
      </g>
     </g>
     <g id="xtick_4">
-     <g id="line2d_6"/>
+     <g id="line2d_5"/>
      <g id="text_4">
       <!-- 26/04 -->
       <g style="fill: #6b7076" transform="translate(244.802503 303.487437) scale(0.09 -0.09)">
@@ -214,7 +209,7 @@ z
      </g>
     </g>
     <g id="xtick_5">
-     <g id="line2d_7"/>
+     <g id="line2d_6"/>
      <g id="text_5">
       <!-- 26/05 -->
       <g style="fill: #6b7076" transform="translate(309.753552 303.487437) scale(0.09 -0.09)">
@@ -247,7 +242,7 @@ z
      </g>
     </g>
     <g id="xtick_6">
-     <g id="line2d_8"/>
+     <g id="line2d_7"/>
      <g id="text_6">
       <!-- 26/06 -->
       <g style="fill: #6b7076" transform="translate(376.869636 303.487437) scale(0.09 -0.09)">
@@ -260,7 +255,7 @@ z
      </g>
     </g>
     <g id="xtick_7">
-     <g id="line2d_9"/>
+     <g id="line2d_8"/>
      <g id="text_7">
       <!-- 26/07 -->
       <g style="fill: #6b7076" transform="translate(441.820685 303.487437) scale(0.09 -0.09)">
@@ -285,7 +280,7 @@ z
      </g>
     </g>
     <g id="xtick_8">
-     <g id="line2d_10"/>
+     <g id="line2d_9"/>
      <g id="text_8">
       <!-- 26/08 -->
       <g style="fill: #6b7076" transform="translate(508.936768 303.487437) scale(0.09 -0.09)">
@@ -327,12 +322,12 @@ z
    </g>
    <g id="matplotlib.axis_2">
     <g id="ytick_1">
-     <g id="line2d_11">
+     <g id="line2d_10">
       <path d="M 46.44 289.708172 
 L 572.76 289.708172 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_12"/>
+     <g id="line2d_11"/>
      <g id="text_9">
       <!-- 80 -->
       <g style="fill: #6b7076" transform="translate(32.95 293.289891) scale(0.09 -0.09)">
@@ -342,12 +337,12 @@ L 572.76 289.708172
      </g>
     </g>
     <g id="ytick_2">
-     <g id="line2d_13">
+     <g id="line2d_12">
       <path d="M 46.44 256.996072 
 L 572.76 256.996072 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_14"/>
+     <g id="line2d_13"/>
      <g id="text_10">
       <!-- 100 -->
       <g style="fill: #6b7076" transform="translate(27.955 260.577791) scale(0.09 -0.09)">
@@ -358,12 +353,12 @@ L 572.76 256.996072
      </g>
     </g>
     <g id="ytick_3">
-     <g id="line2d_15">
+     <g id="line2d_14">
       <path d="M 46.44 224.283972 
 L 572.76 224.283972 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_16"/>
+     <g id="line2d_15"/>
      <g id="text_11">
       <!-- 120 -->
       <g style="fill: #6b7076" transform="translate(27.955 227.865691) scale(0.09 -0.09)">
@@ -374,12 +369,12 @@ L 572.76 224.283972
      </g>
     </g>
     <g id="ytick_4">
-     <g id="line2d_17">
+     <g id="line2d_16">
       <path d="M 46.44 191.571872 
 L 572.76 191.571872 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_18"/>
+     <g id="line2d_17"/>
      <g id="text_12">
       <!-- 140 -->
       <g style="fill: #6b7076" transform="translate(27.955 195.153591) scale(0.09 -0.09)">
@@ -390,12 +385,12 @@ L 572.76 191.571872
      </g>
     </g>
     <g id="ytick_5">
-     <g id="line2d_19">
+     <g id="line2d_18">
       <path d="M 46.44 158.859772 
 L 572.76 158.859772 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_20"/>
+     <g id="line2d_19"/>
      <g id="text_13">
       <!-- 160 -->
       <g style="fill: #6b7076" transform="translate(27.955 162.441491) scale(0.09 -0.09)">
@@ -406,12 +401,12 @@ L 572.76 158.859772
      </g>
     </g>
     <g id="ytick_6">
-     <g id="line2d_21">
+     <g id="line2d_20">
       <path d="M 46.44 126.147672 
 L 572.76 126.147672 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_22"/>
+     <g id="line2d_21"/>
      <g id="text_14">
       <!-- 180 -->
       <g style="fill: #6b7076" transform="translate(27.955 129.729391) scale(0.09 -0.09)">
@@ -422,12 +417,12 @@ L 572.76 126.147672
      </g>
     </g>
     <g id="ytick_7">
-     <g id="line2d_23">
+     <g id="line2d_22">
       <path d="M 46.44 93.435572 
 L 572.76 93.435572 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #e7e5e2; stroke-width: 0.8; stroke-linecap: square"/>
      </g>
-     <g id="line2d_24"/>
+     <g id="line2d_23"/>
      <g id="text_15">
       <!-- 200 -->
       <g style="fill: #6b7076" transform="translate(27.955 97.01729) scale(0.09 -0.09)">
@@ -438,7 +433,7 @@ L 572.76 93.435572
      </g>
     </g>
    </g>
-   <g id="line2d_25">
+   <g id="line2d_24">
     <path d="M 70.363636 256.996072 
 L 72.528671 254.837074 
 L 74.693706 256.587171 
@@ -581,7 +576,7 @@ L 548.836364 203.724417
 L 548.836364 203.724417 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
    </g>
-   <g id="line2d_26">
+   <g id="line2d_25">
     <path d="M 70.363636 256.996072 
 L 72.528671 252.579939 
 L 74.693706 254.182832 
@@ -728,7 +723,7 @@ L 548.836364 147.345113
 L 548.836364 147.345113 
 " clip-path="url(#p590cffd353)" style="fill: none; stroke: #1f4e79; stroke-width: 1.9; stroke-linecap: square"/>
    </g>
-   <g id="line2d_27">
+   <g id="line2d_26">
     <path d="M 70.363636 256.996072 
 L 72.528671 255.932929 
 L 74.693706 255.671232 
@@ -1050,303 +1045,6 @@ z
     </g>
    </g>
    <g id="text_19">
-    <!-- SOXQ 年內高點 -->
-    <g style="fill: #9ba0a6" transform="translate(406.581385 69.44868) scale(0.08 -0.08)">
-     <defs>
-      <path id="NotoSansCJKtc-Regular-53" d="M 1946 -83 
-C 2925 -83 3539 506 3539 1248 
-C 3539 1946 3117 2266 2573 2502 
-L 1907 2790 
-C 1542 2944 1126 3117 1126 3578 
-C 1126 3994 1472 4256 2003 4256 
-C 2438 4256 2784 4090 3072 3821 
-L 3379 4198 
-C 3053 4538 2560 4774 2003 4774 
-C 1152 4774 525 4256 525 3533 
-C 525 2848 1043 2515 1478 2330 
-L 2150 2035 
-C 2598 1837 2938 1683 2938 1197 
-C 2938 742 2573 435 1952 435 
-C 1466 435 992 666 659 1018 
-L 307 608 
-C 710 186 1280 -83 1946 -83 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-4f" d="M 2374 -83 
-C 3552 -83 4378 858 4378 2362 
-C 4378 3866 3552 4774 2374 4774 
-C 1197 4774 371 3866 371 2362 
-C 371 858 1197 -83 2374 -83 
-z
-M 2374 435 
-C 1530 435 979 1190 979 2362 
-C 979 3533 1530 4256 2374 4256 
-C 3219 4256 3770 3533 3770 2362 
-C 3770 1190 3219 435 2374 435 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-58" d="M 109 0 
-L 736 0 
-L 1408 1267 
-C 1530 1504 1651 1741 1786 2029 
-L 1811 2029 
-C 1965 1741 2093 1504 2214 1267 
-L 2912 0 
-L 3565 0 
-L 2189 2394 
-L 3469 4691 
-L 2848 4691 
-L 2221 3494 
-C 2106 3277 2016 3078 1888 2803 
-L 1862 2803 
-C 1709 3078 1613 3277 1491 3494 
-L 851 4691 
-L 198 4691 
-L 1478 2426 
-L 109 0 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-51" d="M 2374 410 
-C 1530 410 979 1165 979 2362 
-C 979 3533 1530 4256 2374 4256 
-C 3219 4256 3770 3533 3770 2362 
-C 3770 1165 3219 410 2374 410 
-z
-M 3808 -1178 
-C 4090 -1178 4339 -1133 4480 -1069 
-L 4365 -614 
-C 4243 -653 4083 -685 3872 -685 
-C 3366 -685 2931 -474 2720 -58 
-C 3712 115 4378 1011 4378 2362 
-C 4378 3866 3552 4774 2374 4774 
-C 1197 4774 371 3866 371 2362 
-C 371 986 1062 77 2086 -64 
-C 2349 -704 2944 -1178 3808 -1178 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-20" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-5e74" d="M 307 1427 
-L 307 966 
-L 3277 966 
-L 3277 -512 
-L 3770 -512 
-L 3770 966 
-L 6106 966 
-L 6106 1427 
-L 3770 1427 
-L 3770 2701 
-L 5658 2701 
-L 5658 3155 
-L 3770 3155 
-L 3770 4141 
-L 5805 4141 
-L 5805 4602 
-L 1965 4602 
-C 2074 4819 2170 5043 2259 5274 
-L 1773 5402 
-C 1466 4531 934 3699 320 3174 
-C 442 3104 646 2944 736 2867 
-C 1082 3200 1421 3642 1715 4141 
-L 3277 4141 
-L 3277 3155 
-L 1363 3155 
-L 1363 1427 
-L 307 1427 
-z
-M 1843 1427 
-L 1843 2701 
-L 3277 2701 
-L 3277 1427 
-L 1843 1427 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-5167" d="M 1824 5088 
-L 1824 4659 
-L 2976 4659 
-C 2995 4410 3021 4173 3053 3942 
-L 704 3942 
-L 704 -512 
-L 1184 -512 
-L 1184 3469 
-L 2854 3469 
-C 2630 2458 2112 1773 1242 1344 
-C 1344 1261 1504 1075 1568 966 
-C 2426 1408 2950 2118 3226 3098 
-C 3501 2138 4000 1421 4838 998 
-C 4915 1126 5075 1318 5184 1414 
-C 4339 1779 3859 2483 3610 3469 
-L 5254 3469 
-L 5254 115 
-C 5254 19 5222 -19 5107 -19 
-C 4986 -26 4576 -32 4154 -13 
-C 4230 -154 4307 -371 4326 -506 
-C 4864 -506 5235 -506 5459 -422 
-C 5670 -346 5734 -192 5734 115 
-L 5734 3942 
-L 3507 3942 
-C 3450 4294 3411 4678 3392 5088 
-L 1824 5088 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-9ad8" d="M 1830 3578 
-L 4602 3578 
-L 4602 2995 
-L 1830 2995 
-L 1830 3578 
-z
-M 1350 3930 
-L 1350 2643 
-L 5101 2643 
-L 5101 3930 
-L 1350 3930 
-z
-M 2822 5286 
-L 3008 4710 
-L 378 4710 
-L 378 4288 
-L 5997 4288 
-L 5997 4710 
-L 3539 4710 
-C 3469 4915 3373 5184 3283 5395 
-L 2822 5286 
-z
-M 614 2285 
-L 614 -506 
-L 1075 -506 
-L 1075 1882 
-L 5312 1882 
-L 5312 -6 
-C 5312 -77 5280 -102 5203 -102 
-C 5126 -102 4826 -109 4550 -96 
-C 4608 -198 4678 -346 4704 -461 
-C 5114 -461 5389 -461 5562 -403 
-C 5734 -339 5792 -237 5792 0 
-L 5792 2285 
-L 614 2285 
-z
-M 1798 1504 
-L 1798 -134 
-L 2253 -134 
-L 2253 186 
-L 4518 186 
-L 4518 1504 
-L 1798 1504 
-z
-M 2253 1146 
-L 4083 1146 
-L 4083 544 
-L 2253 544 
-L 2253 1146 
-z
-" transform="scale(0.015625)"/>
-      <path id="NotoSansCJKtc-Regular-9ede" d="M 966 4474 
-C 1069 4166 1152 3757 1165 3494 
-L 1421 3565 
-C 1402 3821 1312 4230 1203 4538 
-L 966 4474 
-z
-M 1197 781 
-C 1267 422 1299 -38 1286 -339 
-L 1626 -301 
-C 1632 0 1594 461 1523 813 
-L 1197 781 
-z
-M 1856 781 
-C 1990 454 2106 26 2138 -262 
-L 2458 -186 
-C 2426 90 2298 518 2163 838 
-L 1856 781 
-z
-M 2515 794 
-C 2694 480 2867 58 2931 -218 
-L 3251 -102 
-C 3187 179 3014 589 2822 902 
-L 2515 794 
-z
-M 627 902 
-C 557 512 416 13 218 -288 
-L 563 -435 
-C 762 -128 890 378 960 781 
-L 627 902 
-z
-M 2272 4557 
-C 2214 4262 2086 3808 1997 3533 
-L 2202 3456 
-C 2317 3706 2445 4122 2554 4454 
-L 2272 4557 
-z
-M 4314 5363 
-L 4314 2330 
-L 3379 2330 
-L 3379 -506 
-L 3827 -506 
-L 3827 -211 
-L 5440 -211 
-L 5440 -480 
-L 5901 -480 
-L 5901 2330 
-L 4781 2330 
-L 4781 3526 
-L 6150 3526 
-L 6150 3974 
-L 4781 3974 
-L 4781 5363 
-L 4314 5363 
-z
-M 3827 237 
-L 3827 1894 
-L 5440 1894 
-L 5440 237 
-L 3827 237 
-z
-M 877 4794 
-L 1568 4794 
-L 1568 3245 
-L 877 3245 
-L 877 4794 
-z
-M 1894 4794 
-L 2637 4794 
-L 2637 3245 
-L 1894 3245 
-L 1894 4794 
-z
-M 333 1555 
-L 333 1178 
-L 3149 1178 
-L 3149 1555 
-L 1946 1555 
-L 1946 2067 
-L 3072 2067 
-L 3072 2451 
-L 1946 2451 
-L 1946 2893 
-L 3027 2893 
-L 3027 5146 
-L 493 5146 
-L 493 2893 
-L 1517 2893 
-L 1517 2451 
-L 448 2451 
-L 448 2067 
-L 1517 2067 
-L 1517 1555 
-L 333 1555 
-z
-" transform="scale(0.015625)"/>
-     </defs>
-     <use xlink:href="#NotoSansCJKtc-Regular-53"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-4f" transform="translate(59.599991 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-58" transform="translate(133.799973 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-51" transform="translate(191.09996 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-20" transform="translate(265.299942 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-5e74" transform="translate(287.699936 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-5167" transform="translate(387.699921 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-9ad8" transform="translate(487.699905 0)"/>
-     <use xlink:href="#NotoSansCJKtc-Regular-9ede" transform="translate(587.69989 0)"/>
-    </g>
-   </g>
-   <g id="text_20">
     <!-- 日經／SOXQ 比值的成立以來最低 -->
     <g style="fill: #9ba0a6" transform="translate(331.280686 69.44868) scale(0.08 -0.08)">
      <defs>
@@ -1465,6 +1163,78 @@ L 6182 5222
 L 5990 5414 
 z
 " transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-53" d="M 1946 -83 
+C 2925 -83 3539 506 3539 1248 
+C 3539 1946 3117 2266 2573 2502 
+L 1907 2790 
+C 1542 2944 1126 3117 1126 3578 
+C 1126 3994 1472 4256 2003 4256 
+C 2438 4256 2784 4090 3072 3821 
+L 3379 4198 
+C 3053 4538 2560 4774 2003 4774 
+C 1152 4774 525 4256 525 3533 
+C 525 2848 1043 2515 1478 2330 
+L 2150 2035 
+C 2598 1837 2938 1683 2938 1197 
+C 2938 742 2573 435 1952 435 
+C 1466 435 992 666 659 1018 
+L 307 608 
+C 710 186 1280 -83 1946 -83 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-4f" d="M 2374 -83 
+C 3552 -83 4378 858 4378 2362 
+C 4378 3866 3552 4774 2374 4774 
+C 1197 4774 371 3866 371 2362 
+C 371 858 1197 -83 2374 -83 
+z
+M 2374 435 
+C 1530 435 979 1190 979 2362 
+C 979 3533 1530 4256 2374 4256 
+C 3219 4256 3770 3533 3770 2362 
+C 3770 1190 3219 435 2374 435 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-58" d="M 109 0 
+L 736 0 
+L 1408 1267 
+C 1530 1504 1651 1741 1786 2029 
+L 1811 2029 
+C 1965 1741 2093 1504 2214 1267 
+L 2912 0 
+L 3565 0 
+L 2189 2394 
+L 3469 4691 
+L 2848 4691 
+L 2221 3494 
+C 2106 3277 2016 3078 1888 2803 
+L 1862 2803 
+C 1709 3078 1613 3277 1491 3494 
+L 851 4691 
+L 198 4691 
+L 1478 2426 
+L 109 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-51" d="M 2374 410 
+C 1530 410 979 1165 979 2362 
+C 979 3533 1530 4256 2374 4256 
+C 3219 4256 3770 3533 3770 2362 
+C 3770 1165 3219 410 2374 410 
+z
+M 3808 -1178 
+C 4090 -1178 4339 -1133 4480 -1069 
+L 4365 -614 
+C 4243 -653 4083 -685 3872 -685 
+C 3366 -685 2931 -474 2720 -58 
+C 3712 115 4378 1011 4378 2362 
+C 4378 3866 3552 4774 2374 4774 
+C 1197 4774 371 3866 371 2362 
+C 371 986 1062 77 2086 -64 
+C 2349 -704 2944 -1178 3808 -1178 
+z
+" transform="scale(0.015625)"/>
+      <path id="NotoSansCJKtc-Regular-20" transform="scale(0.015625)"/>
       <path id="NotoSansCJKtc-Regular-6bd4" d="M 870 -314 
 C 1024 -218 1267 -141 3110 358 
 C 3091 467 3066 672 3066 813 
@@ -1888,13 +1658,13 @@ z
     </g>
    </g>
    <g id="legend_1">
-    <g id="line2d_28">
+    <g id="line2d_27">
      <path d="M 54.54 78.228157 
 L 61.74 78.228157 
 L 68.94 78.228157 
 " style="fill: none; stroke: #d70c18; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
-    <g id="text_21">
+    <g id="text_20">
      <!-- 日經 225 -->
      <g style="fill: #14161a" transform="translate(76.14 81.378157) scale(0.09 -0.09)">
       <use xlink:href="#NotoSansCJKtc-Regular-65e5"/>
@@ -1905,13 +1675,13 @@ L 68.94 78.228157
       <use xlink:href="#NotoSansCJKtc-Regular-35" transform="translate(333.399933 0)"/>
      </g>
     </g>
-    <g id="line2d_29">
+    <g id="line2d_28">
      <path d="M 129.141562 78.228157 
 L 136.341562 78.228157 
 L 143.541562 78.228157 
 " style="fill: none; stroke: #1f4e79; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
-    <g id="text_22">
+    <g id="text_21">
      <!-- 費半代理 SOXQ -->
      <g style="fill: #14161a" transform="translate(150.741562 81.378157) scale(0.09 -0.09)">
       <defs>
@@ -2162,13 +1932,13 @@ z
       <use xlink:href="#NotoSansCJKtc-Regular-51" transform="translate(613.499893 0)"/>
      </g>
     </g>
-    <g id="line2d_30">
+    <g id="line2d_29">
      <path d="M 230.634844 78.228157 
 L 237.834844 78.228157 
 L 245.034844 78.228157 
 " style="fill: none; stroke: #8a8f95; stroke-width: 1.9; stroke-linecap: square"/>
     </g>
-    <g id="text_23">
+    <g id="text_22">
      <!-- 那斯達克綜合 -->
      <g style="fill: #14161a" transform="translate(252.234844 81.378157) scale(0.09 -0.09)">
       <defs>
@@ -2557,7 +2327,7 @@ z
     </g>
    </g>
   </g>
-  <g id="text_24">
+  <g id="text_23">
    <!-- 日股的折價來自沒完全參與，不是因為被錯殺 -->
    <g style="fill: #14161a" transform="translate(46.44 30.974547) scale(0.145 -0.145)">
     <defs>
@@ -3619,7 +3389,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Bold-6bba" transform="translate(1899.99971 0)"/>
    </g>
   </g>
-  <g id="text_25">
+  <g id="text_24">
    <!-- 日經 225、費半代理 SOXQ 與那斯達克綜合，2026-01-05＝100，至 2026-08-14 -->
    <g style="fill: #6b7076" transform="translate(46.44 54.549287) scale(0.1 -0.1)">
     <defs>
@@ -3824,7 +3594,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Regular-34" transform="translate(3459.19931 0)"/>
    </g>
   </g>
-  <g id="text_26">
+  <g id="text_25">
    <!-- SOXQ 是追蹤費城半導體指數的 ETF，不是指數本身；其歷史僅回到 2021 年，分位一律指成立以來。 -->
    <g style="fill: #9ba0a6" transform="translate(46.44 346.7339) scale(0.08 -0.08)">
     <defs>
@@ -4976,6 +4746,41 @@ C 800 3392 704 3283 602 3264
 C 659 3136 730 2912 762 2810 
 z
 " transform="scale(0.015625)"/>
+     <path id="NotoSansCJKtc-Regular-5e74" d="M 307 1427 
+L 307 966 
+L 3277 966 
+L 3277 -512 
+L 3770 -512 
+L 3770 966 
+L 6106 966 
+L 6106 1427 
+L 3770 1427 
+L 3770 2701 
+L 5658 2701 
+L 5658 3155 
+L 3770 3155 
+L 3770 4141 
+L 5805 4141 
+L 5805 4602 
+L 1965 4602 
+C 2074 4819 2170 5043 2259 5274 
+L 1773 5402 
+C 1466 4531 934 3699 320 3174 
+C 442 3104 646 2944 736 2867 
+C 1082 3200 1421 3642 1715 4141 
+L 3277 4141 
+L 3277 3155 
+L 1363 3155 
+L 1363 1427 
+L 307 1427 
+z
+M 1843 1427 
+L 1843 2701 
+L 3277 2701 
+L 3277 1427 
+L 1843 1427 
+z
+" transform="scale(0.015625)"/>
      <path id="NotoSansCJKtc-Regular-5206" d="M 1888 5165 
 C 1574 4160 986 3302 224 2778 
 C 339 2694 544 2515 634 2419 
@@ -5192,7 +4997,7 @@ z
     <use xlink:href="#NotoSansCJKtc-Regular-3002" transform="translate(4350.899292 0)"/>
    </g>
   </g>
-  <g id="text_27">
+  <g id="text_26">
    <!-- 資料來源：FRED NIKKEI225／NASDAQCOM、Tiingo SOXQ，2026-01-05 至 2026-08-14 -->
    <g style="fill: #9ba0a6" transform="translate(46.44 338.0992) scale(0.08 -0.08)">
     <defs>
