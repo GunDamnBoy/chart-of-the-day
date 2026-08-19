@@ -50,9 +50,16 @@ jobs:
           git config user.name  "kb-fetch-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add raw
+          # 這裡**不是**「沒變化就跳過」。fetched_at 每次執行都不同，所以
+          # 檔案內容必定有變化 —— 原本那個 else 分支永遠不會觸發，是死碼，
+          # 而「死碼看起來像已經實作了」比沒實作更隱蔽。
+          # 走到這裡若真的無變更，代表 fetch 沒有產出檔案，那是 bug，要大聲失敗。
           if git diff --cached --quiet; then
-            echo "raw 沒有變化，不 commit"
-          else
-            git commit -m "raw: fetch $(date -u +%F)"
-            git push
+            echo "::error::raw 無任何變更 —— fetch 未產出檔案"
+            exit 1
           fi
+          git commit -m "raw: fetch $(date -u +%F)"
+          # Mac 端的 publish 也往 main 推 data/，遠端比我新是常態不是意外。
+          # 先 rebase 再 push；**絕不 force**，那會抹掉對方剛寫進去的東西。
+          git pull --rebase
+          git push
