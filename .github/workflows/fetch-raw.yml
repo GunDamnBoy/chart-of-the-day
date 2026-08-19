@@ -28,15 +28,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout 本 repo（資料 repo）
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: checkout kb-core（public，免認證）
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: GunDamnBoy/kb-core
           path: kb-core
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
