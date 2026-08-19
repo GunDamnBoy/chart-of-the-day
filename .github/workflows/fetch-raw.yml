@@ -1,0 +1,58 @@
+# 管線 A —— 取數並寫進本 repo 的 raw/。
+#
+# 三個刻意的設計，改動前先讀：
+#
+# 1. **只用 workflow_dispatch，暫時不排程。**
+#    「規格說有排程、系統卻沒有，比沒有排程更危險」——它會讓人以為每天會自動
+#    有資料。等 tracer bullet 全鏈路驗完再加 schedule。
+#
+# 2. **絕不使用 pull_request_target。**
+#    那是 public repo 的 Actions secret 唯一真正的外洩路徑。本 repo 沒有協作者、
+#    實務上不會有 fork PR，但「不會有」是運氣不是機制。
+#
+# 3. **checkout kb-core 不需要任何憑證，因為它是 public。**
+#    這一步就是「零 PAT」架構的機制本身：本 repo 推自己用內建 GITHUB_TOKEN，
+#    共用程式碼靠 public checkout 取得，全程沒有任何 PAT。
+#    kb-core 若改成 private，這裡就必須引入一把 PAT——那不是偏好選擇。
+
+name: fetch-raw
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout 本 repo（資料 repo）
+        uses: actions/checkout@v4
+
+      - name: checkout kb-core（public，免認證）
+        uses: actions/checkout@v4
+        with:
+          repository: GunDamnBoy/kb-core
+          path: kb-core
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 取數
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python kb-core/tools/fetch_raw.py raw FRED:DGS10
+
+      - name: commit raw
+        run: |
+          git config user.name  "kb-fetch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add raw
+          if git diff --cached --quiet; then
+            echo "raw 沒有變化，不 commit"
+          else
+            git commit -m "raw: fetch $(date -u +%F)"
+            git push
+          fi
