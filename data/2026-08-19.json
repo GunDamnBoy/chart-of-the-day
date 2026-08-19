@@ -1,0 +1,25 @@
+{
+ "date": "2026-08-19",
+ "upstream_date": "2026-08-19",
+ "note": "tracer bullet：由 2026-08-19.json 產出，FRED:DGS10 共 1657 點",
+ "items": [
+  {
+   "k": "美債 10 年期",
+   "v": "4.72%",
+   "asof": "2026-08-17"
+  },
+  {
+   "k": "近三個月變動",
+   "v": "+13 bp",
+   "from": "2026-05-15"
+  },
+  {
+   "k": "序列落後天數",
+   "v": "2 天"
+  }
+ ],
+ "provenance": {
+  "derived_from": "chart-of-the-day/raw/2026-08-19.json",
+  "raw_fetched_at": "2026-08-19T00:45:41+00:00"
+ }
+}
