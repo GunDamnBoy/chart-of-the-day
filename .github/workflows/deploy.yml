@@ -24,3 +24,18 @@ jobs:
           path: .
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      # **kb-core 的 checkout 一定要排在 upload-pages-artifact 之後。**
+      # 這個 workflow 上傳的是 `path: .`（整個 repo），
+      # 在上傳之前 checkout 進來的任何東西都會跟著被發到站上。
+      - name: 取驗證程式
+        uses: actions/checkout@v5
+        with:
+          repository: GunDamnBoy/kb-core
+          path: kb-core
+
+      # **部署完不等於讀者看得到。** 比雜湊不比欄位的理由寫在 verify_live.py 的 docstring。
+      - name: 驗證線上那份就是剛上傳的那份
+        run: |
+          python3 kb-core/tools/verify_live.py \
+            "${{ steps.deployment.outputs.page_url }}" data/index.json

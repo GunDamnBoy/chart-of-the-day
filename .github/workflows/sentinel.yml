@@ -1,0 +1,19 @@
+# 哨兵：問「這個站還活著嗎」，跑在 GitHub 而不是 Mac 上。
+#
+# 實作在 kb-core 的 reusable workflow，三個資料 repo 共用一份 ——
+# 三份各自演化的哨兵，遲早會變成三種不同的判準。
+#
+# cron 排在 UTC 03:20（台北 11:20），**刻意排在 11:30 那一輪之前**：
+# 它要回答的是「昨天那一期還在不在」，不是「今天的跑完了沒」。
+name: sentinel
+
+on:
+  schedule:
+    - cron: "20 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  sentinel:
+    uses: GunDamnBoy/kb-core/.github/workflows/sentinel-reusable.yml@main
+    with:
+      system_id: chart-of-the-day
