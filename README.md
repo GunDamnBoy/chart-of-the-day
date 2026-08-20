@@ -1,3 +1,19 @@
+> **這份是舊制的文件，2026-08-20 起不再是權威。**
+> 每日五圖已接上 `kb-core` 的共用底盤，門檻與規則的家換了：
+>
+> | 要找什麼 | 現在在哪 |
+> |---|---|
+> | 每一個數字（篇幅、條數、門檻、時刻） | `kb-core/chart/anchors.json` |
+> | 什麼算對的產出 | `kb-core/chart/BRIEF.md` |
+> | 取數眉角與可用來源 | `kb-core/chart/SOURCES.md` |
+> | 每天怎麼跑 | `kb-core/skills/chart/SKILL.md` |
+> | 發布前檢查（原 `tools/check_day.py`） | `kb-core/checks/chart.py`＋`kb-core/tools/chart_verify.py` |
+> | 程式（原 `tools/*.py`） | `kb-core/scripts/chart/` |
+>
+> **這裡寫的指令有一部分已經跑不動了**（`tools/` 已清空，殘骸在 `tools/_to_delete/`）。
+> 這份還沒刪，是因為裡面有一些事故紀錄尚未搬完 —— 讀它可以，
+> **照它做不行**：兩份規則同時存在時，改到沒在跑的那一份不會有任何徵兆。
+
 # 每日五圖 · Chart of the Day
 
 每天挑五個題目，用公開資料**自己重製**五張圖，每張圖配一段自己的判讀。

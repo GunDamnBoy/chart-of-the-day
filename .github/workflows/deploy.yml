@@ -19,15 +19,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # **只把站台要用到的東西挑進去，不是整個 repo。**
+      # 舊寫法是 `path: .`，於是 tools/（248K）、raw/（72K）與五份 .md（236K）
+      # 每次部署都被一起發到公開網站上 —— 每次約 556K，而且沒有任何人會發現，
+      # 因為網站看起來一切正常。
+      #
+      # 2026-08-20 把程式搬進 kb-core 之後，tools/ 本來就不該在這裡；
+      # 但這一段的價值不只是省那 556K，是**讓「發布的內容」變成一個明講的清單**。
+      - name: 準備要部署的檔案
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -R data _site/
+          cp -R charts _site/
+          du -sh _site
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
 
-      # **kb-core 的 checkout 一定要排在 upload-pages-artifact 之後。**
-      # 這個 workflow 上傳的是 `path: .`（整個 repo），
-      # 在上傳之前 checkout 進來的任何東西都會跟著被發到站上。
+      # kb-core 的 checkout 排在上傳之後。改成 `_site` 白名單之後這已經不是
+      # 必要條件了，但順序保留 —— **白名單是「現在只發這些」，
+      # 不是「以後也只會發這些」**，而排在後面的成本是零。
       - name: 取驗證程式
         uses: actions/checkout@v5
         with:
