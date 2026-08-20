@@ -797,6 +797,31 @@ def _echarts_new_kind(ch: Chart, base: dict) -> dict:
     return base
 
 
+# 零線：靜態軌在 render_static() 用 axhline 畫。互動軌原本**只有 timeseries 那條路有**——
+# 2026-08-20 對帳發現站上 7 張標了 zero_line 的圖裡，只有 1 張（唯一那張 timeseries）
+# 的 option 有零線，grouped_bar 4 張、scatter 1 張、waterfall 1 張全部沒有。
+#
+# 這是「**改一半比沒改更難發現**」的教科書案例：當初測的那個案例剛好是 timeseries，
+# 所以看起來修好了。抽成共用函式並讓三條出口都經過它，讓「哪一種圖型」不再是變因。
+#
+# gauge 與 heatmap 排除，與 render_static() 第 408 行的條件逐字相同——
+# 那兩種沒有可言的零線。
+def _apply_zero_line(ch: Chart, base: dict) -> dict:
+    if not ch.zero_line or ch.kind in ("gauge", "heatmap"):
+        return base
+    if not base.get("series"):
+        return base
+    s0 = base["series"][0]
+    ml = s0.get("markLine") or {"silent": True, "symbol": "none", "data": []}
+    ml.setdefault("data", [])
+    ml["data"] = list(ml["data"]) + [{
+        "yAxis": 0, "lineStyle": {"color": RULE, "width": 1.0, "type": "solid"},
+        "label": {"show": False},
+    }]
+    s0["markLine"] = ml
+    return base
+
+
 def echarts_option(ch: Chart) -> dict:
     """與 render_static 同源；前端直接 setOption。"""
     base = {
@@ -808,7 +833,7 @@ def echarts_option(ch: Chart) -> dict:
         "textStyle": {"fontFamily": "'Noto Sans TC','PingFang TC',sans-serif"},
     }
     if ch.kind in NEW_KINDS:
-        return _echarts_new_kind(ch, base)
+        return _apply_zero_line(ch, _echarts_new_kind(ch, base))
     if ch.kind == "scatter":
         base.update({
             "xAxis": {"type": "value", "name": ch.x_label, "nameLocation": "middle",
@@ -825,7 +850,7 @@ def echarts_option(ch: Chart) -> dict:
                            "color": ACCENT, "fontWeight": "bold"}},
             ],
         })
-        return base
+        return _apply_zero_line(ch, base)
 
     # x 軸取所有序列日期的聯集，不是 series[0] 的日期。
     #
@@ -876,16 +901,6 @@ def echarts_option(ch: Chart) -> dict:
         base["series"].append(item)
     if ch.markers and base["series"]:
         base["series"][0]["markLine"] = _marker_markline(ch)
-    # 零線：靜態軌在 render_static() 用 axhline 畫，互動軌原本完全沒有這件事。
-    # 正負值不分色之後，零線是唯一區分正負的視覺元素——兩軌都要有，否則
-    # 網頁上的讀者看不出正負的分界，而 PNG 上看得出來。
-    if ch.zero_line and base["series"]:
-        s0 = base["series"][0]
-        ml = s0.get("markLine") or {"silent": True, "symbol": "none", "data": []}
-        ml.setdefault("data", [])
-        ml["data"] = list(ml["data"]) + [{
-            "yAxis": 0, "lineStyle": {"color": RULE, "width": 1.0, "type": "solid"},
-            "label": {"show": False},
-        }]
-        s0["markLine"] = ml
-    return base
+    # 正負值不分色之後，零線是唯一區分正負的視覺元素——兩軌都要有，
+    # 否則網頁上的讀者看不出正負的分界，而 PNG 上看得出來。
+    return _apply_zero_line(ch, base)
