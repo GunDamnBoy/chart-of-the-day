@@ -25,3 +25,11 @@ jobs:
     uses: GunDamnBoy/kb-core/.github/workflows/sentinel-reusable.yml@main
     with:
       system_id: chart-of-the-day
+    # **caller 一定要給權限。** 被呼叫的 workflow 在自己那份裡宣告的 permissions
+    # 是上限的「請求」，實際能拿到多少由 caller 決定 —— 少了這一段，
+    # 這支從 2026-08-20 建立起到 08-21 一次都沒成功過（唯一那次 startup_failure），
+    # 而**沒有心跳的樣子跟「哨兵判綠」在遠端看起來都是「沒有紅字」**。
+    # 另外兩個 repo 的 caller 一直都有這一段，只有這裡漏了。
+    permissions:
+      contents: write
+      issues: write
