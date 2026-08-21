@@ -468,7 +468,7 @@ advisory-dashboard-daily（07:30 起跑，完成時間 10:40→11:20 且持續�
 ## 6. 每日執行步驟
 
 1. **查三大數據**：`python3 tools/macro_release.py --check`，輸出原樣寫進 `about.macro_release`。有 `fresh` → slot 1 就是它（第 2 節）。
-2. **讀上游**：`~/advisory-knowledge-hub/data/<今天>.json`。不存在就**等 15 分鐘再讀一次**；仍無則改用前一日檔案並在 `about.run` 註明。
+2. **讀上游**：`~/advisory-rewrite/data/<今天>.json`（2026-08-21 更正——原本寫 `~/advisory-knowledge-hub`，那是**系統 id 不是路徑**，同名舊 checkout 停在 08-18 且已搬走）。不存在就**等 15 分鐘再讀一次**；仍無則改用前一日檔案並在 `about.run` 註明。
 3. **掃圖表專欄**：Bloomberg Graphics、FT Visual & Data／LEX、Economist Graphic Detail、Reuters Graphics。**只取圖題與論點**，記下 outlet／title／url。
 4. **選題**：依第 2 節五個 slot 各挑一個，檢查 `theme` 不重複。
 5. **取數**：`python3 tools/fetch.py <ids...>`（進快取即可，數字用來寫判讀）。
