@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-17T11:32+08:00",
+ "updated": "2026-08-21T05:09:29+00:00",
  "days": [
+  {
+   "date": "2026-08-21",
+   "weekday": "五",
+   "headline": "風險偏好正在分層：BB 貼著近三年最窄，CCC 已是近三年最闊",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "美股與財報",
+    "黃金",
+    "能源與原物料",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-08-21.json"
+  },
   {
    "date": "2026-08-17",
    "weekday": "週一",
@@ -262,5 +280,7 @@
     "軌道圖｜AI 與半導體"
    ]
   }
- ]
+ ],
+ "updatedLabel": "8/21 13:09",
+ "count": 14
 }
