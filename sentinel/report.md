@@ -1,9 +1,9 @@
-# 哨兵回報 · 2026-08-21T08:29:02+00:00
+# 哨兵回報 · 2026-08-22T07:47:47+00:00
 
 - ✅ `sentinel.data_fresh`
 - ✅ `sentinel.no_future_date`
 - ✅ `sentinel.updated_fresh`
-- ⏭️ `sentinel.no_data_loss` 沒有上一次的 heartbeat，第一次執行無從比較
+- ✅ `sentinel.no_data_loss`
 - ⏭️ `sentinel.ledger_overdue` 這個系統還沒有訊號帳本，該項未執行
 
 ## 這輪檢查看不到的形態
