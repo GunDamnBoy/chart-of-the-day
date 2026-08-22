@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-21T07:24:47+00:00",
+ "updated": "2026-08-22T03:50:51+00:00",
  "days": [
+  {
+   "date": "2026-08-22",
+   "weekday": "六",
+   "headline": "貶值交易只贏了一週：黃金補回失土，風險資產各自退場",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "美股與財報",
+    "信用債",
+    "AI 與半導體",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-08-22.json"
+  },
   {
    "date": "2026-08-21",
    "weekday": "五",
@@ -281,6 +300,6 @@
    ]
   }
  ],
- "updatedLabel": "8/21 15:24",
- "count": 14
+ "updatedLabel": "8/22 11:50",
+ "count": 15
 }
