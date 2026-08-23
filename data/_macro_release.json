@@ -1,0 +1,28 @@
+{
+ "checked_at": "2026-08-23T11:05:58+08:00",
+ "host": "Mac-mini.local",
+ "source": "macro_release.check()",
+ "items": [
+  {
+   "kind": "NFP",
+   "label": "非農就業",
+   "last_updated": "2026-08-07T08:31:34",
+   "age_hours": 373.6,
+   "fresh": false
+  },
+  {
+   "kind": "CPI",
+   "label": "消費者物價",
+   "last_updated": "2026-08-12T09:10:19",
+   "age_hours": 252.9,
+   "fresh": false
+  },
+  {
+   "kind": "PCE",
+   "label": "個人消費支出物價",
+   "last_updated": "2026-07-30T12:01:34",
+   "age_hours": 562.1,
+   "fresh": false
+  }
+ ]
+}

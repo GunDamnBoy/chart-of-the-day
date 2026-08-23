@@ -1,11 +1,16 @@
 {
- "started": "2026-08-22T11:00:02+08:00",
- "finished": "2026-08-22T11:06:23+08:00",
+ "started": "2026-08-23T11:00:02+08:00",
+ "finished": "2026-08-23T11:05:58+08:00",
  "host": "Mac-mini.local",
- "requested": 46,
+ "requested": 51,
  "ok": 34,
  "failed": {
-  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等"
+  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等",
+  "^TWOII": "RuntimeError: ^TWOII 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
+  "^KS11": "RuntimeError: ^KS11 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
+  "005930.KS": "RuntimeError: 005930.KS 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
+  "8035.T": "RuntimeError: 8035.T 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
+  "6857.T": "RuntimeError: 6857.T 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -158,8 +163,8 @@
   },
   {
    "id": "NASDAQCOM",
-   "n": 2926,
-   "last": "2026-08-20"
+   "n": 2927,
+   "last": "2026-08-21"
   },
   {
    "id": "NIKKEI225",
@@ -191,5 +196,28 @@
    "n": 2957,
    "last": "2026-08-20"
   }
- ]
+ ],
+ "canary": {
+  "id": "^GSPC",
+  "client": "bare",
+  "means": "裸客戶端通不通，不是 Yahoo 通不通。紅＝維持現狀（2026-08-22 起的已知值）；綠＝Yahoo 不再要求握手，此時應回頭檢討 handshake_allowlist 是否還需要",
+  "red": true
+ },
+ "handshake": {
+  "ids": [
+   "^TWOII",
+   "^KS11",
+   "005930.KS",
+   "8035.T",
+   "6857.T"
+  ],
+  "failed": [
+   "^TWOII",
+   "^KS11",
+   "005930.KS",
+   "8035.T",
+   "6857.T"
+  ],
+  "means": "走握手客戶端的那幾條。**這裡有東西就是那條路壞了**（多半是 yfinance 又被 Yahoo 改壞），當日該圖要退回代理或改題並在 note 說明"
+ }
 }

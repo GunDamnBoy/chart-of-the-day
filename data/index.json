@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-22T03:50:51+00:00",
+ "updated": "2026-08-23T03:50:56+00:00",
  "days": [
+  {
+   "date": "2026-08-23",
+   "weekday": "日",
+   "headline": "兩個月來 2 年期一格沒動，帳單全記在 30 年那一段",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "美股與財報",
+    "台灣",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-08-23.json"
+  },
   {
    "date": "2026-08-22",
    "weekday": "六",
@@ -300,6 +319,6 @@
    ]
   }
  ],
- "updatedLabel": "8/22 11:50",
- "count": 15
+ "updatedLabel": "8/23 11:50",
+ "count": 16
 }
