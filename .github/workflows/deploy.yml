@@ -34,20 +34,30 @@ jobs:
           cp -R charts _site/
           du -sh _site
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
-      # kb-core 的 checkout 排在上傳之後。改成 `_site` 白名單之後這已經不是
-      # 必要條件了，但順序保留 —— **白名單是「現在只發這些」，
-      # 不是「以後也只會發這些」**，而排在後面的成本是零。
+      # kb-core 的 checkout 2026-08-23 移到上傳之前 —— 下面那道守衛要在上傳前跑。
+      # 原本排在後面的理由（白名單是「現在只發這些」不是「以後也只會發這些」）
+      # 現在反過來變成前提：**白名單多擔了一個責任，它要擋住 `kb-core/`**。
       - name: 取驗證程式
         uses: actions/checkout@v5
         with:
           repository: GunDamnBoy/kb-core
           path: kb-core
+
+      # **索引與日檔說的是不是同一件事。**
+      # 清單頁讀 `data/index.json` 的複本、單篇頁讀 `data/<日期>.json`，
+      # 兩邊漂開時**兩頁各自都正常、但說的不是同一件事**，沒有人會發現。
+      # 2026-08-23 外資報告週摘就是這樣：首頁一整面舊標題、單篇頁全對，
+      # 而 verify_live 是綠的而且它是對的（線上就是剛上傳的那份）。
+      # `weekday` 兩邊刻意不同：索引是 `六`（下拉選單用），日檔是 `週六`（頁首日期列用）。
+      # 放行要明講，而守衛會回報這條擋掉幾次 —— **0 次代表它已經沒用了，該刪**。
+      - name: 驗證索引與日檔一致
+        run: python3 kb-core/tools/verify_site_index.py _site --allow-differ weekday
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
 
       # **部署完不等於讀者看得到。** 比雜湊不比欄位的理由寫在 verify_live.py 的 docstring。
       - name: 驗證線上那份就是剛上傳的那份
