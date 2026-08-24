@@ -1,7 +1,27 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-23T03:50:56+00:00",
+ "updated": "2026-08-24T03:54:50+00:00",
  "days": [
+  {
+   "date": "2026-08-24",
+   "weekday": "一",
+   "headline": "輝達上台前，AI 硬體鏈已經自己修正了兩個月",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "美股與財報",
+    "信用債",
+    "台灣",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "range_area",
+    "grouped_bar"
+   ],
+   "file": "data/2026-08-24.json"
+  },
   {
    "date": "2026-08-23",
    "weekday": "日",
@@ -319,6 +339,6 @@
    ]
   }
  ],
- "updatedLabel": "8/23 11:50",
- "count": 16
+ "updatedLabel": "8/24 11:54",
+ "count": 17
 }
