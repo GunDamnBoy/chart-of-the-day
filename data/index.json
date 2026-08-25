@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-24T03:54:50+00:00",
+ "updated": "2026-08-25T03:46:45+00:00",
  "days": [
+  {
+   "date": "2026-08-25",
+   "weekday": "二",
+   "headline": "黃金五日 +5.2%、費半 −9.5%，同一週的兩端",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "美股與財報",
+    "央行、利率與匯率",
+    "日本",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "scatter"
+   ],
+   "file": "data/2026-08-25.json"
+  },
   {
    "date": "2026-08-24",
    "weekday": "一",
@@ -339,6 +358,6 @@
    ]
   }
  ],
- "updatedLabel": "8/24 11:54",
- "count": 17
+ "updatedLabel": "8/25 11:46",
+ "count": 18
 }
