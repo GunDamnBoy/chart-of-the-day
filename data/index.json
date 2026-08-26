@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-25T03:46:45+00:00",
+ "updated": "2026-08-26T04:00:11+00:00",
  "days": [
+  {
+   "date": "2026-08-26",
+   "weekday": "三",
+   "headline": "輝達開獎前：費半離高點兩成，VIX 只有 15.85",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "能源與原物料",
+    "信用債",
+    "AI 與半導體",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-08-26.json"
+  },
   {
    "date": "2026-08-25",
    "weekday": "二",
@@ -358,6 +376,6 @@
    ]
   }
  ],
- "updatedLabel": "8/25 11:46",
- "count": 18
+ "updatedLabel": "8/26 12:00",
+ "count": 19
 }
