@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-26T04:00:11+00:00",
+ "updated": "2026-08-27T03:54:39+00:00",
  "days": [
+  {
+   "date": "2026-08-27",
+   "weekday": "四",
+   "headline": "7 月 PCE 退下來的是總體，核心兩個月沒動",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "黃金",
+    "信用債",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "waterfall"
+   ],
+   "file": "data/2026-08-27.json"
+  },
   {
    "date": "2026-08-26",
    "weekday": "三",
@@ -376,6 +395,6 @@
    ]
   }
  ],
- "updatedLabel": "8/26 12:00",
- "count": 19
+ "updatedLabel": "8/27 11:54",
+ "count": 20
 }
