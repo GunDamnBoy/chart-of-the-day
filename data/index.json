@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-27T03:54:39+00:00",
+ "updated": "2026-08-28T03:57:35+00:00",
  "days": [
+  {
+   "date": "2026-08-28",
+   "weekday": "五",
+   "headline": "費半補回回檔的十分之一，記憶體的行情在台北",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "美股與財報",
+    "央行、利率與匯率",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "grouped_bar"
+   ],
+   "file": "data/2026-08-28.json"
+  },
   {
    "date": "2026-08-27",
    "weekday": "四",
@@ -395,6 +414,6 @@
    ]
   }
  ],
- "updatedLabel": "8/27 11:54",
- "count": 20
+ "updatedLabel": "8/28 11:57",
+ "count": 21
 }
