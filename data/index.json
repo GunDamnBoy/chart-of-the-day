@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-28T03:57:35+00:00",
+ "updated": "2026-08-29T03:47:13+00:00",
  "days": [
+  {
+   "date": "2026-08-29",
+   "weekday": "六",
+   "headline": "同一場演說，只有黃金與半導體掉進近三年的尾巴",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "美股與財報",
+    "台灣",
+    "AI 與半導體",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-08-29.json"
+  },
   {
    "date": "2026-08-28",
    "weekday": "五",
@@ -414,6 +433,6 @@
    ]
   }
  ],
- "updatedLabel": "8/28 11:57",
- "count": 21
+ "updatedLabel": "8/29 11:47",
+ "count": 22
 }
