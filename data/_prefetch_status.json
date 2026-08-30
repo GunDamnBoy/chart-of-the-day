@@ -1,16 +1,12 @@
 {
- "started": "2026-08-29T11:00:02+08:00",
- "finished": "2026-08-29T11:05:40+08:00",
+ "started": "2026-08-30T11:00:06+08:00",
+ "finished": "2026-08-30T11:09:13+08:00",
  "host": "Mac-mini.local",
  "requested": 48,
- "ok": 33,
+ "ok": 37,
  "failed": {
   "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等",
-  "^TWOII": "RuntimeError: ^TWOII 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
-  "^KS11": "RuntimeError: ^KS11 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
-  "005930.KS": "RuntimeError: 005930.KS 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
-  "8035.T": "RuntimeError: 8035.T 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'",
-  "6857.T": "RuntimeError: 6857.T 需要握手客戶端，但沒有安裝 yfinance：No module named 'yfinance'"
+  "2408.TW": "RuntimeError: 2408.TW 一筆都沒抓到——不要當成空序列使用"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -130,19 +126,39 @@
    "last": "2026-08-28"
   },
   {
+   "id": "^TWOII",
+   "n": 2393,
+   "last": "2026-07-17"
+  },
+  {
+   "id": "^KS11",
+   "n": 2447,
+   "last": "2026-08-27"
+  },
+  {
+   "id": "005930.KS",
+   "n": 2447,
+   "last": "2026-08-28"
+  },
+  {
+   "id": "8035.T",
+   "n": 2464,
+   "last": "2026-08-28"
+  },
+  {
+   "id": "6857.T",
+   "n": 2464,
+   "last": "2026-08-28"
+  },
+  {
    "id": "2344.TW",
    "n": 483,
    "last": "2026-08-28"
   },
   {
    "id": "2382.TW",
-   "n": 483,
-   "last": "2026-08-28"
-  },
-  {
-   "id": "2408.TW",
-   "n": 483,
-   "last": "2026-08-28"
+   "n": 441,
+   "last": "2026-06-30"
   },
   {
    "id": "DCOILBRENTEU",
@@ -156,8 +172,8 @@
   },
   {
    "id": "NASDAQCOM",
-   "n": 2931,
-   "last": "2026-08-27"
+   "n": 2932,
+   "last": "2026-08-28"
   },
   {
    "id": "NIKKEI225",
@@ -204,13 +220,7 @@
    "8035.T",
    "6857.T"
   ],
-  "failed": [
-   "^TWOII",
-   "^KS11",
-   "005930.KS",
-   "8035.T",
-   "6857.T"
-  ],
+  "failed": [],
   "means": "走握手客戶端的那幾條。**這裡有東西就是那條路壞了**（多半是 yfinance 又被 Yahoo 改壞），當日該圖要退回代理或改題並在 note 說明"
  }
 }

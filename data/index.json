@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-29T03:47:13+00:00",
+ "updated": "2026-08-30T03:52:10+00:00",
  "days": [
+  {
+   "date": "2026-08-30",
+   "weekday": "日",
+   "headline": "升息早就在曲線裡，信用市場的縫也早就裂開",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "信用債",
+    "日本",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-08-30.json"
+  },
   {
    "date": "2026-08-29",
    "weekday": "六",
@@ -433,6 +452,6 @@
    ]
   }
  ],
- "updatedLabel": "8/29 11:47",
- "count": 22
+ "updatedLabel": "8/30 11:52",
+ "count": 23
 }
