@@ -1,12 +1,11 @@
 {
- "started": "2026-08-30T11:00:06+08:00",
- "finished": "2026-08-30T11:09:13+08:00",
+ "started": "2026-08-31T11:00:02+08:00",
+ "finished": "2026-08-31T11:03:21+08:00",
  "host": "Mac-mini.local",
  "requested": 48,
- "ok": 37,
+ "ok": 38,
  "failed": {
-  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等",
-  "2408.TW": "RuntimeError: 2408.TW 一筆都沒抓到——不要當成空序列使用"
+  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -132,23 +131,23 @@
   },
   {
    "id": "^KS11",
-   "n": 2447,
-   "last": "2026-08-27"
+   "n": 2448,
+   "last": "2026-08-31"
   },
   {
    "id": "005930.KS",
-   "n": 2447,
-   "last": "2026-08-28"
+   "n": 2448,
+   "last": "2026-08-31"
   },
   {
    "id": "8035.T",
-   "n": 2464,
-   "last": "2026-08-28"
+   "n": 2465,
+   "last": "2026-08-31"
   },
   {
    "id": "6857.T",
-   "n": 2464,
-   "last": "2026-08-28"
+   "n": 2465,
+   "last": "2026-08-31"
   },
   {
    "id": "2344.TW",
@@ -157,8 +156,13 @@
   },
   {
    "id": "2382.TW",
-   "n": 441,
-   "last": "2026-06-30"
+   "n": 483,
+   "last": "2026-08-28"
+  },
+  {
+   "id": "2408.TW",
+   "n": 483,
+   "last": "2026-08-28"
   },
   {
    "id": "DCOILBRENTEU",

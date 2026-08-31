@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-30T03:52:10+00:00",
+ "updated": "2026-08-31T21:56:13+00:00",
  "days": [
+  {
+   "date": "2026-08-31",
+   "weekday": "一",
+   "headline": "亞洲半導體今天在補週五那一段，台股還沒開始",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "亞太（韓國、印度、東南亞）",
+    "黃金",
+    "地緣政治（中東與戰事）",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-08-31.json"
+  },
   {
    "date": "2026-08-30",
    "weekday": "日",
@@ -452,6 +470,6 @@
    ]
   }
  ],
- "updatedLabel": "8/30 11:52",
- "count": 23
+ "updatedLabel": "9/1 05:56",
+ "count": 24
 }
