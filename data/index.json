@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-08-31T21:56:13+00:00",
+ "updated": "2026-09-01T03:47:52+00:00",
  "days": [
+  {
+   "date": "2026-09-01",
+   "weekday": "二",
+   "headline": "被動買盤交棒的那一天，台股沒有主動籌碼接手",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "美股與財報",
+    "央行、利率與匯率",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-01.json"
+  },
   {
    "date": "2026-08-31",
    "weekday": "一",
@@ -470,6 +488,6 @@
    ]
   }
  ],
- "updatedLabel": "9/1 05:56",
- "count": 24
+ "updatedLabel": "9/1 11:47",
+ "count": 25
 }
