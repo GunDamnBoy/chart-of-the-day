@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-01T03:47:52+00:00",
+ "updated": "2026-09-02T03:43:35+00:00",
  "days": [
+  {
+   "date": "2026-09-02",
+   "weekday": "三",
+   "headline": "升息的錢全塞在短端，戰爭的錢只到能源為止",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "亞太（韓國、印度、東南亞）",
+    "黃金",
+    "能源與原物料",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-02.json"
+  },
   {
    "date": "2026-09-01",
    "weekday": "二",
@@ -488,6 +506,6 @@
    ]
   }
  ],
- "updatedLabel": "9/1 11:47",
- "count": 25
+ "updatedLabel": "9/2 11:43",
+ "count": 26
 }
