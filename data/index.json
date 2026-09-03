@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-02T03:43:35+00:00",
+ "updated": "2026-09-03T03:46:21+00:00",
  "days": [
+  {
+   "date": "2026-09-03",
+   "weekday": "四",
+   "headline": "賣壓停在亞洲，殖利率在三年高點而利差在三年低點",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "央行、利率與匯率",
+    "信用債",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-09-03.json"
+  },
   {
    "date": "2026-09-02",
    "weekday": "三",
@@ -506,6 +525,6 @@
    ]
   }
  ],
- "updatedLabel": "9/2 11:43",
- "count": 26
+ "updatedLabel": "9/3 11:46",
+ "count": 27
 }
