@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-03T03:46:21+00:00",
+ "updated": "2026-09-04T03:50:11+00:00",
  "days": [
+  {
+   "date": "2026-09-04",
+   "weekday": "五",
+   "headline": "非農前夜利差定價升息，信用最底層同時在三年最闊",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "歐洲",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-09-04.json"
+  },
   {
    "date": "2026-09-03",
    "weekday": "四",
@@ -525,6 +543,6 @@
    ]
   }
  ],
- "updatedLabel": "9/3 11:46",
- "count": 27
+ "updatedLabel": "9/4 11:50",
+ "count": 28
 }
