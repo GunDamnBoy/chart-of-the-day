@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-04T03:50:11+00:00",
+ "updated": "2026-09-05T03:44:45+00:00",
  "days": [
+  {
+   "date": "2026-09-05",
+   "weekday": "六",
+   "headline": "單月非農162k、三個月均71k，費半當天跳開大盤",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "黃金",
+    "台灣",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-09-05.json"
+  },
   {
    "date": "2026-09-04",
    "weekday": "五",
@@ -543,6 +561,6 @@
    ]
   }
  ],
- "updatedLabel": "9/4 11:50",
- "count": 28
+ "updatedLabel": "9/5 11:44",
+ "count": 29
 }
