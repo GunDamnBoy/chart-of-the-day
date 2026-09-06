@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-05T03:44:45+00:00",
+ "updated": "2026-09-06T03:54:35+00:00",
  "days": [
+  {
+   "date": "2026-09-06",
+   "weekday": "日",
+   "headline": "CPI 兩份預測差 3.6 個基點，韓國的紀錄出口不在股價裡",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "亞太（韓國、印度、東南亞）",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-06.json"
+  },
   {
    "date": "2026-09-05",
    "weekday": "六",
@@ -561,6 +579,6 @@
    ]
   }
  ],
- "updatedLabel": "9/5 11:44",
- "count": 29
+ "updatedLabel": "9/6 11:54",
+ "count": 30
 }
