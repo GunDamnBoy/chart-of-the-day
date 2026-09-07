@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-06T03:54:35+00:00",
+ "updated": "2026-09-07T03:59:18+00:00",
  "days": [
+  {
+   "date": "2026-09-07",
+   "weekday": "一",
+   "headline": "美股勞動節休市，亞洲自己走了一段前一成的大漲",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "亞太（韓國、印度、東南亞）",
+    "黃金",
+    "美股與財報",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries"
+   ],
+   "file": "data/2026-09-07.json"
+  },
   {
    "date": "2026-09-06",
    "weekday": "日",
@@ -579,6 +597,6 @@
    ]
   }
  ],
- "updatedLabel": "9/6 11:54",
- "count": 30
+ "updatedLabel": "9/7 11:59",
+ "count": 31
 }
