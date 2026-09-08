@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-07T03:59:18+00:00",
+ "updated": "2026-09-08T03:50:11+00:00",
  "days": [
+  {
+   "date": "2026-09-08",
+   "weekday": "二",
+   "headline": "三十年期的 5% 住了兩個月，十年期還沒到過",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "亞太（韓國、印度、東南亞）",
+    "美股與財報",
+    "日本",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-08.json"
+  },
   {
    "date": "2026-09-07",
    "weekday": "一",
@@ -597,6 +615,6 @@
    ]
   }
  ],
- "updatedLabel": "9/7 11:59",
- "count": 31
+ "updatedLabel": "9/8 11:50",
+ "count": 32
 }
