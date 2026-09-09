@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-08T03:50:11+00:00",
+ "updated": "2026-09-09T03:48:05+00:00",
  "days": [
+  {
+   "date": "2026-09-09",
+   "weekday": "三",
+   "headline": "商品年沒帶上黃金，高收益的裂縫是三年最闊",
+   "charts": 5,
+   "themes": [
+    "能源與原物料",
+    "美股與財報",
+    "信用債",
+    "台灣",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-09.json"
+  },
   {
    "date": "2026-09-08",
    "weekday": "二",
@@ -615,6 +633,6 @@
    ]
   }
  ],
- "updatedLabel": "9/8 11:50",
- "count": 32
+ "updatedLabel": "9/9 11:48",
+ "count": 33
 }
