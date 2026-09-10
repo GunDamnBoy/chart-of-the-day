@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-09T03:48:05+00:00",
+ "updated": "2026-09-10T03:52:28+00:00",
  "days": [
+  {
+   "date": "2026-09-10",
+   "weekday": "四",
+   "headline": "同樣的十年期這次高在長端，銅金比回到一年高位",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "歐洲",
+    "美股與財報",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "scatter",
+    "timeseries"
+   ],
+   "file": "data/2026-09-10.json"
+  },
   {
    "date": "2026-09-09",
    "weekday": "三",
@@ -633,6 +652,6 @@
    ]
   }
  ],
- "updatedLabel": "9/9 11:48",
- "count": 33
+ "updatedLabel": "9/10 11:52",
+ "count": 34
 }
