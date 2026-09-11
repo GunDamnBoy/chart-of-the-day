@@ -1,6 +1,6 @@
 {
- "started": "2026-09-10T11:00:03+08:00",
- "finished": "2026-09-10T11:02:56+08:00",
+ "started": "2026-09-11T11:00:01+08:00",
+ "finished": "2026-09-11T11:02:54+08:00",
  "host": "Mac-mini.local",
  "requested": 47,
  "ok": 37,
@@ -21,188 +21,225 @@
  "series": [
   {
    "id": "DGS2",
-   "n": 2922,
-   "last": "2026-09-08"
+   "n": 2923,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "DGS10",
-   "n": 2922,
-   "last": "2026-09-08"
+   "n": 2923,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "DGS30",
-   "n": 2922,
-   "last": "2026-09-08"
+   "n": 2923,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "DTWEXBGS",
    "n": 2912,
-   "last": "2026-09-04"
+   "last": "2026-09-04",
+   "monthly": false
   },
   {
    "id": "BAMLH0A0HYM2",
-   "n": 795,
-   "last": "2026-09-08"
+   "n": 796,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "BAMLC0A0CM",
-   "n": 794,
-   "last": "2026-09-08"
+   "n": 795,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "BAMLH0A3HYC",
-   "n": 795,
-   "last": "2026-09-08"
+   "n": 796,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "BAMLH0A1HYBB",
-   "n": 795,
-   "last": "2026-09-08"
+   "n": 796,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "^TWII",
-   "n": 734,
-   "last": "2026-09-09"
+   "n": 735,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "2330.TW",
-   "n": 734,
-   "last": "2026-09-09"
+   "n": 735,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "2317.TW",
-   "n": 733,
-   "last": "2026-09-09"
+   "n": 734,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "GLD",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "XLE",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "CPIAUCSL",
    "n": 138,
-   "last": "2026-07-01"
+   "last": "2026-07-01",
+   "monthly": true
   },
   {
    "id": "CPILFESL",
    "n": 138,
-   "last": "2026-07-01"
+   "last": "2026-07-01",
+   "monthly": true
   },
   {
    "id": "PAYEMS",
    "n": 140,
-   "last": "2026-08-01"
+   "last": "2026-08-01",
+   "monthly": true
   },
   {
    "id": "PCEPI",
    "n": 139,
-   "last": "2026-07-01"
+   "last": "2026-07-01",
+   "monthly": true
   },
   {
    "id": "PCEPILFE",
    "n": 139,
-   "last": "2026-07-01"
+   "last": "2026-07-01",
+   "monthly": true
   },
   {
    "id": "SOXQ",
-   "n": 1317,
-   "last": "2026-09-09"
+   "n": 1318,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "FEZ",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "CPER",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "^TWOII",
    "n": 2393,
-   "last": "2026-07-17"
+   "last": "2026-07-17",
+   "monthly": false
   },
   {
    "id": "^KS11",
-   "n": 2457,
-   "last": "2026-09-10"
+   "n": 2458,
+   "last": "2026-09-11",
+   "monthly": false
   },
   {
    "id": "005930.KS",
-   "n": 2456,
-   "last": "2026-09-10"
+   "n": 2457,
+   "last": "2026-09-11",
+   "monthly": false
   },
   {
    "id": "8035.T",
-   "n": 2473,
-   "last": "2026-09-10"
+   "n": 2474,
+   "last": "2026-09-11",
+   "monthly": false
   },
   {
    "id": "6857.T",
-   "n": 2473,
-   "last": "2026-09-10"
+   "n": 2474,
+   "last": "2026-09-11",
+   "monthly": false
   },
   {
    "id": "2344.TW",
-   "n": 734,
-   "last": "2026-09-09"
+   "n": 735,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "2382.TW",
-   "n": 734,
-   "last": "2026-09-09"
+   "n": 735,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "2408.TW",
-   "n": 734,
-   "last": "2026-09-09"
+   "n": 735,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "DCOILBRENTEU",
-   "n": 2961,
-   "last": "2026-09-01"
+   "n": 2967,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "MU",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "NASDAQCOM",
-   "n": 2938,
-   "last": "2026-09-08"
+   "n": 2939,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "SP500",
-   "n": 2521,
-   "last": "2026-09-09"
+   "n": 2522,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "STX",
-   "n": 2938,
-   "last": "2026-09-09"
+   "n": 2939,
+   "last": "2026-09-10",
+   "monthly": false
   },
   {
    "id": "VIXCLS",
-   "n": 2970,
-   "last": "2026-09-08"
+   "n": 2971,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "DTB3",
-   "n": 2922,
-   "last": "2026-09-08"
+   "n": 2923,
+   "last": "2026-09-09",
+   "monthly": false
   },
   {
    "id": "DEXJPUS",
    "n": 2919,
-   "last": "2026-09-04"
+   "last": "2026-09-04",
+   "monthly": false
   }
  ],
  "canary": {
@@ -224,7 +261,7 @@
    {
     "id": "^TWOII",
     "last": "2026-07-17",
-    "why": "落後 39 個交易日，≥ 硬失敗門檻 5"
+    "why": "落後 40 個交易日，≥ 硬失敗門檻 5"
    }
   ],
   "means": "走握手客戶端的那幾條。**這裡有東西就是那條路壞了**（多半是 yfinance 又被 Yahoo 改壞），當日該圖要退回代理或改題並在 note 說明",

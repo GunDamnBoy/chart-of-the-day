@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-10T03:52:28+00:00",
+ "updated": "2026-09-11T03:55:32+00:00",
  "days": [
+  {
+   "date": "2026-09-11",
+   "weekday": "五",
+   "headline": "設備股領跌亞洲，油漲銅跌，而信用利差今年反而縮了",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "黃金",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries"
+   ],
+   "file": "data/2026-09-11.json"
+  },
   {
    "date": "2026-09-10",
    "weekday": "四",
@@ -652,6 +670,6 @@
    ]
   }
  ],
- "updatedLabel": "9/10 11:52",
- "count": 34
+ "updatedLabel": "9/11 11:55",
+ "count": 35
 }
