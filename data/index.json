@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-11T03:55:32+00:00",
+ "updated": "2026-09-12T03:45:51+00:00",
  "days": [
+  {
+   "date": "2026-09-12",
+   "weekday": "六",
+   "headline": "八月核心 CPI 創三年新低，而總體回頭往上",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "亞太（韓國、印度、東南亞）",
+    "美股與財報",
+    "黃金",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-12.json"
+  },
   {
    "date": "2026-09-11",
    "weekday": "五",
@@ -670,6 +688,6 @@
    ]
   }
  ],
- "updatedLabel": "9/11 11:55",
- "count": 35
+ "updatedLabel": "9/12 11:45",
+ "count": 36
 }
