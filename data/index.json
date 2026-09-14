@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-13T03:49:34+00:00",
+ "updated": "2026-09-14T03:46:43+00:00",
  "days": [
+  {
+   "date": "2026-09-14",
+   "weekday": "一",
+   "headline": "「放慢 AI」的帳單先開在亞洲，而油自己又跑了一個月",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "美國政治與政策",
+    "台灣",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "heatmap",
+    "timeseries"
+   ],
+   "file": "data/2026-09-14.json"
+  },
   {
    "date": "2026-09-13",
    "weekday": "日",
@@ -707,6 +726,6 @@
    ]
   }
  ],
- "updatedLabel": "9/13 11:49",
- "count": 37
+ "updatedLabel": "9/14 11:46",
+ "count": 38
 }

@@ -1,12 +1,10 @@
 {
- "started": "2026-09-13T11:00:04+08:00",
- "finished": "2026-09-13T11:02:58+08:00",
+ "started": "2026-09-14T11:00:04+08:00",
+ "finished": "2026-09-14T11:03:48+08:00",
  "host": "Mac-mini.local",
- "requested": 47,
- "ok": 37,
- "failed": {
-  "^GSPC": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等"
- },
+ "requested": 53,
+ "ok": 42,
+ "failed": {},
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
   "^TYX": "來源已知被擋，改用 DGS30（brief §3.2）",
@@ -16,7 +14,8 @@
   "^SOX": "來源已知被擋，改用 SOXQ（ETF 代理）（brief §3.2）",
   "^IXIC": "來源已知被擋，改用 NASDAQCOM（brief §3.2）",
   "BZ=F": "來源已知被擋，改用 DCOILBRENTEU（brief §3.2）",
-  "HG=F": "來源已知被擋，改用 CPER（ETF 代理）（brief §3.2）"
+  "HG=F": "來源已知被擋，改用 CPER（ETF 代理）（brief §3.2）",
+  "^N225": "來源已知被擋，改用 NIKKEI225（brief §3.2）"
  },
  "series": [
   {
@@ -128,6 +127,30 @@
    "monthly": true
   },
   {
+   "id": "FXI",
+   "n": 2940,
+   "last": "2026-09-11",
+   "monthly": false
+  },
+  {
+   "id": "XLF",
+   "n": 2940,
+   "last": "2026-09-11",
+   "monthly": false
+  },
+  {
+   "id": "XBI",
+   "n": 2940,
+   "last": "2026-09-11",
+   "monthly": false
+  },
+  {
+   "id": "MTSDS133FMS",
+   "n": 140,
+   "last": "2026-08-01",
+   "monthly": true
+  },
+  {
    "id": "SOXQ",
    "n": 1319,
    "last": "2026-09-11",
@@ -153,26 +176,26 @@
   },
   {
    "id": "^KS11",
-   "n": 2458,
-   "last": "2026-09-11",
+   "n": 2459,
+   "last": "2026-09-14",
    "monthly": false
   },
   {
    "id": "005930.KS",
-   "n": 2457,
-   "last": "2026-09-11",
+   "n": 2458,
+   "last": "2026-09-14",
    "monthly": false
   },
   {
    "id": "8035.T",
-   "n": 2474,
-   "last": "2026-09-11",
+   "n": 2475,
+   "last": "2026-09-14",
    "monthly": false
   },
   {
    "id": "6857.T",
-   "n": 2474,
-   "last": "2026-09-11",
+   "n": 2475,
+   "last": "2026-09-14",
    "monthly": false
   },
   {
@@ -197,6 +220,12 @@
    "id": "DCOILBRENTEU",
    "n": 2967,
    "last": "2026-09-09",
+   "monthly": false
+  },
+  {
+   "id": "DEXJPUS",
+   "n": 2919,
+   "last": "2026-09-04",
    "monthly": false
   },
   {
@@ -230,15 +259,15 @@
    "monthly": false
   },
   {
-   "id": "DEXJPUS",
-   "n": 2919,
-   "last": "2026-09-04",
-   "monthly": false
-  },
-  {
    "id": "VIXCLS",
    "n": 2972,
    "last": "2026-09-10",
+   "monthly": false
+  },
+  {
+   "id": "NIKKEI225",
+   "n": 2858,
+   "last": "2026-09-11",
    "monthly": false
   }
  ],
@@ -246,7 +275,9 @@
   "id": "^GSPC",
   "client": "bare",
   "means": "裸客戶端通不通，不是 Yahoo 通不通。紅＝維持現狀（2026-08-22 起的已知值）；綠＝Yahoo 不再要求握手，此時應回頭檢討 handshake_allowlist 是否還需要",
-  "red": true
+  "red": true,
+  "error": "RuntimeError: 取數失敗 https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=5y&interval=1d\n  HTTP Error 429: Too Many Requests\n  ★ 429 有兩種成因，處置相反（brief §3.2 1.5）：\n    · 打了一陣子才 429 ＝ 累積型限流 → **等",
+  "not_in_failed": "**哨兵的失敗不寫進 `failed`**（2026-09-13 起）。它依設計每天都會紅，而在此之前它同時被記在這裡與 `failed`，於是 `prefetch.failure_streak_warn` （2026-09-10 蓋來抓「藏起來的結構性故障」的那一條）整條被它佔滿 —— 連四輪的 about.run 都在寫「^GSPC 連續 N 輪」，而那不是新資訊。**一個永遠會響的計數器，跟一個沒有計數器，在輸出上長得一模一樣。** 所以 `failed` 現在只裝「不該失敗卻失敗了」的那些，而這一格裝「本來就預期會失敗、要看它哪天不再失敗」的那一條。"
  },
  "handshake": {
   "ids": [
@@ -261,7 +292,7 @@
    {
     "id": "^TWOII",
     "last": "2026-07-17",
-    "why": "落後 40 個交易日，≥ 硬失敗門檻 5"
+    "why": "落後 41 個交易日，≥ 硬失敗門檻 5"
    }
   ],
   "means": "走握手客戶端的那幾條。**這裡有東西就是那條路壞了**（多半是 yfinance 又被 Yahoo 改壞），當日該圖要退回代理或改題並在 note 說明",
