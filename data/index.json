@@ -1,7 +1,45 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-14T03:46:43+00:00",
+ "updated": "2026-09-16T10:37:43+00:00",
  "days": [
+  {
+   "date": "2026-09-16",
+   "weekday": "三",
+   "headline": "殖利率回到三年前的高位，股市這次卻還在高點旁邊",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "美股與財報",
+    "亞太（韓國、印度、東南亞）",
+    "生技健護",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap"
+   ],
+   "file": "data/2026-09-16.json"
+  },
+  {
+   "date": "2026-09-15",
+   "weekday": "二",
+   "headline": "費半獨自摔了 5.83%，亞洲今天沒有接棒",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "亞太（韓國、印度、東南亞）",
+    "黃金",
+    "能源與原物料",
+    "台灣"
+   ],
+   "kinds": [
+    "scatter",
+    "grouped_bar",
+    "timeseries",
+    "range_area"
+   ],
+   "file": "data/2026-09-15.json"
+  },
   {
    "date": "2026-09-14",
    "weekday": "一",
@@ -726,6 +764,6 @@
    ]
   }
  ],
- "updatedLabel": "9/14 11:46",
- "count": 38
+ "updatedLabel": "9/16 18:37",
+ "count": 40
 }
