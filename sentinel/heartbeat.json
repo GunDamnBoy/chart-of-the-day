@@ -1,7 +1,7 @@
 {
- "at": "2026-09-15T12:42:42+00:00",
- "exit": 10,
- "day_count": 38,
- "latest_date": "2026-09-14",
- "summary": "sentinel.data_fresh: 最新一期是 2026-09-14，已經 45 小時 （上限 36，節奏 24 小時）—— 管線停了；sentinel.updated_fresh: index.updated 是 2026-09-14T03:46:43+00:00，已經 33 小時 （上限 30，節奏 24 小時）—— 沒有人在跑"
+ "at": "2026-09-16T12:37:46+00:00",
+ "exit": 0,
+ "day_count": 40,
+ "latest_date": "2026-09-16",
+ "summary": "全部正常"
 }
