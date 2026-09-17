@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-16T10:37:43+00:00",
+ "updated": "2026-09-17T03:48:56+00:00",
  "days": [
+  {
+   "date": "2026-09-17",
+   "weekday": "四",
+   "headline": "聯準會升息落地，九個美股掛牌標的五日全部收黑",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "美股與財報",
+    "黃金",
+    "亞太（韓國、印度、東南亞）",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "waterfall"
+   ],
+   "file": "data/2026-09-17.json"
+  },
   {
    "date": "2026-09-16",
    "weekday": "三",
@@ -764,6 +783,6 @@
    ]
   }
  ],
- "updatedLabel": "9/16 18:37",
- "count": 40
+ "updatedLabel": "9/17 11:48",
+ "count": 41
 }
