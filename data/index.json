@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-17T03:48:56+00:00",
+ "updated": "2026-09-18T03:48:06+00:00",
  "days": [
+  {
+   "date": "2026-09-18",
+   "weekday": "五",
+   "headline": "十年期站上 5%，多出來的幾乎全是實質利率",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "美股與財報",
+    "AI 與半導體",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "waterfall",
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-18.json"
+  },
   {
    "date": "2026-09-17",
    "weekday": "四",
@@ -783,6 +802,6 @@
    ]
   }
  ],
- "updatedLabel": "9/17 11:48",
- "count": 41
+ "updatedLabel": "9/18 11:48",
+ "count": 42
 }
