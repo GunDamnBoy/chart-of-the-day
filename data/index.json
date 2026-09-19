@@ -1,7 +1,27 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-18T03:48:06+00:00",
+ "updated": "2026-09-19T03:52:14+00:00",
  "days": [
+  {
+   "date": "2026-09-19",
+   "weekday": "六",
+   "headline": "四個市場同一天見頂、同一週見底，只有台股走回原點",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "AI 與半導體",
+    "央行、利率與匯率",
+    "中國",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "scatter",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-19.json"
+  },
   {
    "date": "2026-09-18",
    "weekday": "五",
@@ -802,6 +822,6 @@
    ]
   }
  ],
- "updatedLabel": "9/18 11:48",
- "count": 42
+ "updatedLabel": "9/19 11:52",
+ "count": 43
 }
