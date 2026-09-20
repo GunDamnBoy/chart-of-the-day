@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-19T03:52:14+00:00",
+ "updated": "2026-09-20T03:47:17+00:00",
  "days": [
+  {
+   "date": "2026-09-20",
+   "weekday": "日",
+   "headline": "市場刪掉降息那一格：兩年期減三個月回到 2022 年 10 月",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "歐洲",
+    "金融、併購與企業",
+    "美股與財報",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-20.json"
+  },
   {
    "date": "2026-09-19",
    "weekday": "六",
@@ -822,6 +841,6 @@
    ]
   }
  ],
- "updatedLabel": "9/19 11:52",
- "count": 43
+ "updatedLabel": "9/20 11:47",
+ "count": 44
 }

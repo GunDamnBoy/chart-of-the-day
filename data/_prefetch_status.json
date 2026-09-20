@@ -1,11 +1,11 @@
 {
- "started": "2026-09-19T11:00:04+08:00",
- "finished": "2026-09-19T11:03:12+08:00",
+ "started": "2026-09-20T11:00:05+08:00",
+ "finished": "2026-09-20T11:02:53+08:00",
  "host": "Mac-mini.local",
  "requested": 56,
  "ok": 44,
  "failed": {
-  "^TWOII": "SeriesRegressed: ^TWOII 來源末日 2024-10-12 比快取的 2026-07-17 還舊（來源 1 點、快取 2394 點）—— 快取已保留聯集不會變短，但這條序列今天不可信，不要用。多半是來源對最近幾期回空而不是回錯誤碼（SOURCES.md：空不是「沒有資料」，是被擋）"
+  "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -256,8 +256,14 @@
   },
   {
    "id": "NASDAQCOM",
-   "n": 2945,
-   "last": "2026-09-17",
+   "n": 2946,
+   "last": "2026-09-18",
+   "monthly": false
+  },
+  {
+   "id": "NIKKEI225",
+   "n": 2863,
+   "last": "2026-09-18",
    "monthly": false
   },
   {
@@ -276,12 +282,6 @@
    "id": "VIXCLS",
    "n": 2977,
    "last": "2026-09-17",
-   "monthly": false
-  },
-  {
-   "id": "NIKKEI225",
-   "n": 2863,
-   "last": "2026-09-18",
    "monthly": false
   }
  ],
