@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-20T03:47:17+00:00",
+ "updated": "2026-09-21T03:47:37+00:00",
  "days": [
+  {
+   "date": "2026-09-21",
+   "weekday": "一",
+   "headline": "韓國出口創歷史新高，指數離六月高點還有兩成三",
+   "charts": 5,
+   "themes": [
+    "亞太（韓國、印度、東南亞）",
+    "能源與原物料",
+    "信用債",
+    "AI 與半導體",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-09-21.json"
+  },
   {
    "date": "2026-09-20",
    "weekday": "日",
@@ -841,6 +860,6 @@
    ]
   }
  ],
- "updatedLabel": "9/20 11:47",
- "count": 44
+ "updatedLabel": "9/21 11:47",
+ "count": 45
 }
