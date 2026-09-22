@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-21T03:47:37+00:00",
+ "updated": "2026-09-22T04:02:45+00:00",
  "days": [
+  {
+   "date": "2026-09-22",
+   "weekday": "二",
+   "headline": "費半最強的一週，發生在近一年高點下方 15%",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "美股與財報",
+    "黃金",
+    "日本",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "heatmap"
+   ],
+   "file": "data/2026-09-22.json"
+  },
   {
    "date": "2026-09-21",
    "weekday": "一",
@@ -860,6 +879,6 @@
    ]
   }
  ],
- "updatedLabel": "9/21 11:47",
- "count": 45
+ "updatedLabel": "9/22 12:02",
+ "count": 46
 }
