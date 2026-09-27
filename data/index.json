@@ -1,7 +1,27 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-26T03:40:07+00:00",
+ "updated": "2026-09-27T03:41:07+00:00",
  "days": [
+  {
+   "date": "2026-09-27",
+   "weekday": "日",
+   "headline": "10 年期 5.18%、通膨預期不動；利差、記憶體、油價各有缺口",
+   "charts": 5,
+   "themes": [
+    "信用債",
+    "美股與財報",
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "scatter",
+    "grouped_bar",
+    "timeseries",
+    "waterfall"
+   ],
+   "file": "data/2026-09-27.json"
+  },
   {
    "date": "2026-09-26",
    "weekday": "六",
@@ -953,6 +973,6 @@
    ]
   }
  ],
- "updatedLabel": "9/26 11:40",
- "count": 50
+ "updatedLabel": "9/27 11:41",
+ "count": 51
 }
