@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-27T03:41:07+00:00",
+ "updated": "2026-09-28T03:39:11+00:00",
  "days": [
+  {
+   "date": "2026-09-28",
+   "weekday": "一",
+   "headline": "實質利率壓金價、2s10s 收在 20、CCC 逼近高點",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "日本",
+    "美股與財報",
+    "信用債",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "scatter"
+   ],
+   "file": "data/2026-09-28.json"
+  },
   {
    "date": "2026-09-27",
    "weekday": "日",
@@ -973,6 +992,6 @@
    ]
   }
  ],
- "updatedLabel": "9/27 11:41",
- "count": 51
+ "updatedLabel": "9/28 11:39",
+ "count": 52
 }
