@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-28T03:39:11+00:00",
+ "updated": "2026-09-29T03:39:36+00:00",
  "days": [
+  {
+   "date": "2026-09-29",
+   "weekday": "二",
+   "headline": "金價吐回年內漲幅、KOSPI 補跌、垃圾債利差 4 月來最寬",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "亞太（韓國、印度、東南亞）",
+    "AI 與半導體",
+    "信用債",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-29.json"
+  },
   {
    "date": "2026-09-28",
    "weekday": "一",
@@ -992,6 +1010,6 @@
    ]
   }
  ],
- "updatedLabel": "9/28 11:39",
- "count": 52
+ "updatedLabel": "9/29 11:39",
+ "count": 53
 }
