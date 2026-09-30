@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-29T03:39:36+00:00",
+ "updated": "2026-09-30T03:38:52+00:00",
  "days": [
+  {
+   "date": "2026-09-30",
+   "weekday": "三",
+   "headline": "30 年期美債創高，美光財報前波動降到今年低檔",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "台灣",
+    "中國",
+    "能源與原物料",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-09-30.json"
+  },
   {
    "date": "2026-09-29",
    "weekday": "二",
@@ -1010,6 +1028,6 @@
    ]
   }
  ],
- "updatedLabel": "9/29 11:39",
- "count": 53
+ "updatedLabel": "9/30 11:38",
+ "count": 54
 }
