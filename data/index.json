@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-09-30T03:38:52+00:00",
+ "updated": "2026-10-01T03:39:29+00:00",
  "days": [
+  {
+   "date": "2026-10-01",
+   "weekday": "四",
+   "headline": "核心 PCE 沒再往下，CCC 利差寬過去年關稅衝擊",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "台灣",
+    "黃金",
+    "信用債",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "scatter"
+   ],
+   "file": "data/2026-10-01.json"
+  },
   {
    "date": "2026-09-30",
    "weekday": "三",
@@ -1028,6 +1047,6 @@
    ]
   }
  ],
- "updatedLabel": "9/30 11:38",
- "count": 54
+ "updatedLabel": "10/1 11:39",
+ "count": 55
 }
