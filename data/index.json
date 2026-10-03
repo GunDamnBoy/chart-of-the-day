@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-02T03:40:39+00:00",
+ "updated": "2026-10-03T03:39:36+00:00",
  "days": [
+  {
+   "date": "2026-10-03",
+   "weekday": "六",
+   "headline": "非農修正、硬碟股重挫、信用壓力由 CCC 帶頭",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "黃金",
+    "信用債",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-03.json"
+  },
   {
    "date": "2026-10-02",
    "weekday": "五",
@@ -1066,6 +1085,6 @@
    ]
   }
  ],
- "updatedLabel": "10/2 11:40",
- "count": 56
+ "updatedLabel": "10/3 11:39",
+ "count": 57
 }
