@@ -1,7 +1,27 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-03T03:39:36+00:00",
+ "updated": "2026-10-04T03:41:41+00:00",
  "days": [
+  {
+   "date": "2026-10-04",
+   "weekday": "日",
+   "headline": "費半撐住九月、歐股五週四跌、投等債 6% 靠公債",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "歐洲",
+    "信用債",
+    "美股與財報",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "heatmap",
+    "timeseries",
+    "grouped_bar",
+    "waterfall"
+   ],
+   "file": "data/2026-10-04.json"
+  },
   {
    "date": "2026-10-03",
    "weekday": "六",
@@ -1085,6 +1105,6 @@
    ]
   }
  ],
- "updatedLabel": "10/3 11:39",
- "count": 57
+ "updatedLabel": "10/4 11:41",
+ "count": 58
 }
