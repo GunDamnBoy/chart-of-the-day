@@ -1,11 +1,10 @@
 {
- "started": "2026-10-04T11:00:05+08:00",
- "finished": "2026-10-04T11:09:38+08:00",
+ "started": "2026-10-05T11:00:05+08:00",
+ "finished": "2026-10-05T11:03:18+08:00",
  "host": "Mac-mini.local",
  "requested": 56,
- "ok": 43,
+ "ok": 44,
  "failed": {
-  "8069.TWO": "RuntimeError: 8069.TWO 一筆都沒抓到——不要當成空序列使用",
   "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在"
  },
  "skipped": {
@@ -142,6 +141,12 @@
    "monthly": false
   },
   {
+   "id": "8069.TWO",
+   "n": 749,
+   "last": "2026-10-02",
+   "monthly": false
+  },
+  {
    "id": "FXI",
    "n": 2955,
    "last": "2026-10-02",
@@ -256,12 +261,6 @@
    "monthly": false
   },
   {
-   "id": "VIXCLS",
-   "n": 2987,
-   "last": "2026-10-01",
-   "monthly": false
-  },
-  {
    "id": "DTB3",
    "n": 2939,
    "last": "2026-10-01",
@@ -271,6 +270,12 @@
    "id": "DEXJPUS",
    "n": 2933,
    "last": "2026-09-25",
+   "monthly": false
+  },
+  {
+   "id": "VIXCLS",
+   "n": 2987,
+   "last": "2026-10-01",
    "monthly": false
   },
   {

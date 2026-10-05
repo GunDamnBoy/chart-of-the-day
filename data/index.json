@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-04T03:41:41+00:00",
+ "updated": "2026-10-05T03:39:41+00:00",
  "days": [
+  {
+   "date": "2026-10-05",
+   "weekday": "一",
+   "headline": "30 年期美債創高、黃金一週跌 3.4%、愛德萬逆勢漲",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "黃金",
+    "地緣政治（中東與戰事）",
+    "AI 與半導體",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-05.json"
+  },
   {
    "date": "2026-10-04",
    "weekday": "日",
@@ -1105,6 +1124,6 @@
    ]
   }
  ],
- "updatedLabel": "10/4 11:41",
- "count": 58
+ "updatedLabel": "10/5 11:39",
+ "count": 59
 }
