@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-07T03:40:49+00:00",
+ "updated": "2026-10-08T03:40:32+00:00",
  "days": [
+  {
+   "date": "2026-10-08",
+   "weekday": "四",
+   "headline": "加權逼近 5 萬點只靠台積電，CCC 利差沒跟著收窄",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "歐洲",
+    "信用債",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-08.json"
+  },
   {
    "date": "2026-10-07",
    "weekday": "三",
@@ -1162,6 +1181,6 @@
    ]
   }
  ],
- "updatedLabel": "10/7 11:40",
- "count": 61
+ "updatedLabel": "10/8 11:40",
+ "count": 62
 }
