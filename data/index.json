@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-08T03:40:32+00:00",
+ "updated": "2026-10-09T03:41:23+00:00",
  "days": [
+  {
+   "date": "2026-10-09",
+   "weekday": "五",
+   "headline": "AI 營收打折費半吐回十月，CCC 利差創三年新高",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "央行、利率與匯率",
+    "亞太（韓國、印度、東南亞）",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-10-09.json"
+  },
   {
    "date": "2026-10-08",
    "weekday": "四",
@@ -1181,6 +1200,6 @@
    ]
   }
  ],
- "updatedLabel": "10/8 11:40",
- "count": 62
+ "updatedLabel": "10/9 11:41",
+ "count": 63
 }
