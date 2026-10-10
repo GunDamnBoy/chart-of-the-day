@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-09T03:41:23+00:00",
+ "updated": "2026-10-10T03:39:23+00:00",
  "days": [
+  {
+   "date": "2026-10-10",
+   "weekday": "六",
+   "headline": "殖利率升一點通膨預期沒動，上季能源勝半導體",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "黃金",
+    "能源與原物料",
+    "美股與財報",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-10.json"
+  },
   {
    "date": "2026-10-09",
    "weekday": "五",
@@ -1200,6 +1219,6 @@
    ]
   }
  ],
- "updatedLabel": "10/9 11:41",
- "count": 63
+ "updatedLabel": "10/10 11:39",
+ "count": 64
 }
