@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-10T03:39:23+00:00",
+ "updated": "2026-10-11T03:42:17+00:00",
  "days": [
+  {
+   "date": "2026-10-11",
+   "weekday": "日",
+   "headline": "CPI 前瞻看核心，高收益與布蘭特價差都在走寬",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "信用債",
+    "美股與財報",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-11.json"
+  },
   {
    "date": "2026-10-10",
    "weekday": "六",
@@ -1219,6 +1237,6 @@
    ]
   }
  ],
- "updatedLabel": "10/10 11:39",
- "count": 64
+ "updatedLabel": "10/11 11:42",
+ "count": 65
 }
