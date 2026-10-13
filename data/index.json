@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-12T03:41:16+00:00",
+ "updated": "2026-10-13T03:39:00+00:00",
  "days": [
+  {
+   "date": "2026-10-13",
+   "weekday": "二",
+   "headline": "韓股下半年跌近四分之一，台股指數撐住但電子已轉弱",
+   "charts": 5,
+   "themes": [
+    "亞太（韓國、印度、東南亞）",
+    "能源與原物料",
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-13.json"
+  },
   {
    "date": "2026-10-12",
    "weekday": "一",
@@ -1255,6 +1273,6 @@
    ]
   }
  ],
- "updatedLabel": "10/12 11:41",
- "count": 66
+ "updatedLabel": "10/13 11:39",
+ "count": 67
 }
