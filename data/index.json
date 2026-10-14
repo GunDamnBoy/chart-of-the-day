@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-13T03:39:00+00:00",
+ "updated": "2026-10-14T03:40:41+00:00",
  "days": [
+  {
+   "date": "2026-10-14",
+   "weekday": "三",
+   "headline": "外資提款記憶體，晶片 ETF 距高點跌 16.5%",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "能源與原物料",
+    "信用債",
+    "美股與財報",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "heatmap",
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-10-14.json"
+  },
   {
    "date": "2026-10-13",
    "weekday": "二",
@@ -1273,6 +1292,6 @@
    ]
   }
  ],
- "updatedLabel": "10/13 11:39",
- "count": 67
+ "updatedLabel": "10/14 11:40",
+ "count": 68
 }
