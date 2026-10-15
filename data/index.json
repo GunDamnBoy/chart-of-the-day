@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-14T03:40:41+00:00",
+ "updated": "2026-10-15T03:39:26+00:00",
  "days": [
+  {
+   "date": "2026-10-15",
+   "weekday": "四",
+   "headline": "九月核心 CPI 月增連三個月加快，標普平靜期結束",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "美股與財報",
+    "中國",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-15.json"
+  },
   {
    "date": "2026-10-14",
    "weekday": "三",
@@ -1292,6 +1310,6 @@
    ]
   }
  ],
- "updatedLabel": "10/14 11:40",
- "count": 68
+ "updatedLabel": "10/15 11:39",
+ "count": 69
 }
