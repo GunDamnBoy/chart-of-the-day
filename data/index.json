@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-15T03:39:26+00:00",
+ "updated": "2026-10-16T03:40:09+00:00",
  "days": [
+  {
+   "date": "2026-10-16",
+   "weekday": "五",
+   "headline": "韓股九月以來跌近兩成，亞洲記憶體股在美國止跌後再跌",
+   "charts": 5,
+   "themes": [
+    "亞太（韓國、印度、東南亞）",
+    "台灣",
+    "日本",
+    "AI 與半導體",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-16.json"
+  },
   {
    "date": "2026-10-15",
    "weekday": "四",
@@ -1310,6 +1328,6 @@
    ]
   }
  ],
- "updatedLabel": "10/15 11:39",
- "count": 69
+ "updatedLabel": "10/16 11:40",
+ "count": 70
 }
