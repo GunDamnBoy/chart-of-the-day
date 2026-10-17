@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-16T03:40:09+00:00",
+ "updated": "2026-10-17T03:43:51+00:00",
  "days": [
+  {
+   "date": "2026-10-17",
+   "weekday": "六",
+   "headline": "費半連跌八天、台股單週跌 4.5%，能源 ETF 收在新高",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "能源與原物料",
+    "美國政治與政策",
+    "AI 與半導體",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-17.json"
+  },
   {
    "date": "2026-10-16",
    "weekday": "五",
@@ -1328,6 +1347,6 @@
    ]
   }
  ],
- "updatedLabel": "10/16 11:40",
- "count": 70
+ "updatedLabel": "10/17 11:43",
+ "count": 71
 }
