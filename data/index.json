@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-17T03:43:51+00:00",
+ "updated": "2026-10-18T03:39:57+00:00",
  "days": [
+  {
+   "date": "2026-10-18",
+   "weekday": "日",
+   "headline": "CCC 利差四週擴大 195 基點，兩年債定價續升息",
+   "charts": 5,
+   "themes": [
+    "信用債",
+    "美股與財報",
+    "黃金",
+    "央行、利率與匯率",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries",
+    "waterfall"
+   ],
+   "file": "data/2026-10-18.json"
+  },
   {
    "date": "2026-10-17",
    "weekday": "六",
@@ -1347,6 +1366,6 @@
    ]
   }
  ],
- "updatedLabel": "10/17 11:43",
- "count": 71
+ "updatedLabel": "10/18 11:39",
+ "count": 72
 }
