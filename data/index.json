@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-18T03:39:57+00:00",
+ "updated": "2026-10-19T03:39:58+00:00",
  "days": [
+  {
+   "date": "2026-10-19",
+   "weekday": "一",
+   "headline": "加權離季線剩 2.3%，三星創 2016 年來最大週跌",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "日本",
+    "亞太（韓國、印度、東南亞）",
+    "歐洲",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-19.json"
+  },
   {
    "date": "2026-10-18",
    "weekday": "日",
@@ -1366,6 +1385,6 @@
    ]
   }
  ],
- "updatedLabel": "10/18 11:39",
- "count": 72
+ "updatedLabel": "10/19 11:39",
+ "count": 73
 }
