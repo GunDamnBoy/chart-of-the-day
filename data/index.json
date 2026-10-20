@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-19T03:39:58+00:00",
+ "updated": "2026-10-20T12:24:46+00:00",
  "days": [
+  {
+   "date": "2026-10-20",
+   "weekday": "二",
+   "headline": "加權兩日跌 1.74% 仍守季線，記憶體股再領跌",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "歐洲",
+    "中國",
+    "信用債",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-20.json"
+  },
   {
    "date": "2026-10-19",
    "weekday": "一",
@@ -1385,6 +1403,6 @@
    ]
   }
  ],
- "updatedLabel": "10/19 11:39",
- "count": 73
+ "updatedLabel": "10/20 20:24",
+ "count": 74
 }
