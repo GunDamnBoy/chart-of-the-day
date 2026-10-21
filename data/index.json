@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-20T12:24:46+00:00",
+ "updated": "2026-10-21T03:44:51+00:00",
  "days": [
+  {
+   "date": "2026-10-21",
+   "weekday": "三",
+   "headline": "費半 ETF 距高點跌 22.8%，生技兩天漲 6.2%",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "生技健護",
+    "美股與財報",
+    "台灣",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-21.json"
+  },
   {
    "date": "2026-10-20",
    "weekday": "二",
@@ -1403,6 +1422,6 @@
    ]
   }
  ],
- "updatedLabel": "10/20 20:24",
- "count": 74
+ "updatedLabel": "10/21 11:44",
+ "count": 75
 }
