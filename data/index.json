@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-21T03:44:51+00:00",
+ "updated": "2026-10-22T03:46:36+00:00",
  "days": [
+  {
+   "date": "2026-10-22",
+   "weekday": "四",
+   "headline": "台股站回 5 日線只多 71 點，三星仍距高點 38%",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "亞太（韓國、印度、東南亞）",
+    "中國",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap"
+   ],
+   "file": "data/2026-10-22.json"
+  },
   {
    "date": "2026-10-21",
    "weekday": "三",
@@ -1422,6 +1440,6 @@
    ]
   }
  ],
- "updatedLabel": "10/21 11:44",
- "count": 75
+ "updatedLabel": "10/22 11:46",
+ "count": 76
 }
