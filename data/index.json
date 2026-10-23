@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-22T03:46:36+00:00",
+ "updated": "2026-10-23T03:38:47+00:00",
  "days": [
+  {
+   "date": "2026-10-23",
+   "weekday": "五",
+   "headline": "費半 ETF 單日跌 6.7%，CCC 利差再創近三年高",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "黃金",
+    "生技健護",
+    "AI 與半導體",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-23.json"
+  },
   {
    "date": "2026-10-22",
    "weekday": "四",
@@ -1440,6 +1458,6 @@
    ]
   }
  ],
- "updatedLabel": "10/22 11:46",
- "count": 76
+ "updatedLabel": "10/23 11:38",
+ "count": 77
 }

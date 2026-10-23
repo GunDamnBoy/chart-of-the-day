@@ -1,34 +1,11 @@
 {
- "started": "2026-10-22T11:00:05+08:00",
- "finished": "2026-10-22T11:40:48+08:00",
+ "started": "2026-10-23T11:00:05+08:00",
+ "finished": "2026-10-23T11:02:57+08:00",
  "host": "Mac-mini.local",
- "requested": 56,
- "ok": 21,
+ "requested": 55,
+ "ok": 43,
  "failed": {
-  "DGS2": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2&cosd=2015-01-01\n  The read operation timed out",
-  "DGS10": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10&cosd=2015-01-01\n  The read operation timed out",
-  "DGS30": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30&cosd=2015-01-01\n  The read operation timed out",
-  "DTWEXBGS": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS&cosd=2015-01-01\n  The read operation timed out",
-  "BAMLH0A0HYM2": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2015-01-01\n  The read operation timed out",
-  "BAMLC0A0CM": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=2015-01-01\n  The read operation timed out",
-  "BAMLH0A3HYC": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A3HYC&cosd=2015-01-01\n  The read operation timed out",
-  "BAMLH0A1HYBB": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A1HYBB&cosd=2015-01-01\n  The read operation timed out",
-  "CPIAUCSL": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL&cosd=2015-01-01\n  The read operation timed out",
-  "CPILFESL": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFESL&cosd=2015-01-01\n  The read operation timed out",
-  "PAYEMS": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2015-01-01\n  The read operation timed out",
-  "PCEPI": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPI&cosd=2015-01-01\n  The read operation timed out",
-  "PCEPILFE": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPILFE&cosd=2015-01-01\n  The read operation timed out",
-  "T10YIE": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE&cosd=2015-01-01\n  The read operation timed out",
-  "DCOILWTICO": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2015-01-01\n  The read operation timed out",
-  "MTSDS133FMS": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=MTSDS133FMS&cosd=2015-01-01\n  The read operation timed out",
-  "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在",
-  "DCOILBRENTEU": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2015-01-01\n  The read operation timed out",
-  "NIKKEI225": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225&cosd=2015-01-01\n  The read operation timed out",
-  "SP500": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2015-01-01\n  The read operation timed out",
-  "DTB3": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2015-01-01\n  The read operation timed out",
-  "DEXJPUS": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXJPUS&cosd=2015-01-01\n  The read operation timed out",
-  "VIXCLS": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd=2015-01-01\n  The read operation timed out",
-  "NASDAQCOM": "RuntimeError: 取數失敗 https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2015-01-01\n  The read operation timed out"
+  "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -44,129 +21,261 @@
  },
  "series": [
   {
-   "id": "^TWII",
-   "n": 761,
+   "id": "DGS2",
+   "n": 2952,
    "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "DGS10",
+   "n": 2952,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "DGS30",
+   "n": 2952,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "DTWEXBGS",
+   "n": 2940,
+   "last": "2026-10-16",
+   "monthly": false
+  },
+  {
+   "id": "BAMLH0A0HYM2",
+   "n": 826,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "BAMLC0A0CM",
+   "n": 825,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "BAMLH0A3HYC",
+   "n": 826,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "BAMLH0A1HYBB",
+   "n": 826,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "^TWII",
+   "n": 762,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "2330.TW",
-   "n": 761,
-   "last": "2026-10-21",
+   "n": 762,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "2317.TW",
-   "n": 760,
-   "last": "2026-10-21",
+   "n": 761,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "GLD",
-   "n": 2968,
-   "last": "2026-10-21",
+   "n": 2969,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "XLE",
-   "n": 2968,
-   "last": "2026-10-21",
+   "n": 2969,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
-   "id": "8069.TWO",
-   "n": 761,
-   "last": "2026-10-21",
+   "id": "CPIAUCSL",
+   "n": 140,
+   "last": "2026-09-01",
+   "monthly": true
+  },
+  {
+   "id": "CPILFESL",
+   "n": 140,
+   "last": "2026-09-01",
+   "monthly": true
+  },
+  {
+   "id": "PAYEMS",
+   "n": 141,
+   "last": "2026-09-01",
+   "monthly": true
+  },
+  {
+   "id": "PCEPI",
+   "n": 140,
+   "last": "2026-08-01",
+   "monthly": true
+  },
+  {
+   "id": "PCEPILFE",
+   "n": 140,
+   "last": "2026-08-01",
+   "monthly": true
+  },
+  {
+   "id": "T10YIE",
+   "n": 2953,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
-   "id": "FXI",
-   "n": 2968,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "XLF",
-   "n": 2968,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "XBI",
-   "n": 2968,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "SOXQ",
-   "n": 1347,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "FEZ",
-   "n": 2968,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "CPER",
-   "n": 2968,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "^KS11",
-   "n": 2481,
+   "id": "DCOILWTICO",
+   "n": 2946,
    "last": "2026-10-20",
    "monthly": false
   },
   {
+   "id": "8069.TWO",
+   "n": 762,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "FXI",
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "XLF",
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "XBI",
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "MTSDS133FMS",
+   "n": 141,
+   "last": "2026-09-01",
+   "monthly": true
+  },
+  {
+   "id": "SOXQ",
+   "n": 1348,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "FEZ",
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "CPER",
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "^KS11",
+   "n": 2482,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
    "id": "005930.KS",
-   "n": 2481,
-   "last": "2026-10-21",
+   "n": 2482,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "8035.T",
-   "n": 2498,
-   "last": "2026-10-21",
+   "n": 2499,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "6857.T",
-   "n": 2498,
-   "last": "2026-10-21",
+   "n": 2499,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "2344.TW",
-   "n": 761,
-   "last": "2026-10-21",
-   "monthly": false
-  },
-  {
-   "id": "2382.TW",
-   "n": 761,
-   "last": "2026-10-21",
+   "n": 762,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "2408.TW",
-   "n": 761,
-   "last": "2026-10-21",
+   "n": 762,
+   "last": "2026-10-22",
    "monthly": false
   },
   {
    "id": "MU",
-   "n": 2968,
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "NIKKEI225",
+   "n": 2883,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "SP500",
+   "n": 2551,
    "last": "2026-10-21",
    "monthly": false
   },
   {
    "id": "STX",
-   "n": 2968,
+   "n": 2969,
+   "last": "2026-10-22",
+   "monthly": false
+  },
+  {
+   "id": "DTB3",
+   "n": 2952,
    "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "DEXJPUS",
+   "n": 2947,
+   "last": "2026-10-16",
+   "monthly": false
+  },
+  {
+   "id": "VIXCLS",
+   "n": 3001,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "NASDAQCOM",
+   "n": 2969,
+   "last": "2026-10-21",
+   "monthly": false
+  },
+  {
+   "id": "DCOILBRENTEU",
+   "n": 2996,
+   "last": "2026-10-20",
    "monthly": false
   }
  ],
