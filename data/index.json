@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-23T03:38:47+00:00",
+ "updated": "2026-10-24T03:39:32+00:00",
  "days": [
+  {
+   "date": "2026-10-24",
+   "weekday": "六",
+   "headline": "能源 ETF 收歷史新高，AI 硬體兩週跌一到兩成",
+   "charts": 5,
+   "themes": [
+    "能源與原物料",
+    "黃金",
+    "中國",
+    "AI 與半導體",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-24.json"
+  },
   {
    "date": "2026-10-23",
    "weekday": "五",
@@ -1458,6 +1477,6 @@
    ]
   }
  ],
- "updatedLabel": "10/23 11:38",
- "count": 77
+ "updatedLabel": "10/24 11:39",
+ "count": 78
 }
