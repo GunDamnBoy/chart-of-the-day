@@ -1,6 +1,6 @@
 {
- "started": "2026-10-24T11:00:03+08:00",
- "finished": "2026-10-24T11:02:35+08:00",
+ "started": "2026-10-25T11:00:05+08:00",
+ "finished": "2026-10-25T11:02:56+08:00",
  "host": "Mac-mini.local",
  "requested": 55,
  "ok": 43,
@@ -225,6 +225,12 @@
    "monthly": false
   },
   {
+   "id": "DCOILBRENTEU",
+   "n": 2996,
+   "last": "2026-10-20",
+   "monthly": false
+  },
+  {
    "id": "MU",
    "n": 2970,
    "last": "2026-10-23",
@@ -268,14 +274,8 @@
   },
   {
    "id": "NASDAQCOM",
-   "n": 2970,
-   "last": "2026-10-22",
-   "monthly": false
-  },
-  {
-   "id": "DCOILBRENTEU",
-   "n": 2996,
-   "last": "2026-10-20",
+   "n": 2971,
+   "last": "2026-10-23",
    "monthly": false
   }
  ],

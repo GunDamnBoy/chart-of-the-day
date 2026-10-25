@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-24T03:39:32+00:00",
+ "updated": "2026-10-25T03:39:34+00:00",
  "days": [
+  {
+   "date": "2026-10-25",
+   "weekday": "日",
+   "headline": "CCC 利差升至近三年最高，美債殖利率單日降 17 基點",
+   "charts": 5,
+   "themes": [
+    "信用債",
+    "央行、利率與匯率",
+    "生技健護",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap"
+   ],
+   "file": "data/2026-10-25.json"
+  },
   {
    "date": "2026-10-24",
    "weekday": "六",
@@ -1477,6 +1495,6 @@
    ]
   }
  ],
- "updatedLabel": "10/24 11:39",
- "count": 78
+ "updatedLabel": "10/25 11:39",
+ "count": 79
 }
