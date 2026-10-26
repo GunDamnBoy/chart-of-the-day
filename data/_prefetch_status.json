@@ -1,6 +1,6 @@
 {
- "started": "2026-10-25T11:00:05+08:00",
- "finished": "2026-10-25T11:02:56+08:00",
+ "started": "2026-10-26T11:00:04+08:00",
+ "finished": "2026-10-26T11:02:35+08:00",
  "host": "Mac-mini.local",
  "requested": 55,
  "ok": 43,
@@ -237,6 +237,12 @@
    "monthly": false
   },
   {
+   "id": "NASDAQCOM",
+   "n": 2971,
+   "last": "2026-10-23",
+   "monthly": false
+  },
+  {
    "id": "NIKKEI225",
    "n": 2884,
    "last": "2026-10-23",
@@ -270,12 +276,6 @@
    "id": "VIXCLS",
    "n": 3002,
    "last": "2026-10-22",
-   "monthly": false
-  },
-  {
-   "id": "NASDAQCOM",
-   "n": 2971,
-   "last": "2026-10-23",
    "monthly": false
   }
  ],

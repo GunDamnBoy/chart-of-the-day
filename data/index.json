@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-25T03:39:34+00:00",
+ "updated": "2026-10-26T03:48:25+00:00",
  "days": [
+  {
+   "date": "2026-10-26",
+   "weekday": "一",
+   "headline": "黃金 ETF 週跌 4%，能源 ETF 創 2015 年來新高",
+   "charts": 5,
+   "themes": [
+    "黃金",
+    "能源與原物料",
+    "台灣",
+    "AI 與半導體",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-10-26.json"
+  },
   {
    "date": "2026-10-25",
    "weekday": "日",
@@ -1495,6 +1513,6 @@
    ]
   }
  ],
- "updatedLabel": "10/25 11:39",
- "count": 79
+ "updatedLabel": "10/26 11:48",
+ "count": 80
 }
