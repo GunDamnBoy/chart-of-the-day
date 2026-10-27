@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-26T03:48:25+00:00",
+ "updated": "2026-10-27T03:41:04+00:00",
  "days": [
+  {
+   "date": "2026-10-27",
+   "weekday": "二",
+   "headline": "費半 ETF 險守 200 日線，CCC 級利差破關稅高峰",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "日本",
+    "信用債",
+    "亞太（韓國、印度、東南亞）",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-27.json"
+  },
   {
    "date": "2026-10-26",
    "weekday": "一",
@@ -1513,6 +1531,6 @@
    ]
   }
  ],
- "updatedLabel": "10/26 11:48",
- "count": 80
+ "updatedLabel": "10/27 11:41",
+ "count": 81
 }
