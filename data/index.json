@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-27T03:41:04+00:00",
+ "updated": "2026-10-28T03:40:53+00:00",
  "days": [
+  {
+   "date": "2026-10-28",
+   "weekday": "三",
+   "headline": "2 年債押 12 月升息，費半一天只補回月跌幅四分之一",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "能源與原物料",
+    "美股與財報",
+    "亞太（韓國、印度、東南亞）",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-28.json"
+  },
   {
    "date": "2026-10-27",
    "weekday": "二",
@@ -1531,6 +1549,6 @@
    ]
   }
  ],
- "updatedLabel": "10/27 11:41",
- "count": 81
+ "updatedLabel": "10/28 11:40",
+ "count": 82
 }
