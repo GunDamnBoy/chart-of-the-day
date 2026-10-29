@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-28T03:40:53+00:00",
+ "updated": "2026-10-29T03:38:10+00:00",
  "days": [
+  {
+   "date": "2026-10-29",
+   "weekday": "四",
+   "headline": "布蘭特比 WTI 貴 20 美元，記憶體與韓股一天急漲",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "亞太（韓國、印度、東南亞）",
+    "信用債",
+    "央行、利率與匯率",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "range_area"
+   ],
+   "file": "data/2026-10-29.json"
+  },
   {
    "date": "2026-10-28",
    "weekday": "三",
@@ -1549,6 +1567,6 @@
    ]
   }
  ],
- "updatedLabel": "10/28 11:40",
- "count": 82
+ "updatedLabel": "10/29 11:38",
+ "count": 83
 }
