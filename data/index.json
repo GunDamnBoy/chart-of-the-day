@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-29T03:38:10+00:00",
+ "updated": "2026-10-30T03:40:50+00:00",
  "days": [
+  {
+   "date": "2026-10-30",
+   "weekday": "五",
+   "headline": "核心 PCE 升至 5 月來最高，CCC 利差仍在近三年頂端",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "台灣",
+    "美股與財報",
+    "AI 與半導體",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-10-30.json"
+  },
   {
    "date": "2026-10-29",
    "weekday": "四",
@@ -1567,6 +1585,6 @@
    ]
   }
  ],
- "updatedLabel": "10/29 11:38",
- "count": 83
+ "updatedLabel": "10/30 11:40",
+ "count": 84
 }
