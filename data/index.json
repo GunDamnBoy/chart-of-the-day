@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-30T03:40:50+00:00",
+ "updated": "2026-10-31T03:40:50+00:00",
  "days": [
+  {
+   "date": "2026-10-31",
+   "weekday": "六",
+   "headline": "費半單日跌 7%，黃金破 7 月低點，能源月漲近一成四",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "黃金",
+    "央行、利率與匯率",
+    "能源與原物料",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-10-31.json"
+  },
   {
    "date": "2026-10-30",
    "weekday": "五",
@@ -1585,6 +1604,6 @@
    ]
   }
  ],
- "updatedLabel": "10/30 11:40",
- "count": 84
+ "updatedLabel": "10/31 11:40",
+ "count": 85
 }
