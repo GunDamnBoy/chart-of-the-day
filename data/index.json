@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-10-31T03:40:50+00:00",
+ "updated": "2026-11-01T03:40:40+00:00",
  "days": [
+  {
+   "date": "2026-11-01",
+   "weekday": "日",
+   "headline": "股債相關係數歸零，CCC 利差今年擴大 440 基點",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "日本",
+    "美國政治與政策",
+    "信用債",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-11-01.json"
+  },
   {
    "date": "2026-10-31",
    "weekday": "六",
@@ -1604,6 +1623,6 @@
    ]
   }
  ],
- "updatedLabel": "10/31 11:40",
- "count": 85
+ "updatedLabel": "11/1 11:40",
+ "count": 86
 }
