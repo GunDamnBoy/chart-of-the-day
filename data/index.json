@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-01T03:40:40+00:00",
+ "updated": "2026-11-02T03:41:57+00:00",
  "days": [
+  {
+   "date": "2026-11-02",
+   "weekday": "一",
+   "headline": "加權跌破半年線、費半單日跌 7%，韓綜距高點 37%",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "AI 與半導體",
+    "黃金",
+    "亞太（韓國、印度、東南亞）",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-02.json"
+  },
   {
    "date": "2026-11-01",
    "weekday": "日",
@@ -1623,6 +1641,6 @@
    ]
   }
  ],
- "updatedLabel": "11/1 11:40",
- "count": 86
+ "updatedLabel": "11/2 11:41",
+ "count": 87
 }
