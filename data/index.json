@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-02T03:41:57+00:00",
+ "updated": "2026-11-03T03:42:38+00:00",
  "days": [
+  {
+   "date": "2026-11-03",
+   "weekday": "二",
+   "headline": "美光三天跌 15%、能源 ETF 創高隔日重挫，加權連三黑",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "信用債",
+    "中國",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-03.json"
+  },
   {
    "date": "2026-11-02",
    "weekday": "一",
@@ -1641,6 +1659,6 @@
    ]
   }
  ],
- "updatedLabel": "11/2 11:41",
- "count": 87
+ "updatedLabel": "11/3 11:42",
+ "count": 88
 }
