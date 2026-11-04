@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-03T03:42:38+00:00",
+ "updated": "2026-11-04T03:41:29+00:00",
  "days": [
+  {
+   "date": "2026-11-04",
+   "weekday": "三",
+   "headline": "台韓同跌 3.59%、華邦電跌停，選前標普已低於三個情境",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "美股與財報",
+    "美國政治與政策",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "gauge"
+   ],
+   "file": "data/2026-11-04.json"
+  },
   {
    "date": "2026-11-03",
    "weekday": "二",
@@ -1659,6 +1678,6 @@
    ]
   }
  ],
- "updatedLabel": "11/3 11:42",
- "count": 88
+ "updatedLabel": "11/4 11:41",
+ "count": 89
 }
