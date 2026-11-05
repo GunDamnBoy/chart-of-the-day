@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-04T03:41:29+00:00",
+ "updated": "2026-11-05T03:39:32+00:00",
  "days": [
+  {
+   "date": "2026-11-05",
+   "weekday": "四",
+   "headline": "選後一天金融漲、能源跌，油價溢價在選前就退了",
+   "charts": 5,
+   "themes": [
+    "美國政治與政策",
+    "黃金",
+    "央行、利率與匯率",
+    "中國",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries",
+    "range_area"
+   ],
+   "file": "data/2026-11-05.json"
+  },
   {
    "date": "2026-11-04",
    "weekday": "三",
@@ -1678,6 +1697,6 @@
    ]
   }
  ],
- "updatedLabel": "11/4 11:41",
- "count": 89
+ "updatedLabel": "11/5 11:39",
+ "count": 90
 }
