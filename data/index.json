@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-05T03:39:32+00:00",
+ "updated": "2026-11-06T03:40:13+00:00",
  "days": [
+  {
+   "date": "2026-11-06",
+   "weekday": "五",
+   "headline": "選後漲幅一天吐光，費半 ETF 跌出掛牌以來最深一天",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "AI 與半導體",
+    "央行、利率與匯率",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "heatmap",
+    "timeseries"
+   ],
+   "file": "data/2026-11-06.json"
+  },
   {
    "date": "2026-11-05",
    "weekday": "四",
@@ -1697,6 +1715,6 @@
    ]
   }
  ],
- "updatedLabel": "11/5 11:39",
- "count": 90
+ "updatedLabel": "11/6 11:40",
+ "count": 91
 }
