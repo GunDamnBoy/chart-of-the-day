@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-06T03:40:13+00:00",
+ "updated": "2026-11-07T03:40:00+00:00",
  "days": [
+  {
+   "date": "2026-11-07",
+   "weekday": "六",
+   "headline": "非農重新加速，亞洲接棒 AI 賣壓：日經、台股都距高點兩成",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "日本",
+    "信用債",
+    "台灣",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter",
+    "waterfall"
+   ],
+   "file": "data/2026-11-07.json"
+  },
   {
    "date": "2026-11-06",
    "weekday": "五",
@@ -1715,6 +1734,6 @@
    ]
   }
  ],
- "updatedLabel": "11/6 11:40",
- "count": 91
+ "updatedLabel": "11/7 11:40",
+ "count": 92
 }
