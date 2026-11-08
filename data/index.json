@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-07T03:40:00+00:00",
+ "updated": "2026-11-08T03:40:41+00:00",
  "days": [
+  {
+   "date": "2026-11-08",
+   "weekday": "日",
+   "headline": "選後賣壓集中在 AI 股：金融不動、黃金上漲、能源補跌",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "央行、利率與匯率",
+    "信用債",
+    "黃金",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries",
+    "heatmap"
+   ],
+   "file": "data/2026-11-08.json"
+  },
   {
    "date": "2026-11-07",
    "weekday": "六",
@@ -1734,6 +1753,6 @@
    ]
   }
  ],
- "updatedLabel": "11/7 11:40",
- "count": 92
+ "updatedLabel": "11/8 11:40",
+ "count": 93
 }
