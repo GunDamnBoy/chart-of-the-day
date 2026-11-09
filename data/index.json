@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-08T03:40:41+00:00",
+ "updated": "2026-11-09T03:41:35+00:00",
  "days": [
+  {
+   "date": "2026-11-09",
+   "weekday": "一",
+   "headline": "台股 20 天跌兩成，亞股一半在接美股的棒",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "亞太（韓國、印度、東南亞）",
+    "美股與財報",
+    "美國政治與政策",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-09.json"
+  },
   {
    "date": "2026-11-08",
    "weekday": "日",
@@ -1753,6 +1772,6 @@
    ]
   }
  ],
- "updatedLabel": "11/8 11:40",
- "count": 93
+ "updatedLabel": "11/9 11:41",
+ "count": 94
 }
