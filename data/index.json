@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-10T03:40:17+00:00",
+ "updated": "2026-11-11T03:39:14+00:00",
  "days": [
+  {
+   "date": "2026-11-11",
+   "weekday": "三",
+   "headline": "沒有年增率的 CPI：核心三個月年化 3.7%",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "黃金",
+    "信用債",
+    "台灣",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-11.json"
+  },
   {
    "date": "2026-11-10",
    "weekday": "二",
@@ -1791,6 +1809,6 @@
    ]
   }
  ],
- "updatedLabel": "11/10 11:40",
- "count": 95
+ "updatedLabel": "11/11 11:39",
+ "count": 96
 }
