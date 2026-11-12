@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-11T03:39:14+00:00",
+ "updated": "2026-11-12T03:41:23+00:00",
  "days": [
+  {
+   "date": "2026-11-12",
+   "weekday": "四",
+   "headline": "加權三天漲 11.5%，收回的跌幅還不到一半",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "美股與財報",
+    "亞太（韓國、印度、東南亞）",
+    "AI 與半導體",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-12.json"
+  },
   {
    "date": "2026-11-11",
    "weekday": "三",
@@ -1809,6 +1827,6 @@
    ]
   }
  ],
- "updatedLabel": "11/11 11:39",
- "count": 96
+ "updatedLabel": "11/12 11:41",
+ "count": 97
 }
