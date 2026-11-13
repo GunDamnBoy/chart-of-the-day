@@ -1,6 +1,6 @@
 {
- "started": "2026-11-12T11:00:04+08:00",
- "finished": "2026-11-12T11:02:41+08:00",
+ "started": "2026-11-13T11:00:04+08:00",
+ "finished": "2026-11-13T11:02:38+08:00",
  "host": "Mac-mini.local",
  "requested": 56,
  "ok": 44,
@@ -22,20 +22,20 @@
  "series": [
   {
    "id": "DGS2",
-   "n": 2965,
-   "last": "2026-11-09",
+   "n": 2966,
+   "last": "2026-11-10",
    "monthly": false
   },
   {
    "id": "DGS10",
-   "n": 2965,
-   "last": "2026-11-09",
+   "n": 2966,
+   "last": "2026-11-10",
    "monthly": false
   },
   {
    "id": "DGS30",
-   "n": 2965,
-   "last": "2026-11-09",
+   "n": 2966,
+   "last": "2026-11-10",
    "monthly": false
   },
   {
@@ -46,62 +46,62 @@
   },
   {
    "id": "BAMLH0A0HYM2",
-   "n": 839,
-   "last": "2026-11-09",
+   "n": 840,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "BAMLC0A0CM",
-   "n": 838,
-   "last": "2026-11-09",
+   "n": 839,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "BAMLH0A3HYC",
-   "n": 839,
-   "last": "2026-11-09",
+   "n": 840,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "BAMLH0A1HYBB",
-   "n": 839,
-   "last": "2026-11-09",
+   "n": 840,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "^TWII",
-   "n": 774,
-   "last": "2026-11-11",
+   "n": 775,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "2330.TW",
-   "n": 774,
-   "last": "2026-11-11",
+   "n": 775,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "2317.TW",
-   "n": 773,
-   "last": "2026-11-11",
+   "n": 774,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "2382.TW",
-   "n": 774,
-   "last": "2026-11-11",
+   "n": 775,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "GLD",
-   "n": 2983,
-   "last": "2026-11-11",
+   "n": 2984,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "XLE",
-   "n": 2983,
-   "last": "2026-11-11",
+   "n": 2984,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
@@ -136,140 +136,140 @@
   },
   {
    "id": "T10YIE",
+   "n": 2967,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "DCOILWTICO",
+   "n": 2962,
+   "last": "2026-11-11",
+   "monthly": false
+  },
+  {
+   "id": "8069.TWO",
+   "n": 775,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "FXI",
+   "n": 2984,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "XLF",
+   "n": 2984,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "XBI",
+   "n": 2984,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "MTSDS133FMS",
+   "n": 142,
+   "last": "2026-10-01",
+   "monthly": true
+  },
+  {
+   "id": "SOXQ",
+   "n": 1363,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "FEZ",
+   "n": 2984,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "CPER",
+   "n": 2984,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "^KS11",
+   "n": 2498,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "005930.KS",
+   "n": 2497,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "8035.T",
+   "n": 2513,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "6857.T",
+   "n": 2513,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "2344.TW",
+   "n": 775,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "2408.TW",
+   "n": 775,
+   "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "DCOILBRENTEU",
+   "n": 3012,
+   "last": "2026-11-11",
+   "monthly": false
+  },
+  {
+   "id": "DTB3",
    "n": 2966,
    "last": "2026-11-10",
    "monthly": false
   },
   {
-   "id": "DCOILWTICO",
-   "n": 2956,
-   "last": "2026-11-03",
-   "monthly": false
-  },
-  {
-   "id": "8069.TWO",
-   "n": 774,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "FXI",
-   "n": 2983,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "XLF",
-   "n": 2983,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "XBI",
-   "n": 2983,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "MTSDS133FMS",
-   "n": 141,
-   "last": "2026-09-01",
-   "monthly": true
-  },
-  {
-   "id": "SOXQ",
-   "n": 1362,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "FEZ",
-   "n": 2983,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "CPER",
-   "n": 2983,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "^KS11",
-   "n": 2497,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "005930.KS",
-   "n": 2496,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "8035.T",
-   "n": 2512,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "6857.T",
-   "n": 2512,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "2344.TW",
-   "n": 774,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "2408.TW",
-   "n": 774,
-   "last": "2026-11-11",
-   "monthly": false
-  },
-  {
-   "id": "DCOILBRENTEU",
-   "n": 3006,
-   "last": "2026-11-03",
-   "monthly": false
-  },
-  {
-   "id": "DTB3",
-   "n": 2965,
-   "last": "2026-11-09",
-   "monthly": false
-  },
-  {
    "id": "MU",
-   "n": 2983,
-   "last": "2026-11-11",
+   "n": 2984,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "NASDAQCOM",
-   "n": 2983,
-   "last": "2026-11-10",
+   "n": 2984,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "NIKKEI225",
-   "n": 2896,
-   "last": "2026-11-11",
+   "n": 2897,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
    "id": "SP500",
-   "n": 2565,
-   "last": "2026-11-10",
+   "n": 2566,
+   "last": "2026-11-11",
    "monthly": false
   },
   {
    "id": "STX",
-   "n": 2983,
-   "last": "2026-11-11",
+   "n": 2984,
+   "last": "2026-11-12",
    "monthly": false
   },
   {
@@ -280,8 +280,8 @@
   },
   {
    "id": "VIXCLS",
-   "n": 3015,
-   "last": "2026-11-10",
+   "n": 3016,
+   "last": "2026-11-11",
    "monthly": false
   }
  ],

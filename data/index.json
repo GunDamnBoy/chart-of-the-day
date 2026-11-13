@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-12T03:41:23+00:00",
+ "updated": "2026-11-13T03:40:16+00:00",
  "days": [
+  {
+   "date": "2026-11-13",
+   "weekday": "五",
+   "headline": "黃仁勳出局那天，台股跌幅是日韓的四倍，黃金跌到年內最低",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "能源與原物料",
+    "AI 與半導體",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-11-13.json"
+  },
   {
    "date": "2026-11-12",
    "weekday": "四",
@@ -1827,6 +1846,6 @@
    ]
   }
  ],
- "updatedLabel": "11/12 11:41",
- "count": 97
+ "updatedLabel": "11/13 11:40",
+ "count": 98
 }
