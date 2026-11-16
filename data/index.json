@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-15T03:39:59+00:00",
+ "updated": "2026-11-16T03:39:32+00:00",
  "days": [
+  {
+   "date": "2026-11-16",
+   "weekday": "一",
+   "headline": "記憶體營收創高股價已轉向，債市先替升息付錢",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "歐洲",
+    "日本",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "grouped_bar",
+    "timeseries"
+   ],
+   "file": "data/2026-11-16.json"
+  },
   {
    "date": "2026-11-15",
    "weekday": "日",
@@ -1884,6 +1902,6 @@
    ]
   }
  ],
- "updatedLabel": "11/15 11:39",
- "count": 100
+ "updatedLabel": "11/16 11:39",
+ "count": 101
 }

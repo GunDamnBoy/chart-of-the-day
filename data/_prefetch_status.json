@@ -1,6 +1,6 @@
 {
- "started": "2026-11-15T11:00:05+08:00",
- "finished": "2026-11-15T11:02:31+08:00",
+ "started": "2026-11-16T11:00:05+08:00",
+ "finished": "2026-11-16T11:02:30+08:00",
  "host": "Mac-mini.local",
  "requested": 56,
  "ok": 44,
@@ -273,15 +273,15 @@
    "monthly": false
   },
   {
-   "id": "DEXJPUS",
-   "n": 2962,
-   "last": "2026-11-06",
-   "monthly": false
-  },
-  {
    "id": "VIXCLS",
    "n": 3017,
    "last": "2026-11-12",
+   "monthly": false
+  },
+  {
+   "id": "DEXJPUS",
+   "n": 2962,
+   "last": "2026-11-06",
    "monthly": false
   }
  ],
