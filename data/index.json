@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-16T03:39:32+00:00",
+ "updated": "2026-11-17T03:41:34+00:00",
  "days": [
+  {
+   "date": "2026-11-17",
+   "weekday": "二",
+   "headline": "晶片股跌近三成，台股一天跌 6%，銅連跌五天",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "中國",
+    "亞太（韓國、印度、東南亞）",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap"
+   ],
+   "file": "data/2026-11-17.json"
+  },
   {
    "date": "2026-11-16",
    "weekday": "一",
@@ -1902,6 +1920,6 @@
    ]
   }
  ],
- "updatedLabel": "11/16 11:39",
- "count": 101
+ "updatedLabel": "11/17 11:41",
+ "count": 102
 }
