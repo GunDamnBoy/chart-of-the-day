@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-17T03:41:34+00:00",
+ "updated": "2026-11-18T03:39:45+00:00",
  "days": [
+  {
+   "date": "2026-11-18",
+   "weekday": "三",
+   "headline": "加權反彈吐光、KOSPI 破五千，台灣記憶體一週跌最重",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "歐洲",
+    "央行、利率與匯率",
+    "亞太（韓國、印度、東南亞）",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "waterfall",
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-18.json"
+  },
   {
    "date": "2026-11-17",
    "weekday": "二",
@@ -1920,6 +1939,6 @@
    ]
   }
  ],
- "updatedLabel": "11/17 11:41",
- "count": 102
+ "updatedLabel": "11/18 11:39",
+ "count": 103
 }
