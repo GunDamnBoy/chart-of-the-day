@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-18T03:39:45+00:00",
+ "updated": "2026-11-19T03:40:01+00:00",
  "days": [
+  {
+   "date": "2026-11-19",
+   "weekday": "四",
+   "headline": "銅一週跌一成、金跌 6.6%，標普與加權都貼著均線",
+   "charts": 5,
+   "themes": [
+    "美股與財報",
+    "黃金",
+    "信用債",
+    "台灣",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "waterfall",
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-19.json"
+  },
   {
    "date": "2026-11-18",
    "weekday": "三",
@@ -1939,6 +1958,6 @@
    ]
   }
  ],
- "updatedLabel": "11/18 11:39",
- "count": 103
+ "updatedLabel": "11/19 11:40",
+ "count": 104
 }
