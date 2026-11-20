@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-19T03:40:01+00:00",
+ "updated": "2026-11-20T04:30:31+00:00",
  "days": [
+  {
+   "date": "2026-11-20",
+   "weekday": "五",
+   "headline": "華邦電五天跌兩成，加權第二次逼近離高點兩成",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "日本",
+    "台灣",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "heatmap",
+    "scatter"
+   ],
+   "file": "data/2026-11-20.json"
+  },
   {
    "date": "2026-11-19",
    "weekday": "四",
@@ -1958,6 +1977,6 @@
    ]
   }
  ],
- "updatedLabel": "11/19 11:40",
- "count": 104
+ "updatedLabel": "11/20 12:30",
+ "count": 105
 }
