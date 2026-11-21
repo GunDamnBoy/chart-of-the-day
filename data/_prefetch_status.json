@@ -1,6 +1,6 @@
 {
- "started": "2026-11-19T11:00:04+08:00",
- "finished": "2026-11-19T11:02:40+08:00",
+ "started": "2026-11-21T11:00:05+08:00",
+ "finished": "2026-11-21T11:02:35+08:00",
  "host": "Mac-mini.local",
  "requested": 55,
  "ok": 43,
@@ -22,20 +22,20 @@
  "series": [
   {
    "id": "DGS2",
-   "n": 2970,
-   "last": "2026-11-17",
+   "n": 2972,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "DGS10",
-   "n": 2970,
-   "last": "2026-11-17",
+   "n": 2972,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "DGS30",
-   "n": 2970,
-   "last": "2026-11-17",
+   "n": 2972,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
@@ -46,62 +46,62 @@
   },
   {
    "id": "BAMLH0A0HYM2",
-   "n": 845,
-   "last": "2026-11-17",
+   "n": 847,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "BAMLC0A0CM",
-   "n": 844,
-   "last": "2026-11-17",
+   "n": 846,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "BAMLH0A3HYC",
-   "n": 845,
-   "last": "2026-11-17",
+   "n": 847,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "BAMLH0A1HYBB",
-   "n": 845,
-   "last": "2026-11-17",
+   "n": 847,
+   "last": "2026-11-19",
    "monthly": false
   },
   {
    "id": "^TWII",
-   "n": 779,
-   "last": "2026-11-18",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "2330.TW",
-   "n": 779,
-   "last": "2026-11-18",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "2317.TW",
-   "n": 778,
-   "last": "2026-11-18",
+   "n": 780,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "2382.TW",
-   "n": 779,
-   "last": "2026-11-18",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "GLD",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "XLE",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
@@ -136,8 +136,8 @@
   },
   {
    "id": "T10YIE",
-   "n": 2971,
-   "last": "2026-11-18",
+   "n": 2973,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
@@ -148,26 +148,26 @@
   },
   {
    "id": "8069.TWO",
-   "n": 779,
-   "last": "2026-11-18",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "FXI",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "XLF",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "XBI",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
@@ -178,104 +178,104 @@
   },
   {
    "id": "SOXQ",
-   "n": 1367,
-   "last": "2026-11-18",
+   "n": 1369,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "FEZ",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "CPER",
-   "n": 2988,
-   "last": "2026-11-18",
+   "n": 2990,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "^KS11",
-   "n": 2502,
-   "last": "2026-11-18",
+   "n": 2504,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "005930.KS",
-   "n": 2501,
-   "last": "2026-11-18",
+   "n": 2503,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "8035.T",
-   "n": 2517,
-   "last": "2026-11-18",
+   "n": 2519,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "6857.T",
-   "n": 2517,
-   "last": "2026-11-18",
+   "n": 2519,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "2344.TW",
-   "n": 779,
-   "last": "2026-11-18",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "2408.TW",
-   "n": 779,
-   "last": "2026-11-18",
-   "monthly": false
-  },
-  {
-   "id": "DCOILBRENTEU",
-   "n": 3016,
-   "last": "2026-11-17",
-   "monthly": false
-  },
-  {
-   "id": "DTB3",
-   "n": 2970,
-   "last": "2026-11-17",
-   "monthly": false
-  },
-  {
-   "id": "MU",
-   "n": 2988,
-   "last": "2026-11-18",
-   "monthly": false
-  },
-  {
-   "id": "NASDAQCOM",
-   "n": 2988,
-   "last": "2026-11-17",
-   "monthly": false
-  },
-  {
-   "id": "NIKKEI225",
-   "n": 2901,
-   "last": "2026-11-18",
-   "monthly": false
-  },
-  {
-   "id": "SP500",
-   "n": 2571,
-   "last": "2026-11-18",
-   "monthly": false
-  },
-  {
-   "id": "VIXCLS",
-   "n": 3020,
-   "last": "2026-11-17",
+   "n": 781,
+   "last": "2026-11-20",
    "monthly": false
   },
   {
    "id": "DEXJPUS",
    "n": 2966,
    "last": "2026-11-13",
+   "monthly": false
+  },
+  {
+   "id": "DTB3",
+   "n": 2972,
+   "last": "2026-11-19",
+   "monthly": false
+  },
+  {
+   "id": "MU",
+   "n": 2990,
+   "last": "2026-11-20",
+   "monthly": false
+  },
+  {
+   "id": "NASDAQCOM",
+   "n": 2990,
+   "last": "2026-11-19",
+   "monthly": false
+  },
+  {
+   "id": "NIKKEI225",
+   "n": 2903,
+   "last": "2026-11-20",
+   "monthly": false
+  },
+  {
+   "id": "SP500",
+   "n": 2572,
+   "last": "2026-11-19",
+   "monthly": false
+  },
+  {
+   "id": "VIXCLS",
+   "n": 3022,
+   "last": "2026-11-19",
+   "monthly": false
+  },
+  {
+   "id": "DCOILBRENTEU",
+   "n": 3016,
+   "last": "2026-11-17",
    "monthly": false
   }
  ],
