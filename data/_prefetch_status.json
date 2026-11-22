@@ -1,11 +1,20 @@
 {
- "started": "2026-11-21T11:00:05+08:00",
- "finished": "2026-11-21T11:02:35+08:00",
+ "started": "2026-11-22T11:00:01+08:00",
+ "finished": "2026-11-22T11:03:54+08:00",
  "host": "Mac-mini.local",
  "requested": 55,
- "ok": 43,
+ "ok": 34,
  "failed": {
-  "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在"
+  "GLD": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/GLD/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "XLE": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/XLE/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "FXI": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/FXI/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "XLF": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/XLF/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "XBI": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/XBI/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "SOXQ": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/SOXQ/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "FEZ": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/FEZ/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "CPER": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/CPER/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway",
+  "^TWOII": "RuntimeError: ^TWOII：握手客戶端回空表 —— **空不是「沒有資料」**，多半是 yfinance 又被改壞或該代號不存在",
+  "MU": "RuntimeError: 取數失敗 https://api.tiingo.com/tiingo/daily/MU/prices?startDate=2015-01-01&token=3dd4a8c721b1f4e90fcfa8bf8bffc5b2e6617aec\n  HTTP Error 502: Bad Gateway"
  },
  "skipped": {
   "^TNX": "來源已知被擋，改用 DGS10（brief §3.2）",
@@ -93,18 +102,6 @@
    "monthly": false
   },
   {
-   "id": "GLD",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
-   "id": "XLE",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
    "id": "CPIAUCSL",
    "n": 141,
    "last": "2026-10-01",
@@ -153,46 +150,10 @@
    "monthly": false
   },
   {
-   "id": "FXI",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
-   "id": "XLF",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
-   "id": "XBI",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
    "id": "MTSDS133FMS",
    "n": 142,
    "last": "2026-10-01",
    "monthly": true
-  },
-  {
-   "id": "SOXQ",
-   "n": 1369,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
-   "id": "FEZ",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
-  },
-  {
-   "id": "CPER",
-   "n": 2990,
-   "last": "2026-11-20",
-   "monthly": false
   },
   {
    "id": "^KS11",
@@ -240,12 +201,6 @@
    "id": "DTB3",
    "n": 2972,
    "last": "2026-11-19",
-   "monthly": false
-  },
-  {
-   "id": "MU",
-   "n": 2990,
-   "last": "2026-11-20",
    "monthly": false
   },
   {

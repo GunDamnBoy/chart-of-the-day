@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-21T03:43:08+00:00",
+ "updated": "2026-11-22T03:40:51+00:00",
  "days": [
+  {
+   "date": "2026-11-22",
+   "weekday": "日",
+   "headline": "救市三度出手、台股仍跌，日經單日跌 5.1%",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "日本",
+    "央行、利率與匯率",
+    "AI 與半導體",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "scatter"
+   ],
+   "file": "data/2026-11-22.json"
+  },
   {
    "date": "2026-11-21",
    "weekday": "六",
@@ -1995,6 +2013,6 @@
    ]
   }
  ],
- "updatedLabel": "11/21 11:43",
- "count": 106
+ "updatedLabel": "11/22 11:40",
+ "count": 107
 }
