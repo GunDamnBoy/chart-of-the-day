@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-22T03:40:51+00:00",
+ "updated": "2026-11-23T03:40:42+00:00",
  "days": [
+  {
+   "date": "2026-11-23",
+   "weekday": "一",
+   "headline": "台股上週補跌是韓股兩倍，黃金與銅也被一起賣",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "美股與財報",
+    "中國",
+    "央行、利率與匯率"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-23.json"
+  },
   {
    "date": "2026-11-22",
    "weekday": "日",
@@ -2013,6 +2031,6 @@
    ]
   }
  ],
- "updatedLabel": "11/22 11:40",
- "count": 107
+ "updatedLabel": "11/23 11:40",
+ "count": 108
 }
