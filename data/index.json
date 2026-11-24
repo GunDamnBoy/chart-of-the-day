@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-23T03:40:42+00:00",
+ "updated": "2026-11-24T03:39:24+00:00",
  "days": [
+  {
+   "date": "2026-11-24",
+   "weekday": "二",
+   "headline": "費半一天收回上週跌幅，台韓收盤還沒算進去",
+   "charts": 5,
+   "themes": [
+    "AI 與半導體",
+    "能源與原物料",
+    "亞太（韓國、印度、東南亞）",
+    "信用債",
+    "台灣"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "heatmap"
+   ],
+   "file": "data/2026-11-24.json"
+  },
   {
    "date": "2026-11-23",
    "weekday": "一",
@@ -2031,6 +2050,6 @@
    ]
   }
  ],
- "updatedLabel": "11/23 11:40",
- "count": 108
+ "updatedLabel": "11/24 11:39",
+ "count": 109
 }
