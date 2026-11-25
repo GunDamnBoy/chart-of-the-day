@@ -1,7 +1,27 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-24T03:39:24+00:00",
+ "updated": "2026-11-25T03:40:01+00:00",
  "days": [
+  {
+   "date": "2026-11-25",
+   "weekday": "三",
+   "headline": "台股補上輝達行情的那一晚，費半又跌回一半以上",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "黃金",
+    "央行、利率與匯率",
+    "信用債",
+    "AI 與半導體"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "scatter",
+    "heatmap"
+   ],
+   "file": "data/2026-11-25.json"
+  },
   {
    "date": "2026-11-24",
    "weekday": "二",
@@ -2050,6 +2070,6 @@
    ]
   }
  ],
- "updatedLabel": "11/24 11:39",
- "count": 109
+ "updatedLabel": "11/25 11:40",
+ "count": 110
 }
