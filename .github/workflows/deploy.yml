@@ -3,10 +3,17 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      retry:
+        description: "第幾次自動重開（由 retry job 帶入，人工觸發留 0）"
+        required: false
+        default: "0"
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: write     # retry job 用 GITHUB_TOKEN 另開一次 workflow_dispatch
+  issues: write      # 重開兩次仍失敗就開 issue（跟哨兵同一個通報管道）
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -53,14 +60,46 @@ jobs:
       - name: 驗證索引與日檔一致
         run: python3 kb-core/tools/verify_site_index.py _site --allow-differ weekday
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # **部署完不等於讀者看得到。** 比雜湊不比欄位的理由寫在 verify_live.py 的 docstring。
       - name: 驗證線上那份就是剛上傳的那份
         run: |
           python3 kb-core/tools/verify_live.py \
             "${{ steps.deployment.outputs.page_url }}" data/index.json
+
+  # **部署失敗時另開一次全新的執行，不是重跑同一次。**（2026-11-25 加）
+  #
+  # 2026-11-24 與 11-25 連兩天 `deploy-pages` 回「No artifacts named "github-pages" were
+  # found」（上傳那一步是成功的）。11-24 同一次執行重跑到第 4 次才過、網站晚三小時；
+  # 11-25 同一次執行重跑兩次都失敗，**手動另開一次 workflow_dispatch 三十秒就上線**。
+  # 所以這裡用 GITHUB_TOKEN 另開新的一次（GITHUB_TOKEN 觸發的事件不會開新執行，
+  # 唯一的例外就是 workflow_dispatch），最多兩次；仍失敗就開 issue。
+  #
+  # **它藏住的方式**：push 成功，publish 的回執是 exit 0，本機與 origin 同一顆 commit，
+  # 而哨兵排在 15:20 卻實際晚 7–12 小時才跑。兩天都是使用者自己看到網站沒更新才發現的。
+  # 內容守衛（verify_site_index）擋下時也會走到這裡 —— 那種重開兩次一樣會紅，
+  # 最後開出來的 issue 是對的出口，只是多花兩次執行。
+  retry:
+    needs: deploy
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: 另開一次全新的部署（最多兩次），仍失敗就開 issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RETRY: ${{ github.event.inputs.retry || '0' }}
+        run: |
+          if [ "$RETRY" -lt 2 ]; then
+            sleep 60
+            gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f retry=$((RETRY + 1))
+            echo "已另開第 $((RETRY + 1)) 次自動重開"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" \
+              --title "Pages 部署連續失敗（$(date -u +%F)）" \
+              --body "deploy.yml 失敗，自動另開兩次仍失敗。最後一次：$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID 。push 與 publish 回執都是成功的，網站停在上一期。"
+          fi
