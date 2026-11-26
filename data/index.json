@@ -1,7 +1,26 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-25T03:40:01+00:00",
+ "updated": "2026-11-26T03:39:38+00:00",
  "days": [
+  {
+   "date": "2026-11-26",
+   "weekday": "四",
+   "headline": "核心通膨回升的同一週，台韓股與黃金都在劇烈擺盪",
+   "charts": 5,
+   "themes": [
+    "央行、利率與匯率",
+    "台灣",
+    "亞太（韓國、印度、東南亞）",
+    "黃金",
+    "能源與原物料"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar",
+    "range_area"
+   ],
+   "file": "data/2026-11-26.json"
+  },
   {
    "date": "2026-11-25",
    "weekday": "三",
@@ -2070,6 +2089,6 @@
    ]
   }
  ],
- "updatedLabel": "11/25 11:40",
- "count": 110
+ "updatedLabel": "11/26 11:39",
+ "count": 111
 }
