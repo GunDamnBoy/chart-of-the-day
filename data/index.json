@@ -1,7 +1,25 @@
 {
  "title": "每日五圖 · Chart of the Day",
- "updated": "2026-11-26T03:39:38+00:00",
+ "updated": "2026-11-27T03:40:32+00:00",
  "days": [
+  {
+   "date": "2026-11-27",
+   "weekday": "五",
+   "headline": "台股反彈缺了台積電，信用壓力擠向 CCC",
+   "charts": 5,
+   "themes": [
+    "台灣",
+    "AI 與半導體",
+    "央行、利率與匯率",
+    "日本",
+    "信用債"
+   ],
+   "kinds": [
+    "timeseries",
+    "grouped_bar"
+   ],
+   "file": "data/2026-11-27.json"
+  },
   {
    "date": "2026-11-26",
    "weekday": "四",
@@ -2089,6 +2107,6 @@
    ]
   }
  ],
- "updatedLabel": "11/26 11:39",
- "count": 111
+ "updatedLabel": "11/27 11:40",
+ "count": 112
 }

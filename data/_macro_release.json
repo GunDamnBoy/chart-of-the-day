@@ -1,5 +1,5 @@
 {
- "checked_at": "2026-11-26T11:02:37+08:00",
+ "checked_at": "2026-11-27T11:02:27+08:00",
  "host": "Mac-mini.local",
  "source": "macro_release.check()",
  "items": [
@@ -7,22 +7,22 @@
    "kind": "NFP",
    "label": "非農就業",
    "last_updated": "2026-11-06T09:43:20",
-   "age_hours": 468.3,
+   "age_hours": 492.3,
    "fresh": false
   },
   {
    "kind": "CPI",
    "label": "消費者物價",
    "last_updated": "2026-11-10T08:12:46",
-   "age_hours": 373.8,
+   "age_hours": 397.8,
    "fresh": false
   },
   {
    "kind": "PCE",
    "label": "個人消費支出物價",
    "last_updated": "2026-11-25T07:42:50",
-   "age_hours": 14.3,
-   "fresh": true
+   "age_hours": 38.3,
+   "fresh": false
   }
  ]
 }
